@@ -13,7 +13,7 @@ Google Analytics tracking integration for Spryker
 composer require fond-of-spryker/google-tagmanager
 ```
 
-##1. Add the Container ID in the configuration file 
+## 1. Add the Container ID in the configuration file 
 
 ```
 // ---------- Google Tag Manager
