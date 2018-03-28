@@ -10,5 +10,4 @@ namespace FondOfSpryker\Shared\GoogleTagManager;
 interface GoogleTagManagerConstants
 {
     const CONTAINER_ID = '';
-
 }
