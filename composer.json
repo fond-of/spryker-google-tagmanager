@@ -1,0 +1,47 @@
+{
+  "name": "fond-of-spryker/google-tagmanager",
+  "description": "Google Tag Manager tracking integration for Spryker",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daniel Rose",
+      "email": "daniel-rose@gmx.de"
+    },
+    {
+      "name": "Jozsef Geng",
+      "email": "gengjozsef86@gmail.com"
+    },
+    {
+      "name": "Markus Nörenberg",
+      "email": "noerenberg.markus@gmail.com"
+    },
+    {
+      "name": "Pascal Fischer",
+      "email": "p-fischer@gmx.net"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "spryker/kernel": "^3.0.0"
+  },
+  "require-dev": {
+    "spryker/code-sniffer": "^0.11",
+    "spryker/development": "^3.6",
+    "codeception/codeception": "^2.3",
+    "phpro/grumphp": "^0.14",
+    "sebastian/phpcpd": "^4.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "FondOfSpryker\\": "src/FondOfSpryker/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FondOfSpryker\\": "tests/FondOfSpryker/",
+      "Generated\\": "tests/Generated/"
+    }
+  }
+}
