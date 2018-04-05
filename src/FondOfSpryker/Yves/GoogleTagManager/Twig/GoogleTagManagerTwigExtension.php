@@ -139,7 +139,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         }
 
         if ($page == Variable::PAGE_TYPE_ORDER) {
-            $this->addOrderVariables($params['quote']);
+            $this->addOrderVariables($params['order']);
         }else{
             $this->addQuoteVariables();
         }
@@ -205,11 +205,12 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         );
     }
 
-    private function addOrderVariables($quote)
+    private function addOrderVariables($orderTransfer)
     {
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getOrderVariables($quote)
+            $this->variable->getOrderVariables($orderTransfer)
         );
     }
 

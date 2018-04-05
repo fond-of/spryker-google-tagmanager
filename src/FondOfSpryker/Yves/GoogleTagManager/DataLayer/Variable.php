@@ -118,11 +118,11 @@ class Variable implements VariableInterface
      * @param $quoteTransfer
      * @return array
      */
-    public function getOrderVariables($quoteTransfer)
+    public function getOrderVariables($orderTransfer)
     {
         $transactionProducts = [];
         $transactionProductsSkus = [];
-        $orderItems = $quoteTransfer->getItems();
+        $orderItems = $orderTransfer->getItems();
 
         if (count($orderItems) > 0) {
             foreach ($orderItems as $item) {
@@ -141,16 +141,16 @@ class Variable implements VariableInterface
 
         return  array(
             'transactionEntity' => self::TRANSACTION_ENTITY_ORDER,
-            'transactionId' => $quoteTransfer->getOrderReference(),
-            //'transactionDate' => $quoteTransfer->getCreatedAt(),
-            'transactionAffiliation' => $quoteTransfer->getStore()->getName(),
-            'transactionTotal' => $this->formatPrice($quoteTransfer->getTotals()->getGrandTotal()),
+            'transactionId' => $orderTransfer->getOrderReference(),
+            'transactionDate' => $orderTransfer->getCreatedAt(),
+            'transactionAffiliation' => $orderTransfer->getStore(),
+            'transactionTotal' => $this->formatPrice($orderTransfer->getTotals()->getGrandTotal()),
             'transactionTotalWithoutShippingAmount' => '',
             'transactionSubtotal' => '',
-            'transactionTax' => $this->formatPrice($quoteTransfer->getTotals()->getTaxTotal()->getAmount()),
-            'transactionShipping' => $quoteTransfer->getShipment()->getMethod()->getName(),
-            'transactionPayment' => $quoteTransfer->getPayment()->getPaymentMethod(),
-            'transactionCurrency' => $quoteTransfer->getCurrency(),
+            'transactionTax' => $this->formatPrice($orderTransfer->getTotals()->getTaxTotal()->getAmount()),
+            'transactionShipping' => $orderTransfer->getShipment()->getMethod()->getName(),
+            'transactionPayment' => $orderTransfer->getPayment()->getPaymentMethod(),
+            'transactionCurrency' => $orderTransfer->getCurrency(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus
         );

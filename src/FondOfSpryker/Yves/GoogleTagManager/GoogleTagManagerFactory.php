@@ -44,16 +44,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return \Spryker\Yves\Kernel\Application
      */
-    protected function createProductClient()
-    {
-        return $this->getProvidedDependency('PRODUCT_CLIENT');
-    }
-
-    /**
-     * @return \Spryker\Yves\Kernel\Application
-     */
     protected function createCartClient()
     {
-        return $this->getProvidedDependency('CART_CLIENT');
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CLIENT);
     }
 }
