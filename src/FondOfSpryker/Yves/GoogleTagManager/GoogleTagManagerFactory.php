@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ */
+
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
@@ -20,6 +26,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new GoogleTagManagerTwigExtension(
             $this->getContainerID(),
+            $this->isEnabled(),
             $this->createDataLayerVariables(),
             $this->createCartClient()
         );
@@ -28,15 +35,23 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return string
      */
-    private function getContainerID():string
+    protected function getContainerID():string
     {
         return $this->getConfig()->getContainerID();
     }
 
     /**
+     * @return bool
+     */
+    protected function isEnabled() : bool
+    {
+        return $this->getConfig()->isEnabled();
+    }
+
+    /**
      * @return \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface
      */
-    private function createDataLayerVariables() : VariableInterface
+    protected function createDataLayerVariables() : VariableInterface
     {
         return new Variable();
     }
