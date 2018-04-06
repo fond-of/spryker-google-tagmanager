@@ -7,8 +7,6 @@
  */
 namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
 
-
 class Event implements EventInterface
 {
-
 }

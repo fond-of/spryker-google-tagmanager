@@ -13,84 +13,84 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Yves\Money\Plugin\MoneyPlugin;
 
-
 class Variable implements VariableInterface
 {
-
-    const PAGE_TYPE_CATEGORY  = "category";
-    const PAGE_TYPE_CART  = "cart";
-    const PAGE_TYPE_HOME  = "home";
+    const PAGE_TYPE_CATEGORY = "category";
+    const PAGE_TYPE_CART = "cart";
+    const PAGE_TYPE_HOME = "home";
     const PAGE_TYPE_ORDER = "order";
     const PAGE_TYPE_OTHER = "other";
-    const PAGE_TYPE_PRODUCT  = "product";
+    const PAGE_TYPE_PRODUCT = "product";
 
     const TRANSACTION_ENTITY_QUOTE = 'QUOTE';
     const TRANSACTION_ENTITY_ORDER = 'ORDER';
 
     /**
      * @param string $page
+     *
      * @return array
      */
-    public function getDefaultVariables($page) : array
+    public function getDefaultVariables($page): array
     {
-        return array(
-            'pageType' => $page
-        );
+        return [
+            'pageType' => $page,
+        ];
     }
 
     /**
      * @param Generated\Shared\Transfer\StorageProductTransfer $product
+     *
      * @return array
      */
-    public function getProductVariables(StorageProductTransfer $product) : array
+    public function getProductVariables(StorageProductTransfer $product): array
     {
-        return array(
+        return [
             'productId' => $product->getIdProductAbstract(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => '',
             'productPriceExcludingTax' => '',
             'productTax' => '',
-            'productTaxRate' => ''
-        );
+            'productTaxRate' => '',
+        ];
     }
 
     /**
      * @param array $category
      * @param array $products
+     *
      * @return array
      */
-    public function getCategoryVariables($category, $products) : array
+    public function getCategoryVariables($category, $products): array
     {
         $categoryProducts = [];
         $productSkus = [];
 
         foreach ($products as $product) {
             $productSkus[] = $product['abstract_sku'];
-            $categoryProducts [] = array(
+            $categoryProducts[] = [
                 'id' => $product['id_product_abstract'],
                 'name' => $product['abstract_name'],
                 'sku' => $product['abstract_sku'],
-                'price' => $this->formatPrice($product['price'])
-            );
-
-
+                'price' => $this->formatPrice($product['price']),
+            ];
         }
 
-        return array(
+        return [
             'categoryId' => $category['id_category'],
             'categoryName' => $category['name'],
             'categorySize' => count($categoryProducts),
             'categoryProducts' => $categoryProducts,
-            'products' => $productSkus
-        );
+            'products' => $productSkus,
+        ];
     }
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
      * @return array
      */
-    public function getQuoteVariables(QuoteTransfer $quoteTransfer) : array
+    public function getQuoteVariables(QuoteTransfer $quoteTransfer): array
     {
         $transactionProducts = [];
         $transactionProductsSkus = [];
@@ -100,8 +100,8 @@ class Variable implements VariableInterface
 
         if (count($quoteItems) > 0) {
             foreach ($quoteItems as $item) {
-                $transactionProductsSkus[] = $item->getSku() ;
-                $transactionProducts [] = $this->getProductForTransaction($item);
+                $transactionProductsSkus[] = $item->getSku();
+                $transactionProducts[] = $this->getProductForTransaction($item);
             }
         }
 
@@ -109,7 +109,7 @@ class Variable implements VariableInterface
             $totalWithoutShippingAmount = $total - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
 
-        return  array(
+        return [
             'transactionEntity' => self::TRANSACTION_ENTITY_QUOTE,
             'transactionId' => '',
             'transactionAffiliation' => $quoteTransfer->getStore()->getName(),
@@ -117,12 +117,13 @@ class Variable implements VariableInterface
             'transactionTotalWithoutShippingAmount' => $this->formatPrice($totalWithoutShippingAmount),
             'transactionTax' => $this->formatPrice($quoteTransfer->getTotals()->getTaxTotal()->getAmount()),
             'transactionProducts' => $transactionProducts,
-            'transactionProductsSkus' => $transactionProductsSkus
-        );
+            'transactionProductsSkus' => $transactionProductsSkus,
+        ];
     }
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
      * @return array
      */
     public function getOrderVariables(OrderTransfer $orderTransfer)
@@ -133,12 +134,12 @@ class Variable implements VariableInterface
 
         if (count($orderItems) > 0) {
             foreach ($orderItems as $item) {
-                $transactionProductsSkus[] = $item->getSku() ;
-                $transactionProducts [] = $this->getProductForTransaction($item);
+                $transactionProductsSkus[] = $item->getSku();
+                $transactionProducts[] = $this->getProductForTransaction($item);
             }
         }
 
-        return  array(
+        return [
             'transactionEntity' => self::TRANSACTION_ENTITY_ORDER,
             'transactionId' => $orderTransfer->getOrderReference(),
             'transactionDate' => $orderTransfer->getCreatedAt(),
@@ -151,30 +152,32 @@ class Variable implements VariableInterface
             'transactionPayment' => $orderTransfer->getPayment()->getPaymentMethod(),
             'transactionCurrency' => $orderTransfer->getCurrency(),
             'transactionProducts' => $transactionProducts,
-            'transactionProductsSkus' => $transactionProductsSkus
-        );
+            'transactionProductsSkus' => $transactionProductsSkus,
+        ];
     }
 
     /**
      * @param Generated\Shared\Transfer\ItemTransfer $product
+     *
      * @return array
      */
-    protected function getProductForTransaction (ItemTransfer $product)
+    protected function getProductForTransaction(ItemTransfer $product)
     {
-        return array(
+        return [
             'id' => $product->getIdProductAbstract(),
             'sku' => $product->getSku(),
             'name' => $product->getName(),
             'price' => $this->formatPrice($product->getUnitPrice()),
             'priceexcludingtax' => ($product->getUnitNetPrice()) ? $this->formatPrice($product->getUnitNetPrice()) :  $this->formatPrice($product->getUnitPrice() - $product->getUnitTaxAmount()),
             'tax' => $this->formatPrice($product->getUnitTaxAmount()),
-            'taxrate' => $product->getTaxRate()
-        );
+            'taxrate' => $product->getTaxRate(),
+        ];
     }
 
     /**
      * @param int $amount
-     * @return decimal
+     *
+     * @return float
      */
     protected function formatPrice($amount)
     {

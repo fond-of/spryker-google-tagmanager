@@ -10,5 +10,4 @@ namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
 
 interface EventInterface
 {
-
 }

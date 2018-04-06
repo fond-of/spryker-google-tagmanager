@@ -10,19 +10,18 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
-use Spryker\Yves\Kernel\AbstractFactory;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
+use Spryker\Yves\Kernel\AbstractFactory;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
 class GoogleTagManagerFactory extends AbstractFactory
 {
-
     /**
      * @return \FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension
      */
-    public function createGoogleTagManagerTwigExtension() : GoogleTagManagerTwigExtension
+    public function createGoogleTagManagerTwigExtension(): GoogleTagManagerTwigExtension
     {
         return new GoogleTagManagerTwigExtension(
             $this->getContainerID(),
@@ -35,7 +34,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return string
      */
-    protected function getContainerID():string
+    protected function getContainerID(): string
     {
         return $this->getConfig()->getContainerID();
     }
@@ -43,7 +42,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return bool
      */
-    protected function isEnabled() : bool
+    protected function isEnabled(): bool
     {
         return $this->getConfig()->isEnabled();
     }
@@ -51,7 +50,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface
      */
-    protected function createDataLayerVariables() : VariableInterface
+    protected function createDataLayerVariables(): VariableInterface
     {
         return new Variable();
     }

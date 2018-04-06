@@ -17,9 +17,8 @@ use Twig_SimpleFunction;
 
 class GoogleTagManagerTwigExtension extends TwigExtension
 {
-    const FUNCTION_GOOGLE_TAG_MANAGER   = 'fondOfSpykerGoogleTagManager';
-    const FUNCTION_DATA_LAYER           = 'fondOfSpykerDataLayer';
-
+    const FUNCTION_GOOGLE_TAG_MANAGER = 'fondOfSpykerGoogleTagManager';
+    const FUNCTION_DATA_LAYER = 'fondOfSpykerDataLayer';
 
     /**
      * @var string
@@ -57,16 +56,19 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $variable;
 
     /**
+     * GoogleTagManagerTwigExtension constructor
+     *
      * @param string $containerID
-     * @param \Spryker\Yves\Kernel\Application $application
+     * @param bool $isEnabled
+     * @param \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface $variable
+     * @param \Spryker\Client\Cart\CartClientInterface $cartClient
      */
     public function __construct(
         string $containerID,
         bool $isEnabled,
         VariableInterface $variable,
         CartClientInterface $cartClient
-    )
-    {
+    ) {
         $this->containerID = $containerID;
         $this->cartClient = $cartClient;
         $this->isEnabled = $isEnabled;
@@ -114,14 +116,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         );
     }
 
-
     /**
-     * @param Twig_Environment $twig
+     * @param \Twig_Environment $twig
      * @param string $templateName
+     *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     public function renderGoogleTagManager(Twig_Environment $twig, $templateName): string
     {
@@ -135,13 +134,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     }
 
     /**
-     * @param Twig_Environment $twig
+     * @param \Twig_Environment $twig
      * @param string $page
      * @param array $params
+     *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     public function renderDataLayer(Twig_Environment $twig, $page, $params): string
     {
@@ -161,21 +158,21 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         if ($page == Variable::PAGE_TYPE_ORDER) {
             $this->addOrderVariables($params['order']);
-        }else{
+        } else {
             $this->addQuoteVariables();
         }
 
         return $twig->render($this->getDataLayerTemplateName(), [
-            'data' => $this->dataLayerVariables
+            'data' => $this->dataLayerVariables,
         ]);
     }
 
-
     /**
      * @param string $page
+     *
      * @return array
      */
-    protected function addDefaultVariables($page) : array
+    protected function addDefaultVariables($page): array
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
@@ -185,23 +182,24 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
     /**
      * @param \Generated\Shared\Transfer\StorageProductTransfer $product
+     *
      * @return array
      */
-    protected function addProductVariables($product) : array
+    protected function addProductVariables($product): array
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
             $this->variable->getProductVariables($product)
         );
-
     }
 
     /**
      * @param array $category
      * @param array $products
+     *
      * @return array
      */
-    protected function addCategoryVariables($category, $products) : array
+    protected function addCategoryVariables($category, $products): array
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
@@ -212,14 +210,14 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     /**
      * @return array
      */
-    protected function addQuoteVariables() : array
+    protected function addQuoteVariables(): array
     {
         /**
          * @var Generated\Shared\Transfer\QuoteTransfer
          */
         $quoteTransfer = $this->cartClient->getQuote();
 
-        if (!$quoteTransfer || count($quoteTransfer->getItems()) == 0 ) {
+        if (!$quoteTransfer || count($quoteTransfer->getItems()) == 0) {
             return $this->dataLayerVariables;
         }
 
@@ -230,12 +228,12 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     }
 
     /**
-     * @param $orderTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
      * @return array
      */
     protected function addOrderVariables($orderTransfer)
     {
-
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
             $this->variable->getOrderVariables($orderTransfer)
@@ -245,7 +243,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     /**
      * @return string
      */
-    protected function getDataLayerTemplateName() : string
+    protected function getDataLayerTemplateName(): string
     {
         return '@GoogleTagManager/partials/data-layer.twig';
     }

@@ -7,8 +7,8 @@
  */
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use Spryker\Yves\Kernel\AbstractBundleConfig;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Spryker\Yves\Kernel\AbstractBundleConfig;
 
 class GoogleTagManagerConfig extends AbstractBundleConfig
 {
@@ -27,5 +27,4 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     {
         return $this->get(GoogleTagManagerConstants::ENABLED);
     }
-
 }

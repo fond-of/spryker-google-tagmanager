@@ -8,7 +8,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use Pyz\Yves\Cart\CartFactory;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Yves\Kernel\Container;
 
@@ -32,7 +31,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     /**
      * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return $container
+     * @return \Spryker\Yves\Kernel\Container $container
      */
     protected function provideCartClient(Container $container)
     {

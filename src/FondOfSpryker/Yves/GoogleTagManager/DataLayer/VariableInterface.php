@@ -7,7 +7,7 @@
  */
 
 namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
-use Generated\Shared\Transfer\ItemTransfer;
+
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
@@ -15,32 +15,37 @@ use Generated\Shared\Transfer\StorageProductTransfer;
 interface VariableInterface
 {
     /**
-     * @param $product
+     * @param string $page
+     *
      * @return mixed
      */
     public function getDefaultVariables($page);
 
     /**
      * @param Generated\Shared\Transfer\StorageProductTransfer $product
+     *
      * @return array
      */
     public function getProductVariables(StorageProductTransfer $product);
 
     /**
-     * @param $category
-     * @param $products
+     * @param array $category
+     * @param array $products
+     *
      * @return mixed
      */
     public function getCategoryVariables($category, $products);
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
      * @return array
      */
-    public function getQuoteVariables(QuoteTransfer $quote);
+    public function getQuoteVariables(QuoteTransfer $quoteTransfer);
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
      * @return array
      */
     public function getOrderVariables(OrderTransfer $orderTransfer);
