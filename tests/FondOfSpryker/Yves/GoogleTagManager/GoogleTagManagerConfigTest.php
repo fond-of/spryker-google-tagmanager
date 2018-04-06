@@ -37,4 +37,14 @@ class GoogleTagManagerConfigTest extends Unit
 
         $this->assertEquals('GTM-XXXX', $googleTagManagerConfig->getContainerID());
     }
+
+    /**
+     * @return void
+     */
+    public function testGetIsEnabled()
+    {
+        $googleTagManagerConfig = new GoogleTagManagerConfig();
+
+        $this->assertEquals(true, (bool)$googleTagManagerConfig->isEnabled());
+    }
 }

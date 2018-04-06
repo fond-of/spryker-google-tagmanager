@@ -3,13 +3,32 @@
 namespace FondOfSprykerTest\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
-use org\bovigo\vfs\vfsStream;
+use Spryker\Client\Cart\CartClientInterface;
 use Twig_Environment;
 
 class GoogleTagManagerTwigExtensionTest extends Unit
 {
+    /**
+     * @var \Spryker\Client\Cart\CartClientInterface |\PHPUnit\Framework\MockObject\MockObject|null
+     */
+    protected $cartClientMocK;
+
+    /**
+     * @var \FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension
+     */
+    protected $googleTagManagerTwigExtension;
+
+    /**
+     * @var \Twig_Environment
+     */
     protected $twigEnvironmentMock;
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable |\PHPUnit\Framework\MockObject\MockObject|null
+     */
+    protected $variableMock;
 
     /**
      * @var \org\bovigo\vfs\vfsStreamDirectory
@@ -21,20 +40,27 @@ class GoogleTagManagerTwigExtensionTest extends Unit
      */
     public function _before()
     {
+        $this->cartClientMocK = $this->getMockBuilder(CartClientInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addItem', 'addItems', 'changeItemQuantity', 'clearQuote', 'decreaseItemQuantity', 'getItemCount', 'getQuote', 'increaseItemQuantity', 'removeItem', 'removeItems', 'reloadItems', 'storeQuote'])
+            ->getMock();
 
         $this->twigEnvironmentMock = $this->getMockBuilder(Twig_Environment::class)
             ->disableOriginalConstructor()
             ->setMethods(['render'])
             ->getMock();
 
-        $this->vfsStreamDirectory = vfsStream::setup('root', null, [
-            'config' => [
-                'Shared' => [
-                    'stores.php' => file_get_contents(codecept_data_dir('stores.php')),
-                    'config_default.php' => file_get_contents(codecept_data_dir('config_default.php')),
-                ],
-            ],
-        ]);
+        $this->variableMock = $this->getMockBuilder(VariableInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getDefaultVariables', 'getCategoryVariables', 'getProductVariables', 'getQuoteVariables', 'getOrderVariables'])
+            ->getMock();
+
+        $this->googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(
+            'GTM-XXXX',
+            true,
+            $this->variableMock,
+            $this->cartClientMocK
+        );
     }
 
     /**
@@ -42,12 +68,12 @@ class GoogleTagManagerTwigExtensionTest extends Unit
      */
     public function testGetFunction()
     {
-        $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension('GTM-XXXX');
-        $functions = $googleTagManagerTwigExtension->getFunctions();
+        $functions = $this->googleTagManagerTwigExtension->getFunctions();
 
         $this->assertNotEmpty($functions);
-        $this->assertEquals(1, count($functions));
+        $this->assertEquals(2, count($functions));
         $this->assertEquals('fondOfSpykerGoogleTagManager', $functions[0]->getName());
+        $this->assertEquals('fondOfSpykerDataLayer', $functions[1]->getName());
     }
 
     /**
@@ -61,8 +87,8 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->willReturn($renderedTemplate);
 
         $templateName = '@GoogleTagManager/partials/tag.twig';
-        $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension('GTM-XXXX');
-        $renderer = $googleTagManagerTwigExtension->renderGoogleTagManager($this->twigEnvironmentMock, $templateName);
+
+        $renderer = $this->googleTagManagerTwigExtension->renderGoogleTagManager($this->twigEnvironmentMock, $templateName);
 
         $this->assertNotEmpty($renderer);
     }
@@ -78,9 +104,39 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->willReturn($renderedTemplate);
 
         $templateName = '@GoogleTagManager/partials/tag.twig';
-        $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(null);
+        $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(
+            '',
+            true,
+            $this->variableMock,
+            $this->cartClientMocK
+        );
+
         $renderer = $googleTagManagerTwigExtension->renderGoogleTagManager($this->twigEnvironmentMock, $templateName);
 
         $this->assertEmpty($renderer);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRenderDataLayer()
+    {
+        $renderedTemplate = '<script>var dataLayer = [()]</script>';
+
+        $this->cartClientMocK->expects($this->atLeastOnce())
+            ->method('getQuote')
+            ->willReturn(null);
+
+        $this->twigEnvironmentMock->expects($this->atLeastOnce())
+            ->method('render')
+            ->willReturn($renderedTemplate);
+
+        $this->variableMock->expects($this->atLeastOnce())
+            ->method('getDefaultVariables')
+            ->willReturn([]);
+
+        $renderer = $this->googleTagManagerTwigExtension->renderDataLayer($this->twigEnvironmentMock, 'home', []);
+
+        $this->assertNotEmpty($renderer);
     }
 }
