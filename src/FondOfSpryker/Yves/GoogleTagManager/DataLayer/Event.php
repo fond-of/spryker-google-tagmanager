@@ -7,8 +7,6 @@
  */
 namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
 
-use Spryker\Yves\Money\Plugin\MoneyPlugin;
-
 
 class Event implements EventInterface
 {

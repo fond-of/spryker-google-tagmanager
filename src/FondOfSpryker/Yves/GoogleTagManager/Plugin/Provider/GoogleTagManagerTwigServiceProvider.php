@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ */
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Provider;
 
 use Silex\Application;

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ */
+
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Pyz\Yves\Cart\CartFactory;
