@@ -6,6 +6,7 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\Container;
 
@@ -32,6 +33,11 @@ class GoogleTagManagerFactoryTest extends Unit
     protected $pluginMoneyMock;
 
     /**
+     * @var \Spryker\Client\Session\SessionClientInterface |\PHPUnit\Framework\MockObject\MockObject|null
+     */
+    protected $sessionClientMock;
+
+    /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable |\PHPUnit\Framework\MockObject\MockObject
      */
     protected $variableMock;
@@ -48,6 +54,11 @@ class GoogleTagManagerFactoryTest extends Unit
     {
         $this->cartClientMock = $this->getMockBuilder(CartClientInterface::class)
             ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->sessionClientMocK = $this->getMockBuilder(SessionClientInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['all', 'clear', 'get', 'getBag', 'getMetadataBag', 'getId', 'getName', 'has', 'invalidate', 'isStarted', 'migrate', 'registerBag', 'replace', 'remove', 'save', 'set', 'setContainer', 'setId', 'setName', 'start'])
             ->getMock();
 
         $this->configMock = $this->getMockBuilder(GoogleTagManagerConfig::class)
@@ -89,10 +100,12 @@ class GoogleTagManagerFactoryTest extends Unit
             ->method('offsetGet')
             ->withConsecutive(
                 [GoogleTagManagerDependencyProvider::PLUGIN_MONEY],
-                [GoogleTagManagerDependencyProvider::CART_CLIENT]
+                [GoogleTagManagerDependencyProvider::CART_CLIENT],
+                [GoogleTagManagerDependencyProvider::SESSION_CLIENT]
             )->willReturnOnConsecutiveCalls(
                 $this->pluginMoneyMock,
-                $this->cartClientMock
+                $this->cartClientMock,
+                $this->sessionClientMocK
             );
 
         $googleTagManagerFactory = new GoogleTagManagerFactory();

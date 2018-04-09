@@ -11,6 +11,7 @@ namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Twig\TwigExtension;
 use Twig_Environment;
 use Twig_SimpleFunction;
@@ -21,6 +22,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     const FUNCTION_DATA_LAYER = 'fondOfSpykerDataLayer';
 
     /**
+     * @var \Silex\Application
+     */
+    protected $app;
+
+    /**
      * @var string
      */
     protected $containerID;
@@ -29,6 +35,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @var \Spryker\Client\Cart\CartClientInterface
      */
     protected $cartClient;
+
+    /**
+     * @var \Spryker\Client\Session\SessionClientInterface
+     */
+    protected $sessionClient;
 
     /**
      * @var \Spryker\Yves\Cart\CartFactory
@@ -62,13 +73,16 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param bool $isEnabled
      * @param \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface $variable
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
+     * @param \Spryker\Client\Session\SessionClientInterface $sessionClient
      */
     public function __construct(
         string $containerID,
         bool $isEnabled,
         VariableInterface $variable,
-        CartClientInterface $cartClient
+        CartClientInterface $cartClient,
+        SessionClientInterface $sessionClient
     ) {
+        $this->sessionClient = $sessionClient;
         $this->containerID = $containerID;
         $this->cartClient = $cartClient;
         $this->isEnabled = $isEnabled;
@@ -223,7 +237,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getQuoteVariables($quoteTransfer)
+            $this->variable->getQuoteVariables($quoteTransfer, $this->sessionClient->getId())
         );
     }
 

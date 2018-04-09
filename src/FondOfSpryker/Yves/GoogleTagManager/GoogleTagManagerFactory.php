@@ -11,6 +11,8 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
+use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
 
@@ -28,7 +30,8 @@ class GoogleTagManagerFactory extends AbstractFactory
             $this->getContainerID(),
             $this->isEnabled(),
             $this->createDataLayerVariables(),
-            $this->createCartClient()
+            $this->createCartClient(),
+            $this->createSessionClient()
         );
     }
 
@@ -59,9 +62,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \Spryker\Yves\Kernel\Application
+     * @return \Spryker\Client\Cart\CartClientInterface;
      */
-    protected function createCartClient()
+    protected function createCartClient(): CartClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CLIENT);
     }
@@ -72,5 +75,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createMoneyPlugin(): MoneyPluginInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PLUGIN_MONEY);
+    }
+
+    /**
+     * @return \Spryker\Client\Session\SessionClientInterface;
+     */
+    protected function createSessionClient(): SessionClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::SESSION_CLIENT);
     }
 }

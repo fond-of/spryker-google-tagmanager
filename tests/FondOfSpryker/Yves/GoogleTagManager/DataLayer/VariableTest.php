@@ -196,7 +196,7 @@ class VariableTest extends Unit
             ->method('getStore')
             ->willReturn($this->storeTransferMock);
 
-        $variables = $this->variable->getQuoteVariables($this->quoteTransferMock);
+        $variables = $this->variable->getQuoteVariables($this->quoteTransferMock, 'SESSION_TEST');
 
         $this->assertNotEmpty($variables);
         $this->assertEquals('QUOTE', $variables['transactionEntity']);

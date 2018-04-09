@@ -15,8 +15,8 @@ use Spryker\Yves\Money\Plugin\MoneyPlugin;
 class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvider
 {
     const CART_CLIENT = 'CART_CLIENT';
-    const SALES_CLIENT = 'CART_CLIENT';
     const PLUGIN_MONEY = 'PLUGIN_MONEY';
+    const SESSION_CLIENT = 'SESSION_CLIENT';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -27,6 +27,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         $this->provideCartClient($container);
         $this->provideMoneyPlugin($container);
+        $this->provideSessionClient($container);
 
         return $container;
     }
@@ -55,6 +56,20 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $container[static::PLUGIN_MONEY] = function () {
             return new MoneyPlugin();
         };
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return void
+     */
+    protected function provideSessionClient(Container $container)
+    {
+        $container[static::SESSION_CLIENT] = function (Container $container) {
+            return $container->getLocator()->session()->client();
+        };
+
         return $container;
     }
 }

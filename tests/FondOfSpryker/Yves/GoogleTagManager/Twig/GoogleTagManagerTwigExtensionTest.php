@@ -6,6 +6,7 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Session\SessionClientInterface;
 use Twig_Environment;
 
 class GoogleTagManagerTwigExtensionTest extends Unit
@@ -19,6 +20,11 @@ class GoogleTagManagerTwigExtensionTest extends Unit
      * @var \FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension
      */
     protected $googleTagManagerTwigExtension;
+
+    /**
+     * @var \Spryker\Client\Session\SessionClientInterface |\PHPUnit\Framework\MockObject\MockObject|null
+     */
+    protected $sessionClientMock;
 
     /**
      * @var \Twig_Environment
@@ -45,6 +51,11 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->setMethods(['addItem', 'addItems', 'addValidItems', 'changeItemQuantity', 'clearQuote', 'decreaseItemQuantity', 'getItemCount', 'getQuote', 'increaseItemQuantity', 'removeItem', 'removeItems', 'reloadItems', 'storeQuote'])
             ->getMock();
 
+        $this->sessionClientMock = $this->getMockBuilder(SessionClientInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['all', 'clear', 'get', 'getBag', 'getMetadataBag', 'getId', 'getName', 'has', 'invalidate', 'isStarted', 'migrate', 'registerBag', 'replace', 'remove', 'save', 'set', 'setContainer', 'setId', 'setName', 'start'])
+            ->getMock();
+
         $this->twigEnvironmentMock = $this->getMockBuilder(Twig_Environment::class)
             ->disableOriginalConstructor()
             ->setMethods(['render'])
@@ -59,7 +70,8 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             'GTM-XXXX',
             true,
             $this->variableMock,
-            $this->cartClientMocK
+            $this->cartClientMocK,
+            $this->sessionClientMock
         );
     }
 
@@ -104,11 +116,13 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->willReturn($renderedTemplate);
 
         $templateName = '@GoogleTagManager/partials/tag.twig';
+
         $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(
             '',
             true,
             $this->variableMock,
-            $this->cartClientMocK
+            $this->cartClientMocK,
+            $this->sessionClientMock
         );
 
         $renderer = $googleTagManagerTwigExtension->renderGoogleTagManager($this->twigEnvironmentMock, $templateName);

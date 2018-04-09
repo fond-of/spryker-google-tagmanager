@@ -38,10 +38,11 @@ interface VariableInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param string $sessionId
      *
      * @return array
      */
-    public function getQuoteVariables(QuoteTransfer $quoteTransfer);
+    public function getQuoteVariables(QuoteTransfer $quoteTransfer, string $sessionId);
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer

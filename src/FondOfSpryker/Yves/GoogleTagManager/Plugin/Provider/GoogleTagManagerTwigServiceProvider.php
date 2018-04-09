@@ -26,7 +26,7 @@ class GoogleTagManagerTwigServiceProvider extends AbstractPlugin implements Serv
     {
         $twigExtension = $this
             ->getFactory()
-            ->createGoogleTagManagerTwigExtension();
+            ->createGoogleTagManagerTwigExtension($app);
 
         $app['twig'] = $app->share(
             $app->extend(

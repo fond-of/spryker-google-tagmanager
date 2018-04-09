@@ -103,10 +103,11 @@ class Variable implements VariableInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param string $sessionId
      *
      * @return array
      */
-    public function getQuoteVariables(QuoteTransfer $quoteTransfer): array
+    public function getQuoteVariables(QuoteTransfer $quoteTransfer, string $sessionId): array
     {
         $transactionProducts = [];
         $transactionProductsSkus = [];
@@ -127,7 +128,7 @@ class Variable implements VariableInterface
 
         return [
             'transactionEntity' => self::TRANSACTION_ENTITY_QUOTE,
-            'transactionId' => '',
+            'transactionId' => $sessionId,
             'transactionAffiliation' => $quoteTransfer->getStore()->getName(),
             'transactionTotal' => $this->formatPrice($total),
             'transactionTotalWithoutShippingAmount' => $this->formatPrice($totalWithoutShippingAmount),
