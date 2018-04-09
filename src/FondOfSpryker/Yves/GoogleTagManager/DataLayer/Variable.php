@@ -32,12 +32,12 @@ class Variable implements VariableInterface
 
     /**
      * Variable constructor.
-     * @param MoneyPluginInterface $moneyPlugin
+     *
+     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin
-    )
-    {
+    ) {
         $this->moneyPlugin = $moneyPlugin;
     }
 
@@ -124,7 +124,7 @@ class Variable implements VariableInterface
         if ($quoteTransfer->getShipment()) {
             $totalWithoutShippingAmount = $total - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
-        
+
         return [
             'transactionEntity' => self::TRANSACTION_ENTITY_QUOTE,
             'transactionId' => '',

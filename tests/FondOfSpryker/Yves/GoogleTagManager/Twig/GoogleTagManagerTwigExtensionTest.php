@@ -42,7 +42,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
     {
         $this->cartClientMocK = $this->getMockBuilder(CartClientInterface::class)
             ->disableOriginalConstructor()
-            ->setMethods(['addItem', 'addItems', 'changeItemQuantity', 'clearQuote', 'decreaseItemQuantity', 'getItemCount', 'getQuote', 'increaseItemQuantity', 'removeItem', 'removeItems', 'reloadItems', 'storeQuote'])
+            ->setMethods(['addItem', 'addItems', 'addValidItems', 'changeItemQuantity', 'clearQuote', 'decreaseItemQuantity', 'getItemCount', 'getQuote', 'increaseItemQuantity', 'removeItem', 'removeItems', 'reloadItems', 'storeQuote'])
             ->getMock();
 
         $this->twigEnvironmentMock = $this->getMockBuilder(Twig_Environment::class)
