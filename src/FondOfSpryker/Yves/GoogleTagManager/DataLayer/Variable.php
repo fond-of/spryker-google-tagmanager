@@ -124,8 +124,7 @@ class Variable implements VariableInterface
         if ($quoteTransfer->getShipment()) {
             $totalWithoutShippingAmount = $total - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
-
-        print get_class($quoteTransfer->getTotals()->getTaxTotal());
+        
         return [
             'transactionEntity' => self::TRANSACTION_ENTITY_QUOTE,
             'transactionId' => '',
