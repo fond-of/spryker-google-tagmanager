@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSprykerTest\Yves\DataLayer;
+namespace FondOfSpryker\Yves\DataLayer;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
@@ -9,13 +9,25 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\TotalsTransfer;
+use Generated\Shared\Transfer\TaxTotalTransfer;
+use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class VariableTest extends Unit
 {
     /**
+     * @var
+     */
+    protected $moneyPlugin;
+
+    /**
      * @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer |\PHPUnit\Framework\MockObject\MockObject
      */
     protected $orderTransferMock;
+
+    /**
+     * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface |\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $moneyPluginMock;
 
     /**
      * @var \Generated\Shared\Transfer\QuoteProductTransfer |\PHPUnit\Framework\MockObject\MockObject
@@ -26,6 +38,11 @@ class VariableTest extends Unit
      * @var \Generated\Shared\Transfer\StoreTransfer |\PHPUnit\Framework\MockObject\MockObject
      */
     protected $storeTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\TaxTotalTransfer |\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $taxTotalMock;
 
     /**
      * @var \Generated\Shared\Transfer\TotalsTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -51,6 +68,10 @@ class VariableTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->moneyPluginMock = $this->getMockBuilder(MoneyPluginInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->storageProductTransferMock = $this->getMockBuilder(StorageProductTransfer::class)
             ->disableOriginalConstructor()
             ->setMethods(['getIdProductAbstract', 'getName', 'getSku'])
@@ -61,9 +82,14 @@ class VariableTest extends Unit
             ->setMethods(['getName'])
             ->getMock();
 
+        $this->taxTotalMock = $this->getMockBuilder(TaxTotalTransfer::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAmount'])
+            ->getMock();
+
         $this->totalTransferMock = $this->getMockBuilder(TotalsTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getGrandTotal'])
+            ->setMethods(['getGrandTotal', 'getTaxTotal'])
             ->getMock();
 
         $this->quoteTransferMock = $this->getMockBuilder(QuoteTransfer::class)
@@ -71,7 +97,7 @@ class VariableTest extends Unit
             ->setMethods(['getTotals', 'getItems', 'getShipment', 'getStore'])
             ->getMock();
 
-        $this->variable = new Variable();
+        $this->variable = new Variable($this->moneyPluginMock);
     }
 
     /**
@@ -142,9 +168,17 @@ class VariableTest extends Unit
             ->method('getName')
             ->willReturn('store');
 
+        $this->taxTotalMock->expects($this->atLeastOnce())
+            ->method('getAmount')
+            ->willReturn(1990);
+
         $this->totalTransferMock->expects($this->atLeastOnce())
             ->method('getGrandTotal')
             ->willReturn(1990);
+
+        $this->totalTransferMock->expects($this->atLeastOnce())
+            ->method('getTaxTotal')
+            ->willReturn($this->taxTotalMock);
 
         $this->quoteTransferMock->expects($this->atLeastOnce())
             ->method('getTotals')

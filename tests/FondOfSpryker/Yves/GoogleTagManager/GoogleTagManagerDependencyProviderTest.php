@@ -1,9 +1,8 @@
 <?php
 
-namespace FondOfSprykerTest\Yves\GoogleTagManager;
+namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerDependencyProvider;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Shared\Kernel\BundleProxy;
 use Spryker\Yves\Kernel\Container;

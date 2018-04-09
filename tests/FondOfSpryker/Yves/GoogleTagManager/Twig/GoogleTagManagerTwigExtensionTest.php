@@ -1,10 +1,10 @@
 <?php
 
-namespace FondOfSprykerTest\Yves\GoogleTagManager;
+namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
-use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
+use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Twig_Environment;
 

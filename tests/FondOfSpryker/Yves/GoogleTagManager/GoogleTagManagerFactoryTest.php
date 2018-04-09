@@ -1,14 +1,12 @@
 <?php
 
-namespace FondOfSprykerTest\Yves\GoogleTagManager;
+namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerDependencyProvider;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory;
 use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\Container;
 
 class GoogleTagManagerFactoryTest extends Unit
@@ -27,6 +25,11 @@ class GoogleTagManagerFactoryTest extends Unit
      * @var null|\Spryker\Yves\Kernel\Container|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $containerMock;
+
+    /**
+     * @var \Spryker\Shared\Money\Dependency\Plugin
+     */
+    protected $pluginMoneyMock;
 
     /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable |\PHPUnit\Framework\MockObject\MockObject
@@ -56,6 +59,10 @@ class GoogleTagManagerFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->pluginMoneyMock = $this->getMockBuilder(MoneyPluginInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->variableMock = $this->getMockBuilder(VariableInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -80,8 +87,13 @@ class GoogleTagManagerFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('offsetGet')
-            ->with(GoogleTagManagerDependencyProvider::CART_CLIENT)
-            ->willReturn($this->cartClientMock);
+            ->withConsecutive(
+                [GoogleTagManagerDependencyProvider::PLUGIN_MONEY],
+                [GoogleTagManagerDependencyProvider::CART_CLIENT]
+            )->willReturnOnConsecutiveCalls(
+                $this->pluginMoneyMock,
+                $this->cartClientMock
+            );
 
         $googleTagManagerFactory = new GoogleTagManagerFactory();
         $googleTagManagerFactory->setConfig($this->configMock)

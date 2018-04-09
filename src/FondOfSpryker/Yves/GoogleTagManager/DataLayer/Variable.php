@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
-use Spryker\Yves\Money\Plugin\MoneyPlugin;
+use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class Variable implements VariableInterface
 {
@@ -24,6 +24,22 @@ class Variable implements VariableInterface
 
     const TRANSACTION_ENTITY_QUOTE = 'QUOTE';
     const TRANSACTION_ENTITY_ORDER = 'ORDER';
+
+    /**
+     * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     */
+    protected $moneyPlugin;
+
+    /**
+     * Variable constructor.
+     * @param MoneyPluginInterface $moneyPlugin
+     */
+    public function __construct(
+        MoneyPluginInterface $moneyPlugin
+    )
+    {
+        $this->moneyPlugin = $moneyPlugin;
+    }
 
     /**
      * @param string $page
@@ -109,6 +125,7 @@ class Variable implements VariableInterface
             $totalWithoutShippingAmount = $total - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
 
+        print get_class($quoteTransfer->getTotals()->getTaxTotal());
         return [
             'transactionEntity' => self::TRANSACTION_ENTITY_QUOTE,
             'transactionId' => '',
@@ -181,8 +198,6 @@ class Variable implements VariableInterface
      */
     protected function formatPrice($amount)
     {
-        $money = new MoneyPlugin();
-
-        return $money->convertIntegerToDecimal($amount);
+        return $this->moneyPlugin->convertIntegerToDecimal($amount);
     }
 }

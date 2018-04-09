@@ -1,9 +1,8 @@
 <?php
 
-namespace FondOfSprykerTest\Yves\GoogleTagManager;
+namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use org\bovigo\vfs\vfsStream;
 
 class GoogleTagManagerConfigTest extends Unit

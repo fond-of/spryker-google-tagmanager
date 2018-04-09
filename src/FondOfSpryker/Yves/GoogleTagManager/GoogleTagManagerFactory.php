@@ -11,6 +11,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
+use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
 
 /**
@@ -52,7 +53,9 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     protected function createDataLayerVariables(): VariableInterface
     {
-        return new Variable();
+        return new Variable(
+            $this->createMoneyPlugin()
+        );
     }
 
     /**
@@ -61,5 +64,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createCartClient()
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CLIENT);
+    }
+
+    /**
+     * @return \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     */
+    protected function createMoneyPlugin(): MoneyPluginInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PLUGIN_MONEY);
     }
 }
