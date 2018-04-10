@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Shared\Shipment\ShipmentConstants;
 
 class VariableBuilder implements VariableBuilderInterface
 {
@@ -156,6 +157,9 @@ class VariableBuilder implements VariableBuilderInterface
     {
         $transactionProducts = [];
         $transactionProductsSkus = [];
+        $shipmmentMethods = [];
+        $paymentMethods = [];
+        $expenses = [];
         $orderItems = $orderTransfer->getItems();
 
         if (count($orderItems) > 0) {
@@ -165,18 +169,42 @@ class VariableBuilder implements VariableBuilderInterface
             }
         }
 
+        if (count($orderTransfer->getShipmentMethods()) > 0) {
+            foreach ($orderTransfer->getShipmentMethods() as $shipmment) {
+                $shipmmentMethods[] = $shipmment->getName();
+            }
+        }
+
+        if (count($orderTransfer->getPayments()) > 0) {
+            foreach ($orderTransfer->getPayments() as $payment) {
+                $paymentMethods[] = $payment->getPaymentMethod();
+            }
+        }
+
+        if (count($orderTransfer->getExpenses())) {
+            foreach ($orderTransfer->getExpenses() as $expense) {
+                $expenses[$expense->getType()] = (!array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
+            }
+        }
+
+        if (array_key_exists(ShipmentConstants::SHIPMENT_EXPENSE_TYPE, $expenses)) {
+            $transactionTotalWithoutShippingAmount = $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConstants::SHIPMENT_EXPENSE_TYPE];
+        } else {
+            $transactionTotalWithoutShippingAmount = $orderTransfer->getTotals()->getGrandTotal();
+        }
+
         return [
             'transactionEntity' => self::TRANSACTION_ENTITY_ORDER,
             'transactionId' => $orderTransfer->getOrderReference(),
             'transactionDate' => $orderTransfer->getCreatedAt(),
             'transactionAffiliation' => $orderTransfer->getStore(),
             'transactionTotal' => $this->formatPrice($orderTransfer->getTotals()->getGrandTotal()),
-            'transactionTotalWithoutShippingAmount' => '',
+            'transactionTotalWithoutShippingAmount' => $this->formatPrice($transactionTotalWithoutShippingAmount),
             'transactionSubtotal' => $this->formatPrice($orderTransfer->getTotals()->getSubtotal()),
             'transactionTax' => $this->formatPrice($orderTransfer->getTotals()->getTaxTotal()->getAmount()),
-            'transactionShipping' => $orderTransfer->getShipment()->getMethod()->getName(),
-            'transactionPayment' => $orderTransfer->getPayment()->getPaymentMethod(),
-            'transactionCurrency' => $orderTransfer->getCurrency(),
+            'transactionShipping' => implode('-', $shipmmentMethods),
+            'transactionPayment' => implode('-', $paymentMethods),
+            'transactionCurrency' => $orderTransfer->getCurrencyIsoCode(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
         ];
