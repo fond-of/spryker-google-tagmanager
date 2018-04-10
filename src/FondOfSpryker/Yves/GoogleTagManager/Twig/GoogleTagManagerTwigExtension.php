@@ -8,8 +8,8 @@
 
 namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
 
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Twig\TwigExtension;
@@ -57,28 +57,23 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $isEnabled;
 
     /**
-     * @var \Spryker\Yves\Kernel\Application
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface
      */
-    protected $productClient;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface
-     */
-    protected $variable;
+    protected $variableBuilder;
 
     /**
      * GoogleTagManagerTwigExtension constructor
      *
      * @param string $containerID
      * @param bool $isEnabled
-     * @param \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface $variable
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface $variableBuilder
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
      * @param \Spryker\Client\Session\SessionClientInterface $sessionClient
      */
     public function __construct(
         string $containerID,
         bool $isEnabled,
-        VariableInterface $variable,
+        VariableBuilderInterface $variableBuilder,
         CartClientInterface $cartClient,
         SessionClientInterface $sessionClient
     ) {
@@ -86,7 +81,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         $this->containerID = $containerID;
         $this->cartClient = $cartClient;
         $this->isEnabled = $isEnabled;
-        $this->variable = $variable;
+        $this->variableBuilder = $variableBuilder;
     }
 
     /**
@@ -162,15 +157,15 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         $this->addDefaultVariables($page);
 
-        if ($page == Variable::PAGE_TYPE_PRODUCT) {
+        if ($page == VariableBuilder::PAGE_TYPE_PRODUCT) {
             $this->addProductVariables($params['product']);
         }
 
-        if ($page == Variable::PAGE_TYPE_CATEGORY) {
+        if ($page == VariableBuilder::PAGE_TYPE_CATEGORY) {
             $this->addCategoryVariables($params['category'], $params['products']);
         }
 
-        if ($page == Variable::PAGE_TYPE_ORDER) {
+        if ($page == VariableBuilder::PAGE_TYPE_ORDER) {
             $this->addOrderVariables($params['order']);
         } else {
             $this->addQuoteVariables();
@@ -190,7 +185,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getDefaultVariables($page)
+            $this->variableBuilder->getDefaultVariables($page)
         );
     }
 
@@ -203,7 +198,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getProductVariables($product)
+            $this->variableBuilder->getProductVariables($product)
         );
     }
 
@@ -217,7 +212,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getCategoryVariables($category, $products)
+            $this->variableBuilder->getCategoryVariables($category, $products)
         );
     }
 
@@ -237,7 +232,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getQuoteVariables($quoteTransfer, $this->sessionClient->getId())
+            $this->variableBuilder->getQuoteVariables($quoteTransfer, $this->sessionClient->getId())
         );
     }
 
@@ -250,7 +245,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variable->getOrderVariables($orderTransfer)
+            $this->variableBuilder->getOrderVariables($orderTransfer)
         );
     }
 

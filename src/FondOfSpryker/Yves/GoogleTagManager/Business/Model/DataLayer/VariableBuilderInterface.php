@@ -6,13 +6,13 @@
  * @author      Jozsef Geng <jozsef.geng@fondof.de>
  */
 
-namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 
-interface VariableInterface
+interface VariableBuilderInterface
 {
     /**
      * @param string $page

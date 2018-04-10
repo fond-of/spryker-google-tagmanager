@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
@@ -32,9 +32,9 @@ class GoogleTagManagerTwigExtensionTest extends Unit
     protected $twigEnvironmentMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable |\PHPUnit\Framework\MockObject\MockObject|null
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface |\PHPUnit\Framework\MockObject\MockObject|null
      */
-    protected $variableMock;
+    protected $variableBuilderMock;
 
     /**
      * @var \org\bovigo\vfs\vfsStreamDirectory
@@ -61,7 +61,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->setMethods(['render'])
             ->getMock();
 
-        $this->variableMock = $this->getMockBuilder(VariableInterface::class)
+        $this->variableBuilderMock = $this->getMockBuilder(VariableBuilderInterface::class)
             ->disableOriginalConstructor()
             ->setMethods(['getDefaultVariables', 'getCategoryVariables', 'getProductVariables', 'getQuoteVariables', 'getOrderVariables'])
             ->getMock();
@@ -69,7 +69,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
         $this->googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(
             'GTM-XXXX',
             true,
-            $this->variableMock,
+            $this->variableBuilderMock,
             $this->cartClientMocK,
             $this->sessionClientMock
         );
@@ -120,7 +120,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
         $googleTagManagerTwigExtension = new GoogleTagManagerTwigExtension(
             '',
             true,
-            $this->variableMock,
+            $this->variableBuilderMock,
             $this->cartClientMocK,
             $this->sessionClientMock
         );
@@ -145,7 +145,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->method('render')
             ->willReturn($renderedTemplate);
 
-        $this->variableMock->expects($this->atLeastOnce())
+        $this->variableBuilderMock->expects($this->atLeastOnce())
             ->method('getDefaultVariables')
             ->willReturn([]);
 

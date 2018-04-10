@@ -5,15 +5,16 @@
  *
  * @author      Jozsef Geng <jozsef.geng@fondof.de>
  */
-namespace FondOfSpryker\Yves\GoogleTagManager\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
+use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
-class Variable implements VariableInterface
+class VariableBuilder implements VariableBuilderInterface
 {
     const PAGE_TYPE_CATEGORY = "category";
     const PAGE_TYPE_CART = "cart";
@@ -31,14 +32,22 @@ class Variable implements VariableInterface
     protected $moneyPlugin;
 
     /**
-     * Variable constructor.
+     * @var \Spryker\Client\Product\ProductClientInterface
+     */
+    protected $productClient;
+
+    /**
+     * VariableBuilder constructor.
      *
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
+     * @param \Spryker\Client\Product\ProductClientInterface $productClient
      */
     public function __construct(
-        MoneyPluginInterface $moneyPlugin
+        MoneyPluginInterface $moneyPlugin,
+        ProductClientInterface $productClient
     ) {
         $this->moneyPlugin = $moneyPlugin;
+        $this->productClient = $productClient;
     }
 
     /**
@@ -64,7 +73,7 @@ class Variable implements VariableInterface
             'productId' => $product->getIdProductAbstract(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
-            'productPrice' => '',
+            'productPrice' => $this->formatPrice($product->getPrice()),
             'productPriceExcludingTax' => '',
             'productTax' => '',
             'productTaxRate' => '',

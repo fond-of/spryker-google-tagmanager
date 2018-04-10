@@ -3,9 +3,10 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
+use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableBuilderInterface;
 use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\Container;
@@ -74,7 +75,11 @@ class GoogleTagManagerFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->variableMock = $this->getMockBuilder(VariableInterface::class)
+        $this->productClientMock = $this->getMockBuilder(ProductClientInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->variableMock = $this->getMockBuilder(VariableBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -100,10 +105,12 @@ class GoogleTagManagerFactoryTest extends Unit
             ->method('offsetGet')
             ->withConsecutive(
                 [GoogleTagManagerDependencyProvider::PLUGIN_MONEY],
+                [GoogleTagManagerDependencyProvider::PRODUCT_CLIENT],
                 [GoogleTagManagerDependencyProvider::CART_CLIENT],
                 [GoogleTagManagerDependencyProvider::SESSION_CLIENT]
             )->willReturnOnConsecutiveCalls(
                 $this->pluginMoneyMock,
+                $this->productClientMock,
                 $this->cartClientMock,
                 $this->sessionClientMocK
             );

@@ -1,8 +1,9 @@
 <?php
 
-namespace FondOfSpryker\Yves\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -10,9 +11,10 @@ use Generated\Shared\Transfer\StorageProductTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\TotalsTransfer;
 use Generated\Shared\Transfer\TaxTotalTransfer;
+use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
-class VariableTest extends Unit
+class VariableBuilderTest extends Unit
 {
     /**
      * @var
@@ -33,6 +35,11 @@ class VariableTest extends Unit
      * @var \Generated\Shared\Transfer\QuoteProductTransfer |\PHPUnit\Framework\MockObject\MockObject
      */
     protected $storageProductTransferMock;
+
+    /**
+     * @var \Spryker\Client\Product\ProductClientInterfac |\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $productClient;
 
     /**
      * @var \Generated\Shared\Transfer\StoreTransfer |\PHPUnit\Framework\MockObject\MockObject
@@ -72,9 +79,13 @@ class VariableTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->productClient = $this->getMockBuilder( ProductClientInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->storageProductTransferMock = $this->getMockBuilder(StorageProductTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getIdProductAbstract', 'getName', 'getSku'])
+            ->setMethods(['getIdProductAbstract', 'getName', 'getPrice', 'getSku'])
             ->getMock();
 
         $this->storeTransferMock = $this->getMockBuilder(StoreTransfer::class)
@@ -97,7 +108,7 @@ class VariableTest extends Unit
             ->setMethods(['getTotals', 'getItems', 'getShipment', 'getStore'])
             ->getMock();
 
-        $this->variable = new Variable($this->moneyPluginMock);
+        $this->variableBuilder = new VariableBuilder($this->moneyPluginMock, $this->productClient);
     }
 
     /**
@@ -105,7 +116,7 @@ class VariableTest extends Unit
      */
     public function testGetDefaultVariables()
     {
-        $variables = $this->variable->getDefaultVariables('home');
+        $variables = $this->variableBuilder->getDefaultVariables('home');
 
         $this->assertNotEmpty($variables);
         $this->assertEquals('home', $variables['pageType']);
@@ -128,7 +139,11 @@ class VariableTest extends Unit
             ->method('getSku')
             ->willReturn('sku');
 
-        $variables = $this->variable->getProductVariables($this->storageProductTransferMock);
+        $this->storageProductTransferMock->expects($this->atLeastOnce())
+            ->method('getPrice')
+            ->willReturn(1990);
+
+        $variables = $this->variableBuilder->getProductVariables($this->storageProductTransferMock);
 
         $this->assertNotEmpty($variables);
         $this->assertEquals('1', $variables['productId']);
@@ -154,7 +169,7 @@ class VariableTest extends Unit
             ],
         ];
 
-        $variables = $this->variable->getCategoryVariables($category, $products);
+        $variables = $this->variableBuilder->getCategoryVariables($category, $products);
         $this->assertNotEmpty($variables);
         $this->assertEquals(1, $variables['categoryId']);
     }
@@ -196,7 +211,7 @@ class VariableTest extends Unit
             ->method('getStore')
             ->willReturn($this->storeTransferMock);
 
-        $variables = $this->variable->getQuoteVariables($this->quoteTransferMock, 'SESSION_TEST');
+        $variables = $this->variableBuilder->getQuoteVariables($this->quoteTransferMock, 'SESSION_TEST');
 
         $this->assertNotEmpty($variables);
         $this->assertEquals('QUOTE', $variables['transactionEntity']);

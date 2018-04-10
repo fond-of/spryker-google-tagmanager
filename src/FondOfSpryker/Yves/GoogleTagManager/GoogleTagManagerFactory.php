@@ -8,10 +8,10 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\Variable;
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
+use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -29,9 +29,20 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new GoogleTagManagerTwigExtension(
             $this->getContainerID(),
             $this->isEnabled(),
-            $this->createDataLayerVariables(),
+            $this->createDataLayerVariableBuilder(),
             $this->createCartClient(),
             $this->createSessionClient()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface
+     */
+    public function createDataLayerVariableBuilder()
+    {
+        return new VariableBuilder(
+            $this->createMoneyPlugin(),
+            $this->createProductClient()
         );
     }
 
@@ -52,17 +63,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableInterface
-     */
-    protected function createDataLayerVariables(): VariableInterface
-    {
-        return new Variable(
-            $this->createMoneyPlugin()
-        );
-    }
-
-    /**
-     * @return \Spryker\Client\Cart\CartClientInterface;
+     * @return \Spryker\Client\Cart\CartClientInterface CartClientInterface
      */
     protected function createCartClient(): CartClientInterface
     {
@@ -75,6 +76,14 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createMoneyPlugin(): MoneyPluginInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PLUGIN_MONEY);
+    }
+
+    /**
+     * @return \Spryker\Client\product\ProductClientInterface
+     */
+    protected function createProductClient(): ProductClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_CLIENT);
     }
 
     /**
