@@ -3,7 +3,7 @@
 /**
  * Google Tag Manager Data Layer Variables
  *
- * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
  */
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
@@ -87,7 +87,7 @@ class VariableBuilder implements VariableBuilderInterface
      *
      * @return array
      */
-    public function getCategoryVariables($category, $products): array
+    public function getCategoryVariables(array $category, array $products): array
     {
         $categoryProducts = [];
         $productSkus = [];

@@ -3,7 +3,7 @@
 /**
  * Google Tag Manager Data Layer Variables
  *
- * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
  */
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
@@ -34,7 +34,7 @@ interface VariableBuilderInterface
      *
      * @return mixed
      */
-    public function getCategoryVariables($category, $products);
+    public function getCategoryVariables(array $category, array $products);
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

@@ -3,7 +3,7 @@
 /**
  * Google Tag Manager tracking integration for Spryker
  *
- * @author      Jozsef Geng <jozsef.geng@fondof.de>
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
  */
 
 namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
