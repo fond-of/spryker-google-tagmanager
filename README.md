@@ -38,17 +38,17 @@ $this->application->register(new GoogleTagManagerTwigServiceProvider());
   between <head></head> tags
   
   {% block googletagmanager_data_layer %} {{ fondOfSpykerDataLayer('other', {}) }}{% endblock %} 
-  {{ fondOfSpykerGoogleTagManager('@GoogleTagManager/partials/tag.twig') }}
+  {{ googleTagManager('@GoogleTagManager/partials/tag.twig') }}
   
   after <body> tag
-  {{ fondOfSpykerGoogleTagManager('@GoogleTagManager/partials/tag-noscript.twig') }}
+  {{ googleTagManager('@GoogleTagManager/partials/tag-noscript.twig') }}
 ```
 
 ```
   Catalog/catalog/index.twig 
   {% block googletagmanager_data_layer %}
       {% set params = { 'category' : category, 'products' : products} %}
-      {{ fondOfSpykerDataLayer('category', params) }}
+      {{ dataLayer('category', params) }}
   {% endblock %}
 ```
 
@@ -56,14 +56,14 @@ $this->application->register(new GoogleTagManagerTwigServiceProvider());
   Product/product/detail.twig 
   {% block googletagmanager_data_layer %}
       {% set params = { 'product' : product} %}
-      {{ fondOfSpykerDataLayer('product', params) }}
+      {{ dataLayer('product', params) }}
   {% endblock %}
 ```
 
 ```
   Cart/cart/index.twig 
   {% block googletagmanager_data_layer %}
-      {{ fondOfSpykerDataLayer('cart', {}) }}
+      {{ dataLayer('cart', {}) }}
   {% endblock %}
 ```
 
@@ -71,7 +71,7 @@ $this->application->register(new GoogleTagManagerTwigServiceProvider());
   Checkout/checkout/partial/success.twig 
   {% block googletagmanager_data_layer %}
       {% set params = { 'order' : orderTransfer} %}
-      {{ fondOfSpykerDataLayer('order', params) }}
+      {{ dataLayer('order', params) }}
   {% endblock %}
 ```
 

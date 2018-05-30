@@ -15,7 +15,7 @@ class GoogleTagManagerDependencyProviderTest extends Unit
     protected $bundleProxyMock;
 
     /**
-     * @var \Spryker\Client\Cart\CartClient|\PHPUnit\Framework\MockObject\MockObject|null
+     * @var \Spryker\Client\Cart\CartClientInterface|\PHPUnit\Framework\MockObject\MockObject|null
      */
     protected $cartClientMock;
 

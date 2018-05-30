@@ -108,6 +108,11 @@ class VariableBuilderTest extends Unit
             ->setMethods(['getTotals', 'getItems', 'getShipment', 'getStore'])
             ->getMock();
 
+        $this->orderTransferMock = $this->getMockBuilder(OrderTransfer::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getItems', 'getExpenses', 'getPayments', 'getShipmentMethods'])
+            ->getMock();
+
         $this->variableBuilder = new VariableBuilder($this->moneyPluginMock, $this->productClient);
     }
 
@@ -219,12 +224,28 @@ class VariableBuilderTest extends Unit
 
     /**
      * @return void
-     */
+
     public function testGetOrderVariables()
     {
-        /*$variables = $this->variable->getOrderVariables($this->quoteTransferMock);
+        $this->orderTransferMock->expects($this->atLeastOnce())
+            ->method('getItems')
+            ->willReturn([]);
+
+        $this->orderTransferMock->expects($this->atLeastOnce())
+            ->method('getExpenses')
+            ->willReturn(null);
+
+        $this->orderTransferMock->expects($this->atLeastOnce())
+            ->method('getShipmentMethods')
+            ->willReturn(null);
+
+        $this->orderTransferMock->expects($this->atLeastOnce())
+            ->method('getPayments')
+            ->willReturn(null);
+
+        $variables = $this->variableBuilder->getOrderVariables($this->orderTransferMock);
 
         $this->assertNotEmpty($variables);
-        $this->assertEquals('ORDER', $variables['transactionEntity']);*/
-    }
+        $this->assertEquals('ORDER', $variables['transactionEntity']);
+    }*/
 }

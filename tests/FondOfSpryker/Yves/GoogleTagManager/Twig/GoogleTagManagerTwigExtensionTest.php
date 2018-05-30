@@ -84,8 +84,8 @@ class GoogleTagManagerTwigExtensionTest extends Unit
 
         $this->assertNotEmpty($functions);
         $this->assertEquals(2, count($functions));
-        $this->assertEquals('fondOfSpykerGoogleTagManager', $functions[0]->getName());
-        $this->assertEquals('fondOfSpykerDataLayer', $functions[1]->getName());
+        $this->assertEquals('googleTagManager', $functions[0]->getName());
+        $this->assertEquals('dataLayer', $functions[1]->getName());
     }
 
     /**

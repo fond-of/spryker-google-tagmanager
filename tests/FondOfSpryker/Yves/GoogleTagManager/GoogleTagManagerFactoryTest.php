@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Yves\GoogleTagManager\DataLayer\VariableBuilderInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
 use FondOFSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Product\ProductClientInterface;
@@ -122,5 +122,33 @@ class GoogleTagManagerFactoryTest extends Unit
         $twigExtension = $googleTagManagerFactory->createGoogleTagManagerTwigExtension();
 
         $this->assertInstanceOf(GoogleTagManagerTwigExtension::class, $twigExtension);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateDataLayerVariableBuilder()
+    {
+        $this->containerMock->expects($this->atLeastOnce())
+            ->method('offsetGet')
+            ->withConsecutive(
+                [GoogleTagManagerDependencyProvider::PLUGIN_MONEY],
+                [GoogleTagManagerDependencyProvider::PRODUCT_CLIENT],
+                [GoogleTagManagerDependencyProvider::CART_CLIENT],
+                [GoogleTagManagerDependencyProvider::SESSION_CLIENT]
+            )->willReturnOnConsecutiveCalls(
+                $this->pluginMoneyMock,
+                $this->productClientMock,
+                $this->cartClientMock,
+                $this->sessionClientMocK
+            );
+
+        $googleTagManagerFactory = new GoogleTagManagerFactory();
+        $googleTagManagerFactory->setConfig($this->configMock)
+            ->setContainer($this->containerMock);
+
+        $variableBuidler = $googleTagManagerFactory->createDataLayerVariableBuilder();
+
+        $this->assertInstanceOf(VariableBuilderInterface::class, $variableBuidler);
     }
 }

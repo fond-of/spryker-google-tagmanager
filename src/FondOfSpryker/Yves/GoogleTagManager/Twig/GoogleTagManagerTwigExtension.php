@@ -18,8 +18,8 @@ use Twig_SimpleFunction;
 
 class GoogleTagManagerTwigExtension extends TwigExtension
 {
-    const FUNCTION_GOOGLE_TAG_MANAGER = 'fondOfSpykerGoogleTagManager';
-    const FUNCTION_DATA_LAYER = 'fondOfSpykerDataLayer';
+    const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
+    const FUNCTION_DATA_LAYER = 'dataLayer';
 
     /**
      * @var \Silex\Application
