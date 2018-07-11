@@ -39,9 +39,15 @@ class VariableBuilder implements VariableBuilderInterface
     protected $productClient;
 
     /**
+     * @var \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
+     */
+    protected $priceCalculationHelper;
+
+    /**
      * VariableBuilder constructor.
      *
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
+     * @param \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
      * @param \Spryker\Client\Product\ProductClientInterface $productClient
      */
     public function __construct(
@@ -51,6 +57,7 @@ class VariableBuilder implements VariableBuilderInterface
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->productClient = $productClient;
+        $this->priceCalculationHelper = $priceCalculationHelper;
     }
 
     /**
