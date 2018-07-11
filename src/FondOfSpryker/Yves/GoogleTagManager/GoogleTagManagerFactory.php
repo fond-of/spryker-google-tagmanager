@@ -15,6 +15,7 @@ use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
+use Spryker\Zed\Tax\Business\Model\PriceCalculationHelper;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
@@ -42,6 +43,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new VariableBuilder(
             $this->createMoneyPlugin(),
+            $this->createPriceCalculationHelper(),
             $this->createProductClient()
         );
     }
@@ -92,5 +94,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createSessionClient(): SessionClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::SESSION_CLIENT);
+    }
+
+    /**
+     * @return \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
+     */
+    public function createPriceCalculationHelper()
+    {
+        return new PriceCalculationHelper();
     }
 }

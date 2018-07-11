@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
+use Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface;
 
 class VariableBuilder implements VariableBuilderInterface
 {
@@ -45,6 +46,7 @@ class VariableBuilder implements VariableBuilderInterface
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
+        PriceCalculationHelperInterface $priceCalculationHelper,
         ProductClientInterface $productClient
     ) {
         $this->moneyPlugin = $moneyPlugin;
@@ -75,9 +77,8 @@ class VariableBuilder implements VariableBuilderInterface
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            'productPriceExcludingTax' => '',
-            'productTax' => '',
-            'productTaxRate' => '',
+            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), $product->getTaxRate())),
+            'productTaxRate' => $product->getTaxRate(),
         ];
     }
 
