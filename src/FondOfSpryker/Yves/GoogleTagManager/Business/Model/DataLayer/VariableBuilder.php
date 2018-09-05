@@ -233,7 +233,6 @@ class VariableBuilder implements VariableBuilderInterface
             'priceexcludingtax' => ($product->getUnitNetPrice()) ? $this->formatPrice($product->getUnitNetPrice()) :  $this->formatPrice($product->getUnitPrice() - $product->getUnitTaxAmount()),
             'tax' => $this->formatPrice($product->getUnitTaxAmount()),
             'taxrate' => $product->getTaxRate(),
-            'quantity' => $product->getQuantity()
         ];
     }
 
