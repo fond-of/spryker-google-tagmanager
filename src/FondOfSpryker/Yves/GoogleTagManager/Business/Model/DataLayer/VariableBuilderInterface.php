@@ -9,8 +9,8 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\StorageProductTransfer;
 
 interface VariableBuilderInterface
 {
@@ -22,11 +22,10 @@ interface VariableBuilderInterface
     public function getDefaultVariables($page);
 
     /**
-     * @param Generated\Shared\Transfer\StorageProductTransfer $product
-     *
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
      * @return array
      */
-    public function getProductVariables(StorageProductTransfer $product);
+    public function getProductVariables(ProductViewTransfer $product);
 
     /**
      * @param array $category

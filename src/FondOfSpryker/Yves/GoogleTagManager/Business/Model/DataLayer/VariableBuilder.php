@@ -9,8 +9,8 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
@@ -73,19 +73,23 @@ class VariableBuilder implements VariableBuilderInterface
     }
 
     /**
-     * @param Generated\Shared\Transfer\StorageProductTransfer $product
-     *
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
      * @return array
      */
-    public function getProductVariables(StorageProductTransfer $product): array
+    public function getProductVariables(ProductViewTransfer $product): array
     {
         return [
             'productId' => $product->getIdProductAbstract(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), $product->getTaxRate())),
-            'productTaxRate' => $product->getTaxRate(),
+            /*'productPriceExcludingTax' => $this->formatPrice(
+                $this->priceCalculationHelper->getNetValueFromPrice(
+                    $product->getPrice(),
+                    $product->getTaxRate()
+                )
+            ),
+            'productTaxRate' => $product->getTaxRate(),*/
         ];
     }
 
