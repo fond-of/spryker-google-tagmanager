@@ -37,7 +37,6 @@ class VariableBuilder implements VariableBuilderInterface
      * @var \Spryker\Client\Product\ProductClientInterface
      */
     protected $productClient;
-
     /**
      * @var \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
      */
