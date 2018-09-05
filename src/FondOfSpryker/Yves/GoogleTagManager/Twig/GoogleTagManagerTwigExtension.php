@@ -166,6 +166,8 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         }
 
         if ($page == VariableBuilder::PAGE_TYPE_ORDER) {
+            dump($params['order']);
+
             $this->addOrderVariables($params['order']);
         } else {
             $this->addQuoteVariables();
