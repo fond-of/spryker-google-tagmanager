@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "spryker/cart": "^4.0.0",
+    "spryker/cart": "^5.2.0",
     "spryker/catalog": "^5.0.0",
     "spryker/kernel": "^3.0.0",
     "spryker/money": "^2.0.0",
