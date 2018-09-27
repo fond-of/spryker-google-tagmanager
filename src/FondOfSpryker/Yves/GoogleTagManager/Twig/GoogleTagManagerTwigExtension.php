@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Google Tag Manager tracking integration for Spryker
- *
- * @author      Jozsef Geng <gengjozsef86@gmail.com>
- */
-
 namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;

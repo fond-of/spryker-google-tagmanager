@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Google Tag Manager Data Layer Variables
- *
- * @author      Jozsef Geng <gengjozsef86@gmail.com>
- */
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use Generated\Shared\Transfer\ItemTransfer;
