@@ -12,8 +12,10 @@ use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Client\Product\ProductClientInterface;
+use Spryker\Shared\Config\Config;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
+use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface;
 
 class VariableBuilder implements VariableBuilderInterface
@@ -83,13 +85,9 @@ class VariableBuilder implements VariableBuilderInterface
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            /*'productPriceExcludingTax' => $this->formatPrice(
-                $this->priceCalculationHelper->getNetValueFromPrice(
-                    $product->getPrice(),
-                    $product->getTaxRate()
-                )
-            ),
-            'productTaxRate' => $product->getTaxRate(),*/
+            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(),Config::get(TaxConstants::DEFAULT_TAX_RATE))),
+            'productTax' => $this->priceCalculationHelper->getTaxValueFromPrice($product->getPrice(), Config::get(TaxConstants::DEFAULT_TAX_RATE)),
+            'productTaxRate' => Config::get(TaxConstants::DEFAULT_TAX_RATE)
         ];
     }
 
