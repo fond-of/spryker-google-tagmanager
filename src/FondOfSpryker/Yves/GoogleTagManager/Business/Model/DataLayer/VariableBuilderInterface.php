@@ -17,6 +17,7 @@ interface VariableBuilderInterface
 
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $product
+     *
      * @return array
      */
     public function getProductVariables(ProductViewTransfer $product);

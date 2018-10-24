@@ -71,6 +71,7 @@ class VariableBuilder implements VariableBuilderInterface
 
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $product
+     *
      * @return array
      */
     public function getProductVariables(ProductViewTransfer $product): array
@@ -80,9 +81,9 @@ class VariableBuilder implements VariableBuilderInterface
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(),Config::get(TaxConstants::DEFAULT_TAX_RATE))),
+            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), Config::get(TaxConstants::DEFAULT_TAX_RATE))),
             'productTax' => $this->priceCalculationHelper->getTaxValueFromPrice($product->getPrice(), Config::get(TaxConstants::DEFAULT_TAX_RATE)),
-            'productTaxRate' => Config::get(TaxConstants::DEFAULT_TAX_RATE)
+            'productTaxRate' => Config::get(TaxConstants::DEFAULT_TAX_RATE),
         ];
     }
 
@@ -212,11 +213,12 @@ class VariableBuilder implements VariableBuilderInterface
             'transactionCurrency' => $orderTransfer->getCurrencyIsoCode(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
+            'customerEmail' => $orderTransfer->getBillingAddress()->getEmail(),
         ];
     }
 
     /**
-     * @param Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $product
      *
      * @return array
      */
