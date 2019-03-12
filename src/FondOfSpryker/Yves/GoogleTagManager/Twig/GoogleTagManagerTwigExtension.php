@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
+namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
