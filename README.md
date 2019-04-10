@@ -25,13 +25,21 @@ $config[GoogleTagManagerConstants::CONTAINER_ID] = 'GTM-XXXX';
 $config[GoogleTagManagerConstants::ENABLED] = true;
 ```
 
-## 3. Add twig service provider to YvesBootstrap.php in registerServiceProviders()
+## 3. Include the namespace as a core namespace in the configuration file 
+```
+$config[KernelConstants::CORE_NAMESPACES] = [
+    [...]
+    'FondOfSpryker'
+];
+```
+
+## 4. Add twig service provider to YvesBootstrap.php in registerServiceProviders()
 
 ```
 $this->application->register(new GoogleTagManagerTwigServiceProvider());
 ```
 
-## 4. Add the Twig Extension in the neccessary Twig Templates
+## 5. Add the Twig Extension in the neccessary Twig Templates
 
 ```
   Application/layout/layout.twig 
