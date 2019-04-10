@@ -37,7 +37,7 @@ $this->application->register(new GoogleTagManagerTwigServiceProvider());
   Application/layout/layout.twig 
   between <head></head> tags
   
-  {% block googletagmanager_data_layer %} {{ fondOfSpykerDataLayer('other', {}) }}{% endblock %} 
+  {% block googletagmanager_data_layer %} {{ dataLayer('other', {}) }}{% endblock %} 
   {{ googleTagManager('@GoogleTagManager/partials/tag.twig') }}
   
   after <body> tag
