@@ -1,16 +1,20 @@
 <?php
 
+/**
+ * Google Tag Manager Data Layer Variables
+ *
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
+ */
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
-use Generated\Shared\Transfer\ProductViewTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
-use Spryker\Shared\Config\Config;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
-use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface;
 
 class VariableBuilder implements VariableBuilderInterface
@@ -24,6 +28,11 @@ class VariableBuilder implements VariableBuilderInterface
 
     const TRANSACTION_ENTITY_QUOTE = 'QUOTE';
     const TRANSACTION_ENTITY_ORDER = 'ORDER';
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
+     */
+    protected $config;
 
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
@@ -50,11 +59,13 @@ class VariableBuilder implements VariableBuilderInterface
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
         PriceCalculationHelperInterface $priceCalculationHelper,
-        ProductClientInterface $productClient
+        ProductClientInterface $productClient,
+        GoogleTagManagerConfig $config
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->productClient = $productClient;
         $this->priceCalculationHelper = $priceCalculationHelper;
+        $this->config = $config;
     }
 
     /**
@@ -70,21 +81,45 @@ class VariableBuilder implements VariableBuilderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
      *
      * @return array
      */
-    public function getProductVariables(ProductViewTransfer $product): array
+    public function getProductVariables(StorageProductTransfer $product): array
     {
-        return [
+        $variables = [
             'productId' => $product->getIdProductAbstract(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), Config::get(TaxConstants::DEFAULT_TAX_RATE))),
-            'productTax' => $this->priceCalculationHelper->getTaxValueFromPrice($product->getPrice(), Config::get(TaxConstants::DEFAULT_TAX_RATE)),
-            'productTaxRate' => Config::get(TaxConstants::DEFAULT_TAX_RATE),
+            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), $product->getTaxRate())),
+            'productTaxRate' => $product->getTaxRate(),
         ];
+
+        if ($this->getProductSpecialPrice($product) !== null ) {
+            $variables['productSpecialPrice'] = $this->getProductSpecialPrice($product);
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
+     */
+    protected function getProductSpecialPrice(StorageProductTransfer $product)
+    {
+        $time = time();
+        $specialPrice = $this->formatPrice(intval($product->getAttributes()[$this->config->getSpecialPriceAttribute()]));
+        $specialPriceFrom = $product->getAttributes()[$this->config->getSpecialPriceFromAttribute()];
+        $specialPriceTo = $product->getAttributes()[$this->config->getSpecialPriceToAttribute()];
+
+        if ($specialPrice && ( ($specialPriceFrom != null && $time >= strtotime($specialPriceFrom)
+                && ( $specialPriceTo == null || $time <= strtotime($specialPriceTo))))
+        ) {
+            return $specialPrice;
+        }
+
+        return null;
     }
 
     /**
@@ -232,7 +267,7 @@ class VariableBuilder implements VariableBuilderInterface
             'priceexcludingtax' => ($product->getUnitNetPrice()) ? $this->formatPrice($product->getUnitNetPrice()) :  $this->formatPrice($product->getUnitPrice() - $product->getUnitTaxAmount()),
             'tax' => $this->formatPrice($product->getUnitTaxAmount()),
             'taxrate' => $product->getTaxRate(),
-            'quantity' => $product->getQuantity(),
+            'quantity' => $product->getQuantity()
         ];
     }
 
@@ -244,5 +279,6 @@ class VariableBuilder implements VariableBuilderInterface
     protected function formatPrice($amount)
     {
         return $this->moneyPlugin->convertIntegerToDecimal($amount);
+
     }
 }

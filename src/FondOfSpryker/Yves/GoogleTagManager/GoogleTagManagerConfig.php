@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
+ */
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
@@ -21,5 +26,32 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function isEnabled()
     {
         return $this->get(GoogleTagManagerConstants::ENABLED);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialPriceAttribute(): string
+    {
+        return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE);
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialPriceFromAttribute(): string
+    {
+        return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_FROM);
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialPriceToAttribute(): string
+    {
+        return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_TO);
+
     }
 }
