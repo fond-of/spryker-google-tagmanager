@@ -7,9 +7,11 @@
  */
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
+use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
@@ -50,6 +52,11 @@ class VariableBuilder implements VariableBuilderInterface
     protected $priceCalculationHelper;
 
     /**
+     * @var \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
+     */
+    protected $taxProductConnectorClient;
+
+    /**
      * VariableBuilder constructor.
      *
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
@@ -58,13 +65,13 @@ class VariableBuilder implements VariableBuilderInterface
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
-        PriceCalculationHelperInterface $priceCalculationHelper,
+        TaxProductConnectorClient $taxProductConnectorClient,
         ProductClientInterface $productClient,
         GoogleTagManagerConfig $config
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->productClient = $productClient;
-        $this->priceCalculationHelper = $priceCalculationHelper;
+        $this->taxProductConnectorClient = $taxProductConnectorClient;
         $this->config = $config;
     }
 
@@ -92,7 +99,9 @@ class VariableBuilder implements VariableBuilderInterface
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
             'productPrice' => $this->formatPrice($product->getPrice()),
-            'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), $product->getTaxRate())),
+            'productPriceExcludingTax' => $this->formatPrice(
+                $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
+            ),
             'productTaxRate' => $product->getTaxRate(),
         ];
 
@@ -102,6 +111,7 @@ class VariableBuilder implements VariableBuilderInterface
 
         return $variables;
     }
+    
 
     /**
      * @param \Generated\Shared\Transfer\StorageProductTransfer $product

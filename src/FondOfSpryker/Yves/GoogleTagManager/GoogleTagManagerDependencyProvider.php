@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <jozsefgeng@86gmail.com>
+ */
+
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
@@ -10,6 +16,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
 {
     const CART_CLIENT = 'CART_CLIENT';
     const PRODUCT_CLIENT = 'PRODUCT_CLIENT';
+    const TAX_PRODUCT_CONNECTOR_CLIENT = 'TAX_PRODUCT_CONNECTOR_CLIENT';
     const PLUGIN_MONEY = 'PLUGIN_MONEY';
     const PLUGIN_DATA_LAYER_VARIABLE = 'PLUGIN_DATA_LAYER_VARIABLE';
     const SESSION_CLIENT = 'SESSION_CLIENT';
@@ -23,6 +30,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         $this->provideCartClient($container);
         $this->provideProductClient($container);
+        $this->provideTaxProductConnectorClient($container);
         $this->provideMoneyPlugin($container);
         $this->provideSessionClient($container);
 
@@ -52,6 +60,20 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         $container[static::PRODUCT_CLIENT] = function (Container $container) {
             return $container->getLocator()->product()->client();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container $container
+     */
+    protected function provideTaxProductConnectorClient(Container $container)
+    {
+        $container[static::TAX_PRODUCT_CONNECTOR_CLIENT] = function (Container $container) {
+            return $container->getLocator()->taxProductConnector()->client();
         };
 
         return $container;

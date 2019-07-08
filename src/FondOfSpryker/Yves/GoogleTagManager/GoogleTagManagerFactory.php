@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
+ */
+
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Product\ProductClientInterface;
@@ -33,12 +40,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface
      */
-    public function createDataLayerVariableBuilder()
+    public function createDataLayerVariableBuilder(): VariableBuilderInterface
     {
         return new VariableBuilder(
             $this->createMoneyPlugin(),
-            $this->createPriceCalculationHelper(),
-            $this->createProductClient()
+            $this->createTaxProductConnectorClient(),
+            $this->createProductClient(),
+            $this->getConfig()
         );
     }
 
@@ -91,10 +99,10 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
+     * @return \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
      */
-    public function createPriceCalculationHelper()
+    public function createTaxProductConnectorClient()
     {
-        return new PriceCalculationHelper();
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::TAX_PRODUCT_CONNECTOR_CLIENT);
     }
 }
