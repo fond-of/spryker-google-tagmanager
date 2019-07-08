@@ -11,12 +11,14 @@ use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
-use Generated\Shared\Transfer\ProductAbstractTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
+use Spryker\Shared\Config\Config;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
+use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface;
 
 class VariableBuilder implements VariableBuilderInterface
@@ -32,11 +34,6 @@ class VariableBuilder implements VariableBuilderInterface
     const TRANSACTION_ENTITY_ORDER = 'ORDER';
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
-     */
-    protected $config;
-
-    /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
     protected $moneyPlugin;
@@ -50,11 +47,6 @@ class VariableBuilder implements VariableBuilderInterface
      * @var \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
      */
     protected $priceCalculationHelper;
-
-    /**
-     * @var \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
-     */
-    protected $taxProductConnectorClient;
 
     /**
      * VariableBuilder constructor.
@@ -102,8 +94,15 @@ class VariableBuilder implements VariableBuilderInterface
             'productPriceExcludingTax' => $this->formatPrice(
                 $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
             ),
+            'productTax' => 0,
             'productTaxRate' => $product->getTaxRate(),
         ];
+
+        if ($this->taxProductConnectorClient->getTaxAmountForProduct($product)->getTaxAmount() !== null) {
+            $variables['productTax'] = $this->formatPrice(
+                $this->taxProductConnectorClient->getTaxAmountForProduct($product)->getTaxAmount()
+            );
+        }
 
         if ($this->getProductSpecialPrice($product) !== null ) {
             $variables['productSpecialPrice'] = $this->getProductSpecialPrice($product);
@@ -111,7 +110,6 @@ class VariableBuilder implements VariableBuilderInterface
 
         return $variables;
     }
-    
 
     /**
      * @param \Generated\Shared\Transfer\StorageProductTransfer $product
@@ -258,12 +256,11 @@ class VariableBuilder implements VariableBuilderInterface
             'transactionCurrency' => $orderTransfer->getCurrencyIsoCode(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
-            'customerEmail' => $orderTransfer->getBillingAddress()->getEmail(),
         ];
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param Generated\Shared\Transfer\ItemTransfer $product
      *
      * @return array
      */
@@ -277,7 +274,7 @@ class VariableBuilder implements VariableBuilderInterface
             'priceexcludingtax' => ($product->getUnitNetPrice()) ? $this->formatPrice($product->getUnitNetPrice()) :  $this->formatPrice($product->getUnitPrice() - $product->getUnitTaxAmount()),
             'tax' => $this->formatPrice($product->getUnitTaxAmount()),
             'taxrate' => $product->getTaxRate(),
-            'quantity' => $product->getQuantity()
+            'quantity' => $product->getQuantity(),
         ];
     }
 
@@ -289,6 +286,5 @@ class VariableBuilder implements VariableBuilderInterface
     protected function formatPrice($amount)
     {
         return $this->moneyPlugin->convertIntegerToDecimal($amount);
-
     }
 }
