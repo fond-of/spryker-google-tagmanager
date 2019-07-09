@@ -44,7 +44,8 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new VariableBuilder(
             $this->createMoneyPlugin(),
             $this->createPriceCalculationHelper(),
-            $this->createProductClient()
+            $this->createProductClient(),
+            $this->getConfig()
         );
     }
 

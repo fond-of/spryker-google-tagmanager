@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
@@ -45,19 +46,21 @@ class VariableBuilder implements VariableBuilderInterface
 
     /**
      * VariableBuilder constructor.
-     *
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface
+     * @param \Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface $priceCalculationHelper
      * @param \Spryker\Client\Product\ProductClientInterface $productClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
         PriceCalculationHelperInterface $priceCalculationHelper,
-        ProductClientInterface $productClient
+        ProductClientInterface $productClient,
+        GoogleTagManagerConfig $config
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->productClient = $productClient;
         $this->priceCalculationHelper = $priceCalculationHelper;
+        $this->config = $config;
     }
 
     /**
@@ -73,13 +76,13 @@ class VariableBuilder implements VariableBuilderInterface
     }
 
     /**
-     * @param Generated\Shared\Transfer\StorageProductTransfer $product
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
      *
      * @return array
      */
     public function getProductVariables(StorageProductTransfer $product): array
     {
-        return [
+        $variables = [
             'productId' => $product->getIdProductAbstract(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
@@ -87,7 +90,34 @@ class VariableBuilder implements VariableBuilderInterface
             'productPriceExcludingTax' => $this->formatPrice($this->priceCalculationHelper->getNetValueFromPrice($product->getPrice(), $product->getTaxRate())),
             'productTaxRate' => $product->getTaxRate(),
         ];
+
+        if ($this->getProductSpecialPrice($product) !== null ) {
+            $variables['productSpecialPrice'] = $this->getProductSpecialPrice($product);
+        }
+
+        return $variables;
+
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
+     */
+    protected function getProductSpecialPrice(StorageProductTransfer $product)
+    {
+        $time = time();
+        $specialPrice = $this->formatPrice(intval($product->getAttributes()[$this->config->getSpecialPriceAttribute()]));
+        $specialPriceFrom = $product->getAttributes()[$this->config->getSpecialPriceFromAttribute()];
+        $specialPriceTo = $product->getAttributes()[$this->config->getSpecialPriceToAttribute()];
+
+        if ($specialPrice && ( ($specialPriceFrom != null && $time >= strtotime($specialPriceFrom)
+                && ( $specialPriceTo == null || $time <= strtotime($specialPriceTo))))
+        ) {
+            return $specialPrice;
+        }
+
+        return null;
+    }
+
 
     /**
      * @param array $category
@@ -215,11 +245,12 @@ class VariableBuilder implements VariableBuilderInterface
             'transactionCurrency' => $orderTransfer->getCurrencyIsoCode(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
+            'customerEmail' => $orderTransfer->getBillingAddress()->getEmail(),
         ];
     }
 
     /**
-     * @param Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $product
      *
      * @return array
      */
