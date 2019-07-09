@@ -10,8 +10,12 @@ namespace FondOFSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
+use Spryker\Shared\Config\Config;
+use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Shared\Twig\TwigExtension;
 use Twig_Environment;
 use Twig_SimpleFunction;
@@ -158,7 +162,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         $this->addDefaultVariables($page);
 
         if ($page == VariableBuilder::PAGE_TYPE_PRODUCT) {
-            $this->addProductVariables($params['product']);
+            /**
+             * @todo refractor using plugin
+             */
+            $product = $this->mapProductViewTransferToProductAbstratTransfer($params['product']);
+            $this->addProductVariables($product);
         }
 
         if ($page == VariableBuilder::PAGE_TYPE_CATEGORY) {
@@ -174,6 +182,26 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         return $twig->render($this->getDataLayerTemplateName(), [
             'data' => $this->dataLayerVariables,
         ]);
+    }
+
+    /**
+     * @todo optimize code using a plugin
+     *
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
+     *
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
+     */
+    protected function mapProductViewTransferToProductAbstratTransfer(ProductViewTransfer $productViewTransfer): ProductAbstractTransfer
+    {
+        $productAbstractTransfer = new ProductAbstractTransfer();
+
+        $productAbstractTransfer->setPrice($productViewTransfer->getPrice());
+        $productAbstractTransfer->setSku($productViewTransfer->getSku());
+        $productAbstractTransfer->setIdProductAbstract($productViewTransfer->getIdProductAbstract());
+        $productAbstractTransfer->setTaxRate(Config::get(TaxConstants::DEFAULT_TAX_RATE));
+        $productAbstractTransfer->setAttributes($productViewTransfer->getAttributes());
+
+        return $productAbstractTransfer;
     }
 
     /**

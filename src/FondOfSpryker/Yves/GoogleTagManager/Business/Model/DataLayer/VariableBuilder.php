@@ -11,15 +11,11 @@ use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
-use Generated\Shared\Transfer\ProductViewTransfer;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\Product\ProductClientInterface;
-use Spryker\Shared\Config\Config;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
-use Spryker\Shared\Tax\TaxConstants;
-use Spryker\Zed\Tax\Business\Model\PriceCalculationHelperInterface;
 
 class VariableBuilder implements VariableBuilderInterface
 {
@@ -84,7 +80,7 @@ class VariableBuilder implements VariableBuilderInterface
      *
      * @return array
      */
-    public function getProductVariables(StorageProductTransfer $product): array
+    public function getProductVariables(ProductAbstractTransfer $product): array
     {
         $variables = [
             'productId' => $product->getIdProductAbstract(),
@@ -104,7 +100,7 @@ class VariableBuilder implements VariableBuilderInterface
             );
         }
 
-        if ($this->getProductSpecialPrice($product) !== null ) {
+        if ($this->getProductSpecialPrice($product) !== null) {
             $variables['productSpecialPrice'] = $this->getProductSpecialPrice($product);
         }
 
@@ -112,12 +108,16 @@ class VariableBuilder implements VariableBuilderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
+     * @todo use plugins
+     *
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     *
+     * @return float|null
      */
-    protected function getProductSpecialPrice(StorageProductTransfer $product)
+    protected function getProductSpecialPrice(ProductAbstractTransfer $product)
     {
         $time = time();
-        $specialPrice = $this->formatPrice(intval($product->getAttributes()[$this->config->getSpecialPriceAttribute()]));
+        $specialPrice = $this->formatPrice((int)($product->getAttributes()[$this->config->getSpecialPriceAttribute()]));
         $specialPriceFrom = $product->getAttributes()[$this->config->getSpecialPriceFromAttribute()];
         $specialPriceTo = $product->getAttributes()[$this->config->getSpecialPriceToAttribute()];
 
