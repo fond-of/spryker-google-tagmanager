@@ -9,6 +9,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
+use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
@@ -172,6 +173,7 @@ class VariableBuilder implements VariableBuilderInterface
         $transactionProductsSkus = [];
         $total = $quoteTransfer->getTotals()->getGrandTotal();
         $totalWithoutShippingAmount = 0;
+        $customerEmail = '';
         $quoteItems = $quoteTransfer->getItems();
 
         if (count($quoteItems) > 0) {
@@ -194,6 +196,7 @@ class VariableBuilder implements VariableBuilderInterface
             'transactionTax' => $this->formatPrice($quoteTransfer->getTotals()->getTaxTotal()->getAmount()),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
+            'customerEmail' => $this->getCustomerEmail($quoteTransfer->getBillingAddress()),
         ];
     }
 
@@ -256,6 +259,7 @@ class VariableBuilder implements VariableBuilderInterface
             'transactionCurrency' => $orderTransfer->getCurrencyIsoCode(),
             'transactionProducts' => $transactionProducts,
             'transactionProductsSkus' => $transactionProductsSkus,
+            'customerEmail' => $this->getCustomerEmail($orderTransfer->getBillingAddress()),
         ];
     }
 
@@ -279,12 +283,30 @@ class VariableBuilder implements VariableBuilderInterface
     }
 
     /**
-     * @param int $amount
+     * @param int $amountgetOrderVariables
      *
      * @return float
      */
     protected function formatPrice($amount)
     {
         return $this->moneyPlugin->convertIntegerToDecimal($amount);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AddressTransfer|null $addressTransfer
+     *
+     * @return string
+     */
+    protected function getCustomerEmail(?AddressTransfer $addressTransfer): string
+    {
+        if ($addressTransfer === null) {
+            return '';
+        }
+
+        if (!$addressTransfer->getEmail()) {
+            return '';
+        }
+
+        return $addressTransfer->getEmail();
     }
 }
