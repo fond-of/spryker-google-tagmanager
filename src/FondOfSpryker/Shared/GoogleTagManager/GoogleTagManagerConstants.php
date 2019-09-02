@@ -28,14 +28,22 @@ interface GoogleTagManagerConstants
     const TRANSACTION_ENTITY_QUOTE = 'QUOTE';
     const TRANSACTION_ENTITY_ORDER = 'ORDER';
 
-    public const PRODUCT_ID = 'id';
-    public const PRODUCT_SKU = 'sku';
-    public const PRODUCT_NAME = 'name';
-    public const PRODUCT_PRICE = 'price';
-    public const PRODUCT_PRICE_EXCLUDING_TAX = 'priceexcludingtax';
-    public const PRODUCT_PRICE_TAX = 'tax';
-    public const PRODUCT_PRICE_TAX_RATE = 'taxrate';
-    public const PRODUCT_PRICE_QUANTITY = 'quantity';
+    public const PRODUCT_ID = 'productId';
+    public const PRODUCT_SKU = 'productSku';
+    public const PRODUCT_NAME = 'productName';
+    public const PRODUCT_PRICE = 'productPrice';
+    public const PRODUCT_PRICE_EXCLUDING_TAX = 'productPriceExcludingTax';
+    public const PRODUCT_TAX = 'productTax';
+    public const PRODUCT_TAX_RATE = 'productTaxRate';
+
+    public const TRANSACTION_PRODUCT_ID = 'id';
+    public const TRANSACTION_PRODUCT_SKU = 'sku';
+    public const TRANSACTION_PRODUCT_NAME = 'name';
+    public const TRANSACTION_PRODUCT_PRICE = 'price';
+    public const TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX = 'priceexcludingtax';
+    public const TRANSACTION_PRODUCT_TAX = 'tax';
+    public const TRANSACTION_PRODUCT_TAX_RATE = 'taxrate';
+    public const TRANSACTION_PRODUCT_QUANTITY = 'quantity';
 
     public const CATEGORY_ID = 'categoryId';
     public const CATEGORY_NAME = 'categoryName';

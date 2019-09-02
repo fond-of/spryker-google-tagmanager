@@ -54,8 +54,8 @@ class ProductVariableBuilder
             GoogleTagManagerConstants::PRODUCT_PRICE_EXCLUDING_TAX => $this->moneyPlugin->convertIntegerToDecimal(
                 $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
             ),
-            GoogleTagManagerConstants::PRODUCT_PRICE_TAX => 0,
-            GoogleTagManagerConstants::PRODUCT_PRICE_TAX_RATE => $product->getTaxRate(),
+            GoogleTagManagerConstants::PRODUCT_TAX => 0,
+            GoogleTagManagerConstants::PRODUCT_TAX_RATE => $product->getTaxRate(),
         ];
 
         return $this->executePlugins($product, $variables);

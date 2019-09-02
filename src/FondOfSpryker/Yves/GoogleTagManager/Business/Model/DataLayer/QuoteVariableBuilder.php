@@ -116,14 +116,14 @@ class QuoteVariableBuilder
     protected function getProductForTransaction(ItemTransfer $product): array
     {
         return [
-            GoogleTagManagerConstants::PRODUCT_ID => $product->getIdProductAbstract(),
-            GoogleTagManagerConstants::PRODUCT_SKU => $product->getSku(),
-            GoogleTagManagerConstants::PRODUCT_NAME => $product->getName(),
-            GoogleTagManagerConstants::PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitPrice()),
-            GoogleTagManagerConstants::PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
-            GoogleTagManagerConstants::PRODUCT_PRICE_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
-            GoogleTagManagerConstants::PRODUCT_PRICE_TAX_RATE => $product->getTaxRate(),
-            GoogleTagManagerConstants::PRODUCT_PRICE_QUANTITY => $product->getQuantity(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $product->getName(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitPrice()),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX_RATE => $product->getTaxRate(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_QUANTITY => $product->getQuantity(),
         ];
     }
 
