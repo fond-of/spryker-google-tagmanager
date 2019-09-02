@@ -48,7 +48,7 @@ class QuoteVariableBuilder
                 $quoteTransfer->getTotals()->getGrandTotal()
             ),
             GoogleTagManagerConstants::TRANSACTION_WITHOUT_SHIPPING_AMOUNT => $this->moneyPlugin->convertIntegerToDecimal(
-                $quoteTransfer->getTotals()->getTaxTotal()->getAmount()
+                $this->getTotalWithoutShippingAmount($quoteTransfer)
             ),
             GoogleTagManagerConstants::TRANSACTION_TAX => $this->moneyPlugin->convertIntegerToDecimal(
                 $quoteTransfer->getTotals()->getTaxTotal()->getAmount()
@@ -169,5 +169,19 @@ class QuoteVariableBuilder
         }
 
         return $addressTransfer->getEmail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return int
+     */
+    protected function getTotalWithoutShippingAmount(QuoteTransfer $quoteTransfer): int
+    {
+        if ($quoteTransfer->getShipment()) {
+            return $quoteTransfer->getTotals()->getGrandTotal() - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
+        }
+
+        return 0;
     }
 }
