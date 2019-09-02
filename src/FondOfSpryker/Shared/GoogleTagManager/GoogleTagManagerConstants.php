@@ -15,4 +15,48 @@ interface GoogleTagManagerConstants
     const ATTRIBUTE_SPECIAL_PRICE = 'ATTRIBUTE_SPECIAL_PRICE';
     const ATTRIBUTE_SPECIAL_PRICE_FROM = 'ATTRIBUTE_SPECIAL_PRICE_FROM';
     const ATTRIBUTE_SPECIAL_PRICE_TO = 'ATTRIBUTE_SPECIAL_PRICE_TO';
+
+    const PAGE_TYPE_CATEGORY = "category";
+    const PAGE_TYPE_CART = "cart";
+    const PAGE_TYPE_HOME = "home";
+    const PAGE_TYPE_ORDER = "order";
+    const PAGE_TYPE_OTHER = "other";
+    const PAGE_TYPE_PRODUCT = "product";
+    const PAGE_TYPE_DEFAULT = 'default';
+    const PAGE_TYPE_QUOTE = 'quote';
+
+    const TRANSACTION_ENTITY_QUOTE = 'QUOTE';
+    const TRANSACTION_ENTITY_ORDER = 'ORDER';
+
+    public const PRODUCT_ID = 'id';
+    public const PRODUCT_SKU = 'sku';
+    public const PRODUCT_NAME = 'name';
+    public const PRODUCT_PRICE = 'price';
+    public const PRODUCT_PRICE_EXCLUDING_TAX = 'priceexcludingtax';
+    public const PRODUCT_PRICE_TAX = 'tax';
+    public const PRODUCT_PRICE_TAX_RATE = 'taxrate';
+    public const PRODUCT_PRICE_QUANTITY = 'quantity';
+
+    public const CATEGORY_ID = 'categoryId';
+    public const CATEGORY_NAME = 'categoryName';
+    public const CATEGORY_SIZE = 'categorySize';
+    public const CATEGORY_PRODUCTS = 'categoryProducts';
+
+    public const PRODUCTS = 'products';
+
+    public const TRANSACTION_ENTITY = 'transactionEntity';
+    public const TRANSACTION_ID = 'transactionId';
+    public const TRANSACTION_DATE = 'transactionDate';
+    public const TRANSACTION_AFFILIATION = 'transactionAffiliation';
+    public const TRANSACTION_TOTAL = 'transactionTotal';
+    public const TRANSACTION_WITHOUT_SHIPPING_AMOUNT = 'transactionTotalWithoutShippingAmount';
+    public const TRANSACTION_SUBTOTAL = 'transactionSubtotal';
+    public const TRANSACTION_TAX = 'transactionTax';
+    public const TRANSACTION_SHIPPING = 'transactionShipping';
+    public const TRANSACTION_PAYMENT = 'transactionPayment';
+    public const TRANSACTION_CURRENCY = 'transactionCurrency';
+    public const TRANSACTION_PRODUCTS = 'transactionProducts';
+    public const TRANSACTION_PRODUCTS_SKUS = 'transactionProductsSkus';
+
+    public const CUSTOMER_EMAIL = 'customerEmail';
 }

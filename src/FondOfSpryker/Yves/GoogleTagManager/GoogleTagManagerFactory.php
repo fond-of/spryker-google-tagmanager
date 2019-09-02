@@ -8,15 +8,18 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
-use Spryker\Zed\Tax\Business\Model\PriceCalculationHelper;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
@@ -31,23 +34,77 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new GoogleTagManagerTwigExtension(
             $this->getContainerID(),
             $this->isEnabled(),
-            $this->createDataLayerVariableBuilder(),
+            $this->getVariableBuilders(),
             $this->createCartClient(),
             $this->createSessionClient()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder
      */
-    public function createDataLayerVariableBuilder(): VariableBuilderInterface
+    protected function createProductVariableBuilder(): ProductVariableBuilder
     {
-        return new VariableBuilder(
+        return new ProductVariableBuilder(
             $this->createMoneyPlugin(),
             $this->createTaxProductConnectorClient(),
-            $this->createProductClient(),
-            $this->getConfig()
+            $this->getProductVariableBuilderPlugins()
         );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder
+     */
+    protected function createCategoryVariableBuilder(): CategoryVariableBuilder
+    {
+        return new CategoryVariableBuilder(
+            $this->createMoneyPlugin(),
+            $this->getCategoryVariableBuilderPlugins()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder
+     */
+    protected function createDefaultVariableBuilder(): DefaultVariableBuilder
+    {
+        return new DefaultVariableBuilder($this->getDefaultVariableBuilderPlugins());
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder
+     */
+    protected function createOrderVariableBuilder(): OrderVariableBuilder
+    {
+        return new OrderVariableBuilder(
+            $this->createMoneyPlugin(),
+            $this->getOrderVariableBuilderPlugins()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder
+     */
+    protected function createQuoteVariableBuilder(): QuoteVariableBuilder
+    {
+        return new QuoteVariableBuilder(
+            $this->createMoneyPlugin(),
+            $this->getQuoteVariableBuilderPlugins()
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getVariableBuilders(): array
+    {
+        return [
+            GoogleTagManagerConstants::PAGE_TYPE_PRODUCT => $this->createProductVariableBuilder(),
+            GoogleTagManagerConstants::PAGE_TYPE_CATEGORY => $this->createCategoryVariableBuilder(),
+            GoogleTagManagerConstants::PAGE_TYPE_DEFAULT => $this->createDefaultVariableBuilder(),
+            GoogleTagManagerConstants::PAGE_TYPE_ORDER => $this->createOrderVariableBuilder(),
+            GoogleTagManagerConstants::PAGE_TYPE_QUOTE => $this->createQuoteVariableBuilder(),
+        ];
     }
 
     /**
@@ -67,6 +124,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Client\Cart\CartClientInterface CartClientInterface
      */
     protected function createCartClient(): CartClientInterface
@@ -75,6 +134,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
     protected function createMoneyPlugin(): MoneyPluginInterface
@@ -83,6 +144,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Client\product\ProductClientInterface
      */
     protected function createProductClient(): ProductClientInterface
@@ -91,6 +154,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Client\Session\SessionClientInterface;
      */
     protected function createSessionClient(): SessionClientInterface
@@ -99,10 +164,62 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
      */
     public function createTaxProductConnectorClient()
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::TAX_PRODUCT_CONNECTOR_CLIENT);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\VariableBuilderPluginInterface[]
+     */
+    public function getProductVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
+     */
+    public function getCategoryVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
+     */
+    public function getDefaultVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::DEFAULT_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\OrderVariableBuilderPluginInterface[]
+     */
+    public function getOrderVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::ORDER_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\QuoteVariableBuilderPluginInterface[]
+     */
+    public function getQuoteVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::QUOTE_VARIABLE_BUILDER_PLUGINS);
     }
 }
