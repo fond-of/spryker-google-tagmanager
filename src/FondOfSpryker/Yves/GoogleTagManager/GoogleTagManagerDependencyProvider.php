@@ -14,7 +14,6 @@ use Spryker\Yves\Kernel\Container;
 use Spryker\Yves\Money\Plugin\MoneyPlugin;
 
 /**
- * Class GoogleTagManagerDependencyProvider
  * @package FondOfSpryker\Yves\GoogleTagManager
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */

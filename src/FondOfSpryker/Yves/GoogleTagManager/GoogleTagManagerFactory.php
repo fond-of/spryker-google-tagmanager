@@ -107,6 +107,11 @@ class GoogleTagManagerFactory extends AbstractFactory
         ];
     }
 
+    public function getGoogleTagManagerConfig(): GoogleTagManagerConfig
+    {
+        return $this->getConfig();
+    }
+
     /**
      * @return string
      */
@@ -138,7 +143,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
-    protected function createMoneyPlugin(): MoneyPluginInterface
+    public function createMoneyPlugin(): MoneyPluginInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PLUGIN_MONEY);
     }

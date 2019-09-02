@@ -2,11 +2,12 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
 {
     public const FIELD_NAME = 'sale_price';
@@ -21,16 +22,10 @@ class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPl
      */
     protected $moneyPlugin;
 
-    /**
-     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
-     */
-    public function __construct(
-        MoneyPluginInterface $moneyPlugin,
-        GoogleTagManagerConfig $config
-    ) {
-        $this->moneyPlugin = $moneyPlugin;
-        $this->config = $config;
+    public function __construct()
+    {
+        $this->moneyPlugin = $this->getFactory()->createMoneyPlugin();
+        $this->config = $this->getFactory()->getGoogleTagManagerConfig();
     }
 
     /**
@@ -64,20 +59,28 @@ class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPl
      */
     protected function getProductSpecialPrice(ProductAbstractTransfer $product): ?float
     {
+        $this->getFactory()->createMoneyPlugin();
+
         $time = time();
 
         if (!array_key_exists($this->config->getSpecialPriceAttribute(), $product->getAttributes())) {
             return null;
         }
 
-        $specialPriceAttr = (int)($product->getAttributes()[$this->config->getSpecialPriceAttribute()]);
+        $specialPriceAttr = (int)$product->getAttributes()[$this->config->getSpecialPriceAttribute()];
         $specialPrice = $this->moneyPlugin->convertIntegerToDecimal($specialPriceAttr);
         $specialPriceFrom = $product->getAttributes()[$this->config->getSpecialPriceFromAttribute()];
         $specialPriceTo = $product->getAttributes()[$this->config->getSpecialPriceToAttribute()];
 
-        if ($specialPrice && ( ($specialPriceFrom != null && $time >= strtotime($specialPriceFrom)
-                && ( $specialPriceTo == null || $time <= strtotime($specialPriceTo))))
-        ) {
+        if (!$specialPrice) {
+            return null;
+        }
+
+        if ($specialPriceFrom === null) {
+            return null;
+        }
+
+        if (($time >= strtotime($specialPriceFrom)) && ($specialPriceTo === null || $time <= strtotime($specialPriceTo))) {
             return $specialPrice;
         }
 
