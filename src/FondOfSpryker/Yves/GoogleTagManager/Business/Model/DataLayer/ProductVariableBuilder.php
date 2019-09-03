@@ -40,7 +40,7 @@ class ProductVariableBuilder
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
      *
      * @return array
      */

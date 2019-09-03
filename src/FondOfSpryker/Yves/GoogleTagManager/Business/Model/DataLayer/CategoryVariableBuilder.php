@@ -42,6 +42,7 @@ class CategoryVariableBuilder
 
         foreach ($products as $product) {
             $productSkus[] = $product['abstract_sku'];
+
             $categoryProducts[] = [
                 GoogleTagManagerConstants::PRODUCT_ID => $product['id_product_abstract'],
                 GoogleTagManagerConstants::PRODUCT_NAME => $product['abstract_name'],

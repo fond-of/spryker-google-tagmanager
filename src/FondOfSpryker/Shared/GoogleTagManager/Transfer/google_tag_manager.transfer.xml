@@ -6,31 +6,4 @@
     <transfer name="ProductAbstract">
         <property name="name" type="string" />
     </transfer>
-
-    <transfer name="GoogleTagMangerTransaction">
-        <property name="transactionEntity" type="string" />
-        <property name="transactionId" type="string" />
-        <property name="transactionDate" type="string" />
-        <property name="transactionAffiliation" type="string" />
-        <property name="transactionTotal" type="float" />
-        <property name="transactionTotalWithoutShippingAmount" type="float" />
-        <property name="transactionTax" type="float" />
-        <property name="transactionShipping" type="string" />
-        <property name="transactionPayment" type="string" />
-        <property name="transactionCurrency" type="string" />
-        <property name="transactionProducts" type="GoogleTagMangerTransactionProducts[]" singular="GoogleTagMangerTransactionProduct" />
-        <property name="transactionProductsSkus" type="array" singular="transactionProductsSku" />
-    </transfer>
-
-    <transfer name="GoogleTagMangerTransactionProducts">
-        <property name="int" type="string" />
-        <property name="sku" type="string" />
-        <property name="name" type="string" />
-        <property name="price" type="float" />
-        <property name="priceExcludingTax" type="float" />
-        <property name="tax" type="float" />
-        <property name="taxRate" type="float" />
-        <property name="quantity" type="int" />
-    </transfer>
-
 </transfers>
