@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
+use Spryker\Shared\Config\Config;
+use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Shared\Twig\TwigExtension;
 use Twig_Environment;
 use Twig_SimpleFunction;
@@ -70,6 +72,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param array $variableBuilders
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
      * @param \Spryker\Client\Session\SessionClientInterface $sessionClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(
         string $containerID,
@@ -165,6 +168,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         switch ($page) {
             case GoogleTagManagerConstants::PAGE_TYPE_PRODUCT:
                 $productAbstractTransfer = (new ProductAbstractTransfer())
+                    ->setTaxRate(Config::get(TaxConstants::DEFAULT_TAX_RATE))
                     ->fromArray($params['product']->toArray(), true);
 
                 $this->addProductVariables($productAbstractTransfer);

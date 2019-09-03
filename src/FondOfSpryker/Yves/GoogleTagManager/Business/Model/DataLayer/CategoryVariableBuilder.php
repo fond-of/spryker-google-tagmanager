@@ -44,10 +44,10 @@ class CategoryVariableBuilder
             $productSkus[] = $product['abstract_sku'];
 
             $categoryProducts[] = [
-                GoogleTagManagerConstants::PRODUCT_ID => $product['id_product_abstract'],
-                GoogleTagManagerConstants::PRODUCT_NAME => $product['abstract_name'],
-                GoogleTagManagerConstants::PRODUCT_SKU => $product['abstract_sku'],
-                GoogleTagManagerConstants::PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product['price']),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product['id_product_abstract'],
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $product['abstract_name'],
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product['abstract_sku'],
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product['price']),
             ];
         }
 

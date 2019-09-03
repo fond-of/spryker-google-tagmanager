@@ -54,11 +54,27 @@ class ProductVariableBuilder
             GoogleTagManagerConstants::PRODUCT_PRICE_EXCLUDING_TAX => $this->moneyPlugin->convertIntegerToDecimal(
                 $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
             ),
-            GoogleTagManagerConstants::PRODUCT_TAX => 0,
+            GoogleTagManagerConstants::PRODUCT_TAX => $this->getProductTax($product),
             GoogleTagManagerConstants::PRODUCT_TAX_RATE => $product->getTaxRate(),
         ];
 
         return $this->executePlugins($product, $variables);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     *
+     * @return float
+     */
+    protected function getProductTax(ProductAbstractTransfer $product): float
+    {
+        if ($this->taxProductConnectorClient->getTaxAmountForProduct($product)->getTaxAmount() > 0) {
+            return $this->moneyPlugin->convertIntegerToDecimal(
+                $this->taxProductConnectorClient->getTaxAmountForProduct($product)->getTaxAmount()
+            );
+        }
+
+        return 0;
     }
 
     /**
