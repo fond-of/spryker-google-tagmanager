@@ -8,10 +8,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface;
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Config\Config;
@@ -61,23 +60,24 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $isEnabled;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface
+     * @var array
      */
-    protected $variableBuilder;
+    protected $variableBuilders;
 
     /**
-     * GoogleTagManagerTwigExtension constructor
+     * GoogleTagManagerTwigExtension constructor.
      *
      * @param string $containerID
      * @param bool $isEnabled
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\VariableBuilderInterface $variableBuilder
+     * @param array $variableBuilders
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
      * @param \Spryker\Client\Session\SessionClientInterface $sessionClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(
         string $containerID,
         bool $isEnabled,
-        VariableBuilderInterface $variableBuilder,
+        array $variableBuilders,
         CartClientInterface $cartClient,
         SessionClientInterface $sessionClient
     ) {
@@ -85,7 +85,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         $this->containerID = $containerID;
         $this->cartClient = $cartClient;
         $this->isEnabled = $isEnabled;
-        $this->variableBuilder = $variableBuilder;
+        $this->variableBuilders = $variableBuilders;
     }
 
     /**
@@ -133,6 +133,8 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param \Twig_Environment $twig
      * @param string $templateName
      *
+     * @throws
+     *
      * @return string
      */
     public function renderGoogleTagManager(Twig_Environment $twig, $templateName): string
@@ -151,6 +153,8 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param string $page
      * @param array $params
      *
+     * @throws
+     *
      * @return string
      */
     public function renderDataLayer(Twig_Environment $twig, $page, $params): string
@@ -161,47 +165,32 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         $this->addDefaultVariables($page);
 
-        if ($page == VariableBuilder::PAGE_TYPE_PRODUCT) {
-            /**
-             * @todo refractor using plugin
-             */
-            $product = $this->mapProductViewTransferToProductAbstratTransfer($params['product']);
-            $this->addProductVariables($product);
-        }
+        switch ($page) {
+            case GoogleTagManagerConstants::PAGE_TYPE_PRODUCT:
+                $productAbstractTransfer = (new ProductAbstractTransfer())
+                    ->setTaxRate(Config::get(TaxConstants::DEFAULT_TAX_RATE))
+                    ->fromArray($params['product']->toArray(), true);
 
-        if ($page == VariableBuilder::PAGE_TYPE_CATEGORY) {
-            $this->addCategoryVariables($params['category'], $params['products']);
-        }
+                $this->addProductVariables($productAbstractTransfer);
+                break;
 
-        if ($page == VariableBuilder::PAGE_TYPE_ORDER) {
-            $this->addOrderVariables($params['order']);
-        } else {
-            $this->addQuoteVariables();
+            case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
+                $this->addCategoryVariables($params['category'], $params['products']);
+                break;
+
+            case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
+                $this->addOrderVariables($params['order']);
+                break;
+
+            default:
+                $this->addQuoteVariables();
+
+                break;
         }
 
         return $twig->render($this->getDataLayerTemplateName(), [
             'data' => $this->dataLayerVariables,
         ]);
-    }
-
-    /**
-     * @todo optimize code using a plugin
-     *
-     * @param \Generated\Shared\Transfer\ProductViewTransfer $product
-     *
-     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
-     */
-    protected function mapProductViewTransferToProductAbstratTransfer(ProductViewTransfer $productViewTransfer): ProductAbstractTransfer
-    {
-        $productAbstractTransfer = new ProductAbstractTransfer();
-
-        $productAbstractTransfer->setPrice($productViewTransfer->getPrice());
-        $productAbstractTransfer->setSku($productViewTransfer->getSku());
-        $productAbstractTransfer->setIdProductAbstract($productViewTransfer->getIdProductAbstract());
-        $productAbstractTransfer->setTaxRate(Config::get(TaxConstants::DEFAULT_TAX_RATE));
-        $productAbstractTransfer->setAttributes($productViewTransfer->getAttributes());
-
-        return $productAbstractTransfer;
     }
 
     /**
@@ -213,20 +202,20 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilder->getDefaultVariables($page)
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_DEFAULT]->getVariable($page)
         );
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $product
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      *
      * @return array
      */
-    protected function addProductVariables($product): array
+    protected function addProductVariables(ProductAbstractTransfer $product): array
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilder->getProductVariables($product)
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_PRODUCT]->getVariables($product)
         );
     }
 
@@ -240,7 +229,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilder->getCategoryVariables($category, $products)
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_CATEGORY]->getVariables($category, $products)
         );
     }
 
@@ -249,9 +238,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     protected function addQuoteVariables(): array
     {
-        /**
-         * @var Generated\Shared\Transfer\QuoteTransfer
-         */
         $quoteTransfer = $this->cartClient->getQuote();
 
         if (!$quoteTransfer || count($quoteTransfer->getItems()) == 0) {
@@ -260,7 +246,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilder->getQuoteVariables($quoteTransfer, $this->sessionClient->getId())
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_QUOTE]->getVariables($quoteTransfer, $this->sessionClient->getId())
         );
     }
 
@@ -269,11 +255,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      *
      * @return array
      */
-    protected function addOrderVariables($orderTransfer)
+    protected function addOrderVariables(OrderTransfer $orderTransfer)
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilder->getOrderVariables($orderTransfer)
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_ORDER]->getVariables($orderTransfer)
         );
     }
 
