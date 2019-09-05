@@ -172,14 +172,17 @@ class GoogleTagManagerTwigExtension extends TwigExtension
                     ->fromArray($params['product']->toArray(), true);
 
                 $this->addProductVariables($productAbstractTransfer);
+                $this->addQuoteVariables();
                 break;
 
             case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
                 $this->addCategoryVariables($params['category'], $params['products']);
+                $this->addQuoteVariables();
                 break;
 
             case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
                 $this->addOrderVariables($params['order']);
+
                 break;
 
             default:
