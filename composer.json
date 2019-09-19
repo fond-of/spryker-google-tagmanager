@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fond-of-spryker/tax-product-connector": "^1.3",
+    "fond-of-spryker/tax-product-connector": "dev-spryker_upgrade",
     "spryker/cart": "^7.2.0",
     "spryker/catalog": "^5.5.1",
     "spryker/kernel": "^3.37.5",
