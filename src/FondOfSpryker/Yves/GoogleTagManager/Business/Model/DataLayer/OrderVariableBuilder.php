@@ -19,13 +19,13 @@ class OrderVariableBuilder
     protected $moneyPlugin;
 
     /**
-     * @var array
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[]
      */
     protected $orderVariableBuilderPlugins;
 
     /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,

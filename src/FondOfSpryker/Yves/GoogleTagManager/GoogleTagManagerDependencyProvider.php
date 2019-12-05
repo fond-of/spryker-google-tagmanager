@@ -8,6 +8,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Yves\Kernel\Container;
@@ -214,11 +215,13 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     /**
      * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\OrderVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[]
      */
     protected function getOrderVariableBuilderPlugins(Container $container): array
     {
-        return [];
+        return [
+            new OrderDiscountPlugin(),
+        ];
     }
 
     /**

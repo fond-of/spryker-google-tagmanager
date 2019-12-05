@@ -35,6 +35,7 @@ interface GoogleTagManagerConstants
     public const PRODUCT_PRICE_EXCLUDING_TAX = 'productPriceExcludingTax';
     public const PRODUCT_TAX = 'productTax';
     public const PRODUCT_TAX_RATE = 'productTaxRate';
+    public const PRODUCT_CURRENCY = 'productCurrency';
 
     public const TRANSACTION_PRODUCT_ID = 'id';
     public const TRANSACTION_PRODUCT_SKU = 'sku';

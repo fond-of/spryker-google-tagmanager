@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
+use Spryker\Shared\Kernel\Store;
+
 class DefaultVariableBuilder
 {
     /**
@@ -10,13 +12,20 @@ class DefaultVariableBuilder
     protected $defaultVariableBuilderPlugins;
 
     /**
+     * @var Store
+     */
+    protected $store;
+
+    /**
      * DefaultVariableBuilder constructor.
      *
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
+     * @param Store $store
      */
-    public function __construct(array $defaultVariableBuilderPlugins)
+    public function __construct(array $defaultVariableBuilderPlugins, Store $store)
     {
         $this->defaultVariableBuilderPlugins = $defaultVariableBuilderPlugins;
+        $this->store = $store;
     }
 
     /**
@@ -28,6 +37,7 @@ class DefaultVariableBuilder
     {
         $variables = [
             'pageType' => $page,
+            'currency' => $this->store->getCurrencyIsoCode(),
         ];
 
         return $this->executePlugins($variables);

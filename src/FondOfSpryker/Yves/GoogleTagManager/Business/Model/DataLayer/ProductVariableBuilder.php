@@ -5,6 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class ProductVariableBuilder

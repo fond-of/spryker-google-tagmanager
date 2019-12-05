@@ -18,6 +18,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
 
@@ -68,7 +69,10 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     protected function createDefaultVariableBuilder(): DefaultVariableBuilder
     {
-        return new DefaultVariableBuilder($this->getDefaultVariableBuilderPlugins());
+        return new DefaultVariableBuilder(
+            $this->getDefaultVariableBuilderPlugins(),
+            $this->getStore()
+        );
     }
 
     /**
@@ -211,7 +215,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\OrderVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[]
      */
     public function getOrderVariableBuilderPlugins(): array
     {
@@ -226,5 +230,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getQuoteVariableBuilderPlugins(): array
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::QUOTE_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @return Store
+     */
+    protected function getStore(): Store
+    {
+        return Store::getInstance();
     }
 }
