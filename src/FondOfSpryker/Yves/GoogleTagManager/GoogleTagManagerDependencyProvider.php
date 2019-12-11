@@ -8,6 +8,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
@@ -32,6 +33,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const CATEGORY_VARIABLE_BUILDER_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_PLUGINS';
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
     public const QUOTE_VARIABLE_BUILDER_PLUGINS = 'QUOTE_VARIABLE_BUILDER_PLUGINS';
+    public const CONTROLLER_EVENT_HANDLER = 'CONTROLLER_EVENT_HANDLER';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -50,6 +52,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addDefaultVariableBuilderPlugins($container);
         $this->addOrderVariableBuilderPlugins($container);
         $this->addQuoteVariableBuilderPlugins($container);
+        $this->addControllerEventHandler($container);
 
         return $container;
     }
@@ -246,5 +249,30 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function getQuoteVariableBuilderPlugins(Container $container): array
     {
         return [];
+    }
+
+    /**
+     * @param Container $container
+     *
+     * @return Container
+     */
+    protected function addControllerEventHandler(Container $container): Container
+    {
+        $container[static::CONTROLLER_EVENT_HANDLER] = function (Container $container) {
+            return $this->getControllerEventHandler($container);
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param Container $container
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
+     */
+    protected function getControllerEventHandler(Container $container): array
+    {
+        return [
+            new AddProductControllerEventHandler(),
+        ];
     }
 }

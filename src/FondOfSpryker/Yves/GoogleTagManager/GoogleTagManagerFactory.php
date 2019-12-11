@@ -9,6 +9,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
@@ -230,6 +231,16 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getQuoteVariableBuilderPlugins(): array
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::QUOTE_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
+     *
+     * @throws
+     */
+    public function getControllerEventHandler(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CONTROLLER_EVENT_HANDLER);
     }
 
     /**

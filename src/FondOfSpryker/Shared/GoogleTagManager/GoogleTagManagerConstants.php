@@ -68,4 +68,11 @@ interface GoogleTagManagerConstants
     public const TRANSACTION_PRODUCTS_SKUS = 'transactionProductsSkus';
 
     public const CUSTOMER_EMAIL = 'customerEmail';
+
+
+
+
+
+
+    public const CONTROLLER_EVENT_METHOD_ADD_PRODUCT = 'addProduct';
 }
