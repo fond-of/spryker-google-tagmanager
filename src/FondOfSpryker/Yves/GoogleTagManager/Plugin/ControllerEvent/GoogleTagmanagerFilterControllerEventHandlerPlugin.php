@@ -36,7 +36,7 @@ class GoogleTagmanagerFilterControllerEventHandlerPlugin extends AbstractPlugin 
 
         foreach($controllerEventHandlers as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
-                $controllerEventHandler->hande($event->getRequest());
+                $controllerEventHandler->hande($event->getRequest(), $this->getClient());
             }
         }
 

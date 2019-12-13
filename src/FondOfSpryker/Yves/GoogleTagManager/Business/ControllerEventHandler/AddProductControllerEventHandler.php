@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler;
 
+use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Symfony\Component\HttpFoundation\Request;
 
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
@@ -17,8 +19,13 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
     /**
      * @param Request $request
      */
-    public function hande(Request $request): void
+    public function hande(Request $request, GoogleTagManagerClientInterface $client): void
     {
-        // TODO: Implement hande() method.
+        $sku = $request->get('sku');
+
+        $product = $client->findProductConcreteStorageDataBySku($sku, 'en_US');
+        //$productViewTransfer = (new ProductViewTransfer())->fromArray($product);
+
+        return;
     }
 }

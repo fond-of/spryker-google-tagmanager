@@ -267,6 +267,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
 
     /**
      * @param Container $container
+     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
     protected function getControllerEventHandler(Container $container): array
