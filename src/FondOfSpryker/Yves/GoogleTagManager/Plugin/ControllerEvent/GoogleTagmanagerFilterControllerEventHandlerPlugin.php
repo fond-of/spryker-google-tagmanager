@@ -4,7 +4,6 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\ControllerEvent;
 
 use Spryker\Yves\Kernel\AbstractPlugin;
 use SprykerShop\Yves\ShopApplicationExtension\Dependency\Plugin\FilterControllerEventHandlerPluginInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
@@ -19,11 +18,11 @@ class GoogleTagmanagerFilterControllerEventHandlerPlugin extends AbstractPlugin 
      * Specification:
      * - Subscribes for symfony FilterControllerEvent
      *
+     * @api
+     *
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
      *
      * @return void
-     * @api
-     *
      */
     public function handle(FilterControllerEvent $event): void
     {
@@ -34,9 +33,9 @@ class GoogleTagmanagerFilterControllerEventHandlerPlugin extends AbstractPlugin 
         $controllerEventHandlers = $this->getFactory()
             ->getControllerEventHandler();
 
-        foreach($controllerEventHandlers as $controllerEventHandler) {
+        foreach ($controllerEventHandlers as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
-                $controllerEventHandler->hande($event->getRequest(), $this->getClient());
+                $controllerEventHandler->handle($event->getRequest(), $this->getClient(), 'en_US');
             }
         }
 

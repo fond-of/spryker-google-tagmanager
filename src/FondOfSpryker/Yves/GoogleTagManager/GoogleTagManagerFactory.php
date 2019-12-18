@@ -9,12 +9,12 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Client\Product\ProductClientInterface;
@@ -22,6 +22,7 @@ use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
+use Twig\Extension\ExtensionInterface;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
@@ -112,6 +113,27 @@ class GoogleTagManagerFactory extends AbstractFactory
         ];
     }
 
+    /**
+     * @return \Twig\Extension\ExtensionInterface
+     */
+    public function createEnhancedEcommerceTwigExtension(): ExtensionInterface
+    {
+        return new EnhancedEcommerceTwigExtension($this->getEnhancedEcommercePlugins());
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceEventPluginInterface[]
+     */
+    public function getEnhancedEcommercePlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::ENHANCED_ECOMMERCE_PAGE_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
+     */
     public function getGoogleTagManagerConfig(): GoogleTagManagerConfig
     {
         return $this->getConfig();
@@ -234,9 +256,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
-     *
      * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
     public function getControllerEventHandler(): array
     {
@@ -244,7 +266,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return Store
+     * @return \Spryker\Shared\Kernel\Store
      */
     protected function getStore(): Store
     {

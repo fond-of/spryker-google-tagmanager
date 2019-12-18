@@ -7,13 +7,14 @@ use Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClient
 class GoogleTagManagerClientToProductResourceAliasStorageBridge implements GoogleTagManagerClientToProductResourceAliasStorageInterface
 {
     /**
-     * @var ProductResourceAliasStorageClientInterface
+     * @var \Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface
      */
     protected $client;
 
     /**
      * GoogleTagManagerClientToProductResourceAliasStorageBridge constructor.
-     * @param ProductResourceAliasStorageClientInterface $client
+     *
+     * @param \Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface $client
      */
     public function __construct(ProductResourceAliasStorageClientInterface $client)
     {
@@ -23,6 +24,7 @@ class GoogleTagManagerClientToProductResourceAliasStorageBridge implements Googl
     /**
      * @param string $sku
      * @param string $localeName
+     *
      * @return array|null
      */
     public function findProductAbstractStorageDataBySku(string $sku, string $localeName): ?array

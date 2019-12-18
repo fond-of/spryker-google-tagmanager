@@ -34,7 +34,6 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getSpecialPriceAttribute(): string
     {
         return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE);
-
     }
 
     /**
@@ -43,7 +42,6 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getSpecialPriceFromAttribute(): string
     {
         return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_FROM);
-
     }
 
     /**
@@ -52,6 +50,5 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getSpecialPriceToAttribute(): string
     {
         return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_TO);
-
     }
 }

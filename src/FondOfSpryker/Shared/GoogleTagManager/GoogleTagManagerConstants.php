@@ -69,10 +69,14 @@ interface GoogleTagManagerConstants
 
     public const CUSTOMER_EMAIL = 'customerEmail';
 
+    public const EEC_PAGE_TYPE_CART = 'cart';
+    public const EEC_EVENT_ADD = 'eec.add';
+    public const EEC_EVENT_REMOVE = 'eec.remove';
 
-
-
-
-
-    public const CONTROLLER_EVENT_METHOD_ADD_PRODUCT = 'addProduct';
+    public const EEC_PRODUCT_ID = 'id';
+    public const EEC_PRODUCT_NAME = 'name';
+    public const EEC_PRODUCT_VARIANT = 'variant';
+    public const EEC_PRODUCT_BRAND = 'brand';
+    public const EEC_PRODUCT_QUNATITY = 'quantity';
+    public const EEC_PRODUCT_DIMENSION1 = 'dimension1';
 }

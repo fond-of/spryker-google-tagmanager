@@ -3,19 +3,18 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager\Dependency\Client;
 
-
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Client\ProductStorage\ProductStorageClientInterface;
 
 class GoogleTagManagerClientToProductStorageClientBridge implements GoogleTagManagerClientToProductStorageClientInterface
 {
     /**
-     * @var ProductStorageClientInterface
+     * @var \Spryker\Client\ProductStorage\ProductStorageClientInterface
      */
     protected $client;
 
     /**
-     * @param ProductStorageClientInterface $client
+     * @param \Spryker\Client\ProductStorage\ProductStorageClientInterface $client
      */
     public function __construct(ProductStorageClientInterface $client)
     {
@@ -27,7 +26,7 @@ class GoogleTagManagerClientToProductStorageClientBridge implements GoogleTagMan
      * @param $localeName
      * @param array $selectedAttributes
      *
-     * @return ProductViewTransfer
+     * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
     public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = []): ProductViewTransfer
     {

@@ -8,7 +8,10 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\AddProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\RemoveProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartEventPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
@@ -34,6 +37,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
     public const QUOTE_VARIABLE_BUILDER_PLUGINS = 'QUOTE_VARIABLE_BUILDER_PLUGINS';
     public const CONTROLLER_EVENT_HANDLER = 'CONTROLLER_EVENT_HANDLER';
+    public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -53,6 +57,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addOrderVariableBuilderPlugins($container);
         $this->addQuoteVariableBuilderPlugins($container);
         $this->addControllerEventHandler($container);
+        $this->addEnhancedEcommercePlugins($container);
 
         return $container;
     }
@@ -252,9 +257,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Yves\Kernel\Container $container
      */
     protected function addControllerEventHandler(Container $container): Container
     {
@@ -266,7 +271,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
@@ -274,6 +279,31 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         return [
             new AddProductControllerEventHandler(),
+            new RemoveProductControllerEventHandler(),
+        ];
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container $container
+     */
+    protected function addEnhancedEcommercePlugins(Container $container): Container
+    {
+        $container[static::ENHANCED_ECOMMERCE_PAGE_PLUGINS] = function () {
+            return $this->getEnhancedEcommercePlugins();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceEventPluginInterface[]
+     */
+    protected function getEnhancedEcommercePlugins(): array
+    {
+        return [
+            GoogleTagManagerConstants::EEC_PAGE_TYPE_CART => new EnhancedEcommerceCartEventPlugin(),
         ];
     }
 }

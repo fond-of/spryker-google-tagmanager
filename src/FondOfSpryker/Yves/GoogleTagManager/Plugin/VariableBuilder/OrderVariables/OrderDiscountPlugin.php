@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables;
 
-use Generated\Shared\Transfer\CalculatedDiscountTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\TotalsTransfer;
 
@@ -31,12 +30,12 @@ class OrderDiscountPlugin implements OrderVariableBuilderPluginInterface
         $result = [];
 
         if ($orderTransfer->getTotals() instanceof TotalsTransfer && $orderTransfer->getTotals()->getDiscountTotal() > 0) {
-            $result[static::FIELD_DISCOUNT_TOTAL] = $orderTransfer->getTotals()->getDiscountTotal()/100;
+            $result[static::FIELD_DISCOUNT_TOTAL] = $orderTransfer->getTotals()->getDiscountTotal() / 100;
         }
 
         if ($orderTransfer->getCalculatedDiscounts()->count() > 0) {
-            /** @var CalculatedDiscountTransfer $discountTotalTransfer */
-            foreach ($orderTransfer->getCalculatedDiscounts() as $calculatedDiscountTransfer)  {
+            /** @var \Generated\Shared\Transfer\CalculatedDiscountTransfer $discountTotalTransfer */
+            foreach ($orderTransfer->getCalculatedDiscounts() as $calculatedDiscountTransfer) {
                 $result[static::FIELD_VOUCHER_CODE] = $calculatedDiscountTransfer->getVoucherCode();
 
                 break; // we only accept one voucher

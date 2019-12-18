@@ -12,7 +12,7 @@ class DefaultVariableBuilder
     protected $defaultVariableBuilderPlugins;
 
     /**
-     * @var Store
+     * @var \Spryker\Shared\Kernel\Store
      */
     protected $store;
 
@@ -20,7 +20,7 @@ class DefaultVariableBuilder
      * DefaultVariableBuilder constructor.
      *
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
-     * @param Store $store
+     * @param \Spryker\Shared\Kernel\Store $store
      */
     public function __construct(array $defaultVariableBuilderPlugins, Store $store)
     {

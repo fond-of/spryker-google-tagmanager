@@ -14,9 +14,9 @@ class GoogleTagManagerDependencyProvider extends AbstractDependencyProvider
     public const PRODUCT_STORAGE_CLIENT = 'PRODUCT_STORAGE_CLIENT';
 
     /**
-     * @param Container $container
+     * @param \Spryker\Client\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Client\Kernel\Container
      */
     public function provideServiceLayerDependencies(Container $container): Container
     {
@@ -28,9 +28,9 @@ class GoogleTagManagerDependencyProvider extends AbstractDependencyProvider
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Client\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Client\Kernel\Container
      */
     protected function addProductResourceAliasStorageClient(Container $container): Container
     {
@@ -44,9 +44,9 @@ class GoogleTagManagerDependencyProvider extends AbstractDependencyProvider
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Client\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Client\Kernel\Container
      */
     protected function addProductStorageClient(Container $container): Container
     {

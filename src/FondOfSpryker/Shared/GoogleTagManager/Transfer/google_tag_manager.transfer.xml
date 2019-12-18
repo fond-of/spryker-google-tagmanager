@@ -6,4 +6,5 @@
     <transfer name="ProductAbstract">
         <property name="name" type="string" />
     </transfer>
+
 </transfers>

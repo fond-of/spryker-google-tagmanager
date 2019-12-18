@@ -41,7 +41,7 @@ class GoogleTagManagerClient extends AbstractClient implements GoogleTagManagerC
      * @param string $localeName
      * @param array $selectedAttributes
      *
-     * @return ProductViewTransfer
+     * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
     public function mapProductStorageData(array $data, string $localeName, array $selectedAttributes = []): ProductViewTransfer
     {

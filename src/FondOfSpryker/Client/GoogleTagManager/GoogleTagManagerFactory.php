@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
-
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageInterface;
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface;
 use Spryker\Client\Kernel\AbstractFactory;
@@ -11,9 +10,9 @@ use Spryker\Client\Kernel\AbstractFactory;
 class GoogleTagManagerFactory extends AbstractFactory
 {
     /**
-     * @return GoogleTagManagerClientToProductResourceAliasStorageInterface
-     *
      * @throws
+     *
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageInterface
      */
     public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageInterface
     {
@@ -21,9 +20,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return GoogleTagManagerClientToProductStorageClientInterface
-     *
      * @throws
+     *
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface
      */
     public function getProductStorageClient(): GoogleTagManagerClientToProductStorageClientInterface
     {

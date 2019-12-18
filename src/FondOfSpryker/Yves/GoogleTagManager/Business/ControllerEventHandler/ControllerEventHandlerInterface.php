@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 interface ControllerEventHandlerInterface
 {
     /**
-     * @param Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      */
-    public function hande(Request $request, GoogleTagManagerClientInterface $client): void;
+    public function handle(Request $request, GoogleTagManagerClientInterface $client, string $locale): void;
 
     /**
      * @return string
