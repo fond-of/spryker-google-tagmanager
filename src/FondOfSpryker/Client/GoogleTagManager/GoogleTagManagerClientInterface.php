@@ -3,32 +3,18 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
-use Generated\Shared\Transfer\ProductViewTransfer;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface;
 
 interface GoogleTagManagerClientInterface
 {
     /**
-     * @param string $sku
-     * @param string $localeName
-     *
-     * @return array|null
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface
      */
-    public function findProductAbstractStorageDataBySku(string $sku, string $localeName): ?array;
+    public function getProductStorageClient(): GoogleTagManagerClientToProductStorageClientInterface;
 
     /**
-     * @param string $sku
-     * @param string $localeName
-     *
-     * @return array|null
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface
      */
-    public function findProductConcreteStorageDataBySku(string $sku, string $localeName): ?array;
-
-    /**
-     * @param array $data
-     * @param string $localeName
-     * @param array $selectedAttributes
-     *
-     * @return \Generated\Shared\Transfer\ProductViewTransfer
-     */
-    public function mapProductStorageData(array $data, string $localeName, array $selectedAttributes = []): ProductViewTransfer;
+    public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
 }

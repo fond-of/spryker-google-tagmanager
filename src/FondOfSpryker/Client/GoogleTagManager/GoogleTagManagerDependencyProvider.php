@@ -3,7 +3,7 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
-use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageBridge;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientBridge;
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientBridge;
 use Spryker\Client\Kernel\AbstractDependencyProvider;
 use Spryker\Client\Kernel\Container;
@@ -35,7 +35,7 @@ class GoogleTagManagerDependencyProvider extends AbstractDependencyProvider
     protected function addProductResourceAliasStorageClient(Container $container): Container
     {
         $container[static::PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT] = function (Container $container) {
-            return new GoogleTagManagerClientToProductResourceAliasStorageBridge(
+            return new GoogleTagManagerClientToProductResourceAliasStorageClientBridge(
                 $container->getLocator()->productResourceAliasStorage()->client()
             );
         };

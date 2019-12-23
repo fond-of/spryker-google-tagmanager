@@ -3,7 +3,7 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
-use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageInterface;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface;
 use Spryker\Client\Kernel\AbstractFactory;
 
@@ -12,9 +12,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageInterface
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface
      */
-    public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageInterface
+    public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT);
     }

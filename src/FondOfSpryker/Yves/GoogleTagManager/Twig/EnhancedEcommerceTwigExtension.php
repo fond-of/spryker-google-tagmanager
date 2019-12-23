@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
+use Exception;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Spryker\Shared\Twig\TwigExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
     public const FUNCTION_ENHANCED_ECOMMERCE = 'enhancedEcommerce';
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceEventPluginInterface[]
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommercePageTypePluginInterface[]
      */
     protected $plugin;
 
@@ -54,6 +55,7 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
      * @param array $params
      *
      * @throws
+     * @throws \Exception
      *
      * @return string
      */
@@ -61,17 +63,22 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
     {
         switch ($page) {
             case GoogleTagManagerConstants::EEC_PAGE_TYPE_CART:
-                $eec = $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CART]->handle($request);
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CART]->handle($twig, $request, $params);
 
+            case GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL:
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL]->handle($twig, $request, $params);
                 break;
 
-            default:
-                $eec = [];
+            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS:
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS]->handle($twig, $request, $params);
+                break;
+
+            case GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE:
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE]->handle($twig, $request, $params);
+                break;
         }
 
-        return $twig->render($this->getEnhancedMicrodateTemplateName(), [
-            'data' => $eec,
-        ]);
+        throw new Exception(sprintf('no plugin for enhanced ecommerce found %s', __METHOD__));
     }
 
     /**

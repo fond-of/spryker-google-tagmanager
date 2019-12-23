@@ -1,10 +1,11 @@
 <?php
 
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler;
+namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface
@@ -28,7 +29,8 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
     {
         $sku = $request->get('sku');
 
-        $product = $client->findProductConcreteStorageDataBySku($sku, $locale);
+        $product = $client->getProductResourceAliasStorageClient()
+            ->findProductConcreteStorageDataBySku($sku, $locale);
 
         $removeProductEventArray = $this->getEnhancedEcommerceRemoveProductEventArray();
         $removeProductEventArray = $this->removeProduct($removeProductEventArray, $product);

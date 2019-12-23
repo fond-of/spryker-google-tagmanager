@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
-class GoogleTagmanagerFilterControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
+class CartControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
 {
     public const CONTROLLER = 'Yves\CartPage\Controller\CartController';
 
@@ -30,10 +30,10 @@ class GoogleTagmanagerFilterControllerEventHandlerPlugin extends AbstractPlugin 
             return;
         }
 
-        $controllerEventHandlers = $this->getFactory()
-            ->getControllerEventHandler();
+        $cartControllerEventHandler = $this->getFactory()
+            ->getCartControllerEventHandler();
 
-        foreach ($controllerEventHandlers as $controllerEventHandler) {
+        foreach ($cartControllerEventHandler as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
                 $controllerEventHandler->handle($event->getRequest(), $this->getClient(), 'en_US');
             }

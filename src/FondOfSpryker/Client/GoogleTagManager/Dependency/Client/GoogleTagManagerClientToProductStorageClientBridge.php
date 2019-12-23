@@ -32,4 +32,15 @@ class GoogleTagManagerClientToProductStorageClientBridge implements GoogleTagMan
     {
         return $this->client->mapProductStorageData($data, $localeName, $selectedAttributes);
     }
+
+    /**
+     * @param $idProductAbstract
+     * @param $localeName
+     *
+     * @return array|null
+     */
+    public function findProductAbstractStorageData($idProductAbstract, $localeName): ?array
+    {
+        return $this->client->findProductAbstractStorageData($idProductAbstract, $localeName);
+    }
 }

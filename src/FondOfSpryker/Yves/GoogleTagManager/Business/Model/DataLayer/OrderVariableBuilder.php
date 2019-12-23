@@ -127,13 +127,31 @@ class OrderVariableBuilder
         return [
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $product->getName(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitPrice()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX_RATE => $product->getTaxRate(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_QUANTITY => $product->getQuantity(),
         ];
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     *
+     * @return string
+     */
+    protected function getProductName(ItemTransfer $product): string
+    {
+        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getConcreteAttributes())) {
+            return $product->getName();
+        }
+
+        if (!$product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
+            return $product->getName();
+        }
+
+        return $product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
+use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class CategoryVariableBuilder
@@ -18,15 +20,31 @@ class CategoryVariableBuilder
     protected $categoryVariableBuilderPlugins;
 
     /**
+     * @var \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface
+     */
+    protected $client;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @param \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface $client
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[] $categoryVariableBuilderPlugins
+     * @param array|string $categoryVariableBuilderPlugins
+     * @param string|array $locale
      */
     public function __construct(
+        GoogleTagManagerClientInterface $client,
         MoneyPluginInterface $moneyPlugin,
+        string $locale,
         array $categoryVariableBuilderPlugins = []
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->categoryVariableBuilderPlugins = $categoryVariableBuilderPlugins;
+        $this->client = $client;
+        $this->locale = $locale;
     }
 
     /**
@@ -41,14 +59,20 @@ class CategoryVariableBuilder
         $productSkus = [];
 
         foreach ($products as $product) {
-            $productSkus[] = $product['abstract_sku'];
+            $productData = $this->client->getProductResourceAliasStorageClient()
+                ->findProductAbstractStorageDataBySku($product['abstract_sku'], $this->locale);
+
+            $product = $this->client->getProductStorageClient()
+                ->mapProductStorageData($productData, $this->locale);
 
             $categoryProducts[] = [
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product['id_product_abstract'],
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $product['abstract_name'],
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product['abstract_sku'],
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product['price']),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getPrice()),
             ];
+
+            $productSkus[] = $product->getSku();
         }
 
         $variables = [
@@ -60,6 +84,24 @@ class CategoryVariableBuilder
         ];
 
         return $this->executePlugins($variables, $category, $products);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     *
+     * @return string
+     */
+    protected function getProductName(ProductViewTransfer $product): string
+    {
+        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
+            return $product->getName();
+        }
+
+        if (!$product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
+            return $product->getName();
+        }
+
+        return $product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**

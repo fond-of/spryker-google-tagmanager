@@ -15,4 +15,12 @@ interface GoogleTagManagerClientToProductStorageClientInterface
      * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
     public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = []): ProductViewTransfer;
+
+    /**
+     * @param $idProductAbstract
+     * @param $localeName
+     *
+     * @return array|null
+     */
+    public function findProductAbstractStorageData($idProductAbstract, $localeName): ?array;
 }

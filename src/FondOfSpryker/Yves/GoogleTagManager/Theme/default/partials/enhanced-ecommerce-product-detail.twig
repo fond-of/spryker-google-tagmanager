@@ -1,0 +1,22 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'eec.detail',
+        ecommerce: {
+            detail: {
+                actionField: {
+                    list: 'product detail view'
+                },
+                products: [{
+                    id: '{{ product.sku }}',
+                    name: '{{ product.attributes.model }}',
+                    variant: '{{ product.attributes.style }}',
+                    brand: '{{ product.attributes.brand }}',
+                    dimension1: '{{ product.attributes.size }}'
+                }]
+            }
+        }
+    });
+</script>
+<!-- enhanced ecommerce end -->

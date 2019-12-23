@@ -2,7 +2,9 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
-use Generated\Shared\Transfer\ProductViewTransfer;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToCartClientInterface;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface;
 use Spryker\Client\Kernel\AbstractClient;
 
 /**
@@ -11,42 +13,26 @@ use Spryker\Client\Kernel\AbstractClient;
 class GoogleTagManagerClient extends AbstractClient implements GoogleTagManagerClientInterface
 {
     /**
-     * @param string $sku
-     * @param string $localeName
-     *
-     * @return array|null
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface
      */
-    public function findProductAbstractStorageDataBySku(string $sku, string $localeName): ?array
+    public function getProductStorageClient(): GoogleTagManagerClientToProductStorageClientInterface
     {
-        return $this->getFactory()
-            ->getProductResourceAliasStorageClient()
-            ->findProductAbstractStorageDataBySku($sku, $localeName);
+        return $this->getFactory()->getProductStorageClient();
     }
 
     /**
-     * @param string $sku
-     * @param string $localeName
-     *
-     * @return array|null
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface
      */
-    public function findProductConcreteStorageDataBySku(string $sku, string $localeName): ?array
+    public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageClientInterface
     {
-        return $this->getFactory()
-            ->getProductResourceAliasStorageClient()
-            ->findProductConcreteStorageDataBySku($sku, $localeName);
+        return $this->getFactory()->getProductResourceAliasStorageClient();
     }
 
     /**
-     * @param array $data
-     * @param string $localeName
-     * @param array $selectedAttributes
-     *
-     * @return \Generated\Shared\Transfer\ProductViewTransfer
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToCartClientInterface
      */
-    public function mapProductStorageData(array $data, string $localeName, array $selectedAttributes = []): ProductViewTransfer
+    public function getCartClient(): GoogleTagManagerClientToCartClientInterface
     {
-        return $this->getFactory()
-            ->getProductStorageClient()
-            ->mapProductStorageData($data, $localeName, $selectedAttributes);
+        return $this->getFactory()->getCartClient();
     }
 }

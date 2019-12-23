@@ -1,8 +1,9 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler;
+namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class ChangeQuantityControllerEventHandler implements ControllerEventHandlerInterface

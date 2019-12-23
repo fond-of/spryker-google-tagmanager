@@ -5,23 +5,27 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
+use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class EnhancedEcommerceCartEventPlugin extends AbstractPlugin implements EnhancedEcommerceEventPluginInterface
+class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param array|null $params
      *
      * @return array
      */
-    public function handle(Request $request): array
+    public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
-        return [
-            $this->addProduct($request),
-            $this->removeProduct($request),
-        ];
+        return $twig->render($this->getTemplate(), [
+            'data' => [
+                $this->addProduct($request),
+                $this->removeProduct($request),
+            ],
+        ]);
     }
 
     /**
@@ -40,6 +44,8 @@ class EnhancedEcommerceCartEventPlugin extends AbstractPlugin implements Enhance
         if (!array_key_exists('event', $addProductEventArray) || $addProductEventArray['event'] !== GoogleTagManagerConstants::EEC_EVENT_ADD) {
             return [];
         }
+
+        $request->getSession()->remove(GoogleTagManagerConstants::EEC_EVENT_ADD);
 
         return $addProductEventArray;
     }
@@ -61,6 +67,16 @@ class EnhancedEcommerceCartEventPlugin extends AbstractPlugin implements Enhance
             return [];
         }
 
+        $request->getSession()->remove(GoogleTagManagerConstants::EEC_EVENT_REMOVE);
+
         return $removeProductEventArray;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 }

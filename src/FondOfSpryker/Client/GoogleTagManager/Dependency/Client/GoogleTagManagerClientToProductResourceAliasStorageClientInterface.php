@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager\Dependency\Client;
 
-interface GoogleTagManagerClientToProductResourceAliasStorageInterface
+interface GoogleTagManagerClientToProductResourceAliasStorageClientInterface
 {
     /**
      * @param string $sku

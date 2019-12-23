@@ -4,7 +4,7 @@ namespace FondOfSpryker\Client\GoogleTagManager\Dependency\Client;
 
 use Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface;
 
-class GoogleTagManagerClientToProductResourceAliasStorageBridge implements GoogleTagManagerClientToProductResourceAliasStorageInterface
+class GoogleTagManagerClientToProductResourceAliasStorageClientBridge implements GoogleTagManagerClientToProductResourceAliasStorageClientInterface
 {
     /**
      * @var \Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface

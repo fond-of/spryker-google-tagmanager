@@ -37,6 +37,11 @@ interface GoogleTagManagerConstants
     public const PRODUCT_TAX_RATE = 'productTaxRate';
     public const PRODUCT_CURRENCY = 'productCurrency';
 
+    public const SIZE_UNTRANSLATED = 'size_untranslated';
+    public const STYLE_UNTRANSLATED = 'style_untranslated';
+    public const NAME_UNTRANSLATED = 'name_untranslated';
+    public const MODEL_UNTRANSLATED = 'model_untranslated';
+
     public const TRANSACTION_PRODUCT_ID = 'id';
     public const TRANSACTION_PRODUCT_SKU = 'sku';
     public const TRANSACTION_PRODUCT_NAME = 'name';
@@ -70,6 +75,10 @@ interface GoogleTagManagerConstants
     public const CUSTOMER_EMAIL = 'customerEmail';
 
     public const EEC_PAGE_TYPE_CART = 'cart';
+    public const EEC_PAGE_TYPE_PRODUCT_DETAIL = 'productDetail';
+    public const EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS = 'checkoutBillingAddress';
+    public const EEC_PAGE_TYPE_PURCHASE = 'purchase';
+
     public const EEC_EVENT_ADD = 'eec.add';
     public const EEC_EVENT_REMOVE = 'eec.remove';
 
@@ -79,4 +88,5 @@ interface GoogleTagManagerConstants
     public const EEC_PRODUCT_BRAND = 'brand';
     public const EEC_PRODUCT_QUNATITY = 'quantity';
     public const EEC_PRODUCT_DIMENSION1 = 'dimension1';
+    public const EEC_PRODUCT_PRICE = 'price';
 }

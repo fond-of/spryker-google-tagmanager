@@ -48,7 +48,7 @@ class ProductVariableBuilder
     {
         $variables = [
             GoogleTagManagerConstants::PRODUCT_ID => $product->getIdProductAbstract(),
-            GoogleTagManagerConstants::PRODUCT_NAME => $product->getName(),
+            GoogleTagManagerConstants::PRODUCT_NAME => $this->getProductName($product),
             GoogleTagManagerConstants::PRODUCT_SKU => $product->getSku(),
             GoogleTagManagerConstants::PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getPrice()),
             GoogleTagManagerConstants::PRODUCT_PRICE_EXCLUDING_TAX => $this->moneyPlugin->convertIntegerToDecimal(
@@ -76,6 +76,24 @@ class ProductVariableBuilder
         }
 
         return 0;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     *
+     * @return string
+     */
+    protected function getProductName(ProductAbstractTransfer $product): string
+    {
+        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
+            return $product->getName();
+        }
+
+        if (!$product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
+            return $product->getName();
+        }
+
+        return $product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**

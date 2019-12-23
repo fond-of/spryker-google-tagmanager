@@ -17,7 +17,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBu
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
-use Spryker\Client\Product\ProductClientInterface;
 use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
@@ -38,8 +37,8 @@ class GoogleTagManagerFactory extends AbstractFactory
             $this->getContainerID(),
             $this->isEnabled(),
             $this->getVariableBuilders(),
-            $this->createCartClient(),
-            $this->createSessionClient()
+            $this->getCartClient(),
+            $this->getSessionClient()
         );
     }
 
@@ -50,7 +49,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new ProductVariableBuilder(
             $this->createMoneyPlugin(),
-            $this->createTaxProductConnectorClient(),
+            $this->getTaxProductConnectorClient(),
             $this->getProductVariableBuilderPlugins()
         );
     }
@@ -61,7 +60,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createCategoryVariableBuilder(): CategoryVariableBuilder
     {
         return new CategoryVariableBuilder(
+            $this->getClient(),
             $this->createMoneyPlugin(),
+            $this->getStore()->getCurrentLocale(),
             $this->getCategoryVariableBuilderPlugins()
         );
     }
@@ -124,7 +125,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceEventPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommercePageTypePluginInterface[]
      */
     public function getEnhancedEcommercePlugins(): array
     {
@@ -160,7 +161,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \Spryker\Client\Cart\CartClientInterface CartClientInterface
      */
-    protected function createCartClient(): CartClientInterface
+    public function getCartClient(): CartClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CLIENT);
     }
@@ -178,19 +179,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \Spryker\Client\product\ProductClientInterface
-     */
-    protected function createProductClient(): ProductClientInterface
-    {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_CLIENT);
-    }
-
-    /**
-     * @throws
-     *
      * @return \Spryker\Client\Session\SessionClientInterface;
      */
-    protected function createSessionClient(): SessionClientInterface
+    protected function getSessionClient(): SessionClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::SESSION_CLIENT);
     }
@@ -200,7 +191,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
      */
-    public function createTaxProductConnectorClient()
+    public function getTaxProductConnectorClient()
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::TAX_PRODUCT_CONNECTOR_CLIENT);
     }
@@ -260,9 +251,9 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
-    public function getControllerEventHandler(): array
+    public function getCartControllerEventHandler(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CONTROLLER_EVENT_HANDLER);
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CONTROLLER_EVENT_HANDLER);
     }
 
     /**

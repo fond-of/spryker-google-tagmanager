@@ -1,0 +1,37 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    {% set shipping = (data.cart.shipment is not empty and data.cart.shipment.method is not empty)
+        ? data.cart.shipment.method.storeCurrencyPrice : 0 %}
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'eec.purchase',
+        ecommerce: {
+            currencyCode: 'EUR',
+            purchase: {
+                actionField: {
+                    id: '{{ quote.orderReference }}',
+                    affiliation: '{{ quote.store.name }}',
+                    revenue: '{{ qoute.totals.priceToPay }}',
+                    tax: '{{ qoute.totals.taxTotal.amount }}',
+                    shipping: '2.00',
+                    coupon: '{{ voucherCode }}'
+                },
+                products: [
+                    {% for item in quote.items %}
+                    {
+                        id: '{{ item.sku }}',
+                        name: '{{ item.name }}',
+                        variant: '{{ products[item.sku].attributes.style }}',
+                        brand: '{{ quote.store.name }}',
+                        quantity: {{ item.quantity }},
+                        dimension1: '{{ products[item.sku].attributes.size }}',
+                        price: '{{ item.priceProduct }}'{% if loop.last == false %},{% endif %}
+                    }
+                    {% endfor %}
+                ]
+            }
+        }
+    });
+</script>
+<!-- enhanced ecommerce end -->
