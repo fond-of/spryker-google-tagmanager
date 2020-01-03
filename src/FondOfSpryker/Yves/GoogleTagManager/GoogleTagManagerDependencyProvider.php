@@ -13,6 +13,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\Add
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutShippingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
@@ -311,6 +312,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL => new EnhancedEcommerceProductDetailPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS => new EnhancedEcommerceCheckoutBillingAddressPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS => new EnhancedEcommerceCheckoutShippingAddressPlugin(),
+            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
         ];
     }

@@ -73,6 +73,14 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
                 return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS]->handle($twig, $request, $params);
                 break;
 
+            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS:
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS]->handle($twig, $request, $params);
+                break;
+
+            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT:
+                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT]->handle($twig, $request, $params);
+                break;
+
             case GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE:
                 return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE]->handle($twig, $request, $params);
                 break;

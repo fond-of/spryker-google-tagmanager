@@ -38,6 +38,7 @@ class DefaultVariableBuilder
         $variables = [
             'pageType' => $page,
             'currency' => $this->store->getCurrencyIsoCode(),
+            'store' => $this->store->getStoreName(),
         ];
 
         return $this->executePlugins($variables);

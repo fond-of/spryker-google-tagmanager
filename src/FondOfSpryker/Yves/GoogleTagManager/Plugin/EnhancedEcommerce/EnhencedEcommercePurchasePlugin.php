@@ -36,7 +36,6 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     {
         $products = [];
         $voucherCode = '';
-        $shipment =
 
         $quoteTransfer = $this->getFactory()
             ->getCartClient()
@@ -95,7 +94,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      */
     protected function getShipment(QuoteTransfer $quoteTransfer): int
     {
-        if (!$quoteTransfer->getShipment() === null) {
+        if ($quoteTransfer->getShipment() === null) {
             return 0;
         }
 

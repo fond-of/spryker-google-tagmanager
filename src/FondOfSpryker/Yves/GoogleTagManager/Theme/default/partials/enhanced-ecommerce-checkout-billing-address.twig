@@ -2,24 +2,13 @@
 <script type="text/javascript">
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-        event: 'eec.checkout',
+        event: 'eec.checkout_option',
         ecommerce: {
-            checkout: {
+            checkout_option: {
                 actionField: {
-                    step: 1
-                },
-                products: [
-                {% for item in quote.items %}
-                    {
-                        id: '{{ item.sku }}',
-                        name: '{{ item.name }}',
-                        variant: '{{ products[item.sku].attributes.style }}',
-                        brand: '{{ quote.store.name }}',
-                        quantity: {{ item.quantity }},
-                        dimension1: '{{ products[item.sku].attributes.size }}',
-                    }{% if loop.last == false %},{% endif %}
-                {% endfor %}
-                ]
+                    step: 2,
+                    option: 'Billing address'
+                }
             }
         }
     });

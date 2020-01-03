@@ -32,23 +32,6 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
-        $quoteTransfer = $this->getFactory()->getCartClient()->getQuote();
-        $products = [];
-
-        foreach ($quoteTransfer->getItems() as $item) {
-            $productData = $this->getClient()
-                ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
-
-            $products[$item->getSku()] = $this->getClient()->getProductStorageClient()->mapProductStorageData(
-                $productData,
-                $this->getLocale()
-            );
-        }
-
-        return $twig->render($this->getTemplate(), [
-            'quote' => $quoteTransfer,
-            'products' => $products,
-        ]);
+        return $twig->render($this->getTemplate(), []);
     }
 }

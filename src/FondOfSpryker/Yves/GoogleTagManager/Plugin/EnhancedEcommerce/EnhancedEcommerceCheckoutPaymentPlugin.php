@@ -11,14 +11,14 @@ use Twig_Environment;
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
-class EnhancedEcommerceCheckoutShippingAddressPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
+class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
     /**
      * @return string
      */
     public function getTemplate(): string
     {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-checkout-shipping-address.twig';
+        return '@GoogleTagManager/partials/enhanced-ecommerce-checkout-payment.twig';
     }
 
     /**

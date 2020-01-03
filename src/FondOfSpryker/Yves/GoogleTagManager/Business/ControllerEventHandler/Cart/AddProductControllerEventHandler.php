@@ -59,20 +59,6 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
         $request->getSession()->set(GoogleTagManagerConstants::EEC_EVENT_ADD, serialize($addProductEventArray));
     }
 
-    protected function attributeMap()
-    {
-        return [
-              'attribute_map' => [
-                  'super_attributes' => [
-                      'model' => [
-                            'Großer Freund',
-                      ],
-
-                  ],
-              ],
-        ];
-    }
-
     /**
      * @return array
      */
