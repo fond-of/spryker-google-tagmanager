@@ -79,7 +79,14 @@ interface GoogleTagManagerConstants
     public const EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS = 'checkoutBillingAddress';
     public const EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS = 'checkoutShippingAddress';
     public const EEC_PAGE_TYPE_CHECKOUT_PAYMENT = 'checkoutPayment';
+    public const EEC_PAGE_TYPE_CHECKOUT_SUMMARY = 'checkoutSummary';
     public const EEC_PAGE_TYPE_PURCHASE = 'purchase';
+
+    public const EEC_CHECKOUT_STEP_CART = 1;
+    public const EEC_CHECKOUT_STEP_BILLING_ADDRESS = 2;
+    public const EEC_CHECKOUT_STEP_SHIPPING_ADDRESS = 3;
+    public const EEC_CHECKOUT_STEP_PAYMENT = 4;
+    public const EEC_CHECKOUT_STEP_SUMMARY = 5;
 
     public const EEC_EVENT_ADD = 'eec.add';
     public const EEC_EVENT_REMOVE = 'eec.remove';

@@ -12,7 +12,11 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  */
 class CartControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
 {
-    public const CONTROLLER = 'Yves\CartPage\Controller\CartController';
+    public const CONTROLLER = [
+        'Yves\CartPage\Controller\CartController',
+        'Yves\CartPage\Controller\CheckoutController',
+        'Yves\ProductDetailPage\Controller\ProductController'
+    ];
 
     /**
      * Specification:
@@ -26,7 +30,7 @@ class CartControllerEventHandlerPlugin extends AbstractPlugin implements FilterC
      */
     public function handle(FilterControllerEvent $event): void
     {
-        if (\strpos(\get_class($event->getController()[0]), static::CONTROLLER) === false) {
+        if (in_array(\get_class($event->getController()[0]), static::CONTROLLER)) {
             return;
         }
 

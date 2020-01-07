@@ -3,7 +3,6 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
 use Exception;
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Spryker\Shared\Twig\TwigExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -61,29 +60,8 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
      */
     public function renderEnhancedEcommerce(Twig_Environment $twig, string $page, ?Request $request, array $params = []): string
     {
-        switch ($page) {
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CART:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CART]->handle($twig, $request, $params);
-
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL]->handle($twig, $request, $params);
-                break;
-
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS]->handle($twig, $request, $params);
-                break;
-
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS]->handle($twig, $request, $params);
-                break;
-
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT]->handle($twig, $request, $params);
-                break;
-
-            case GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE:
-                return $this->plugin[GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE]->handle($twig, $request, $params);
-                break;
+        if (array_key_exists($page, $this->plugin)) {
+            return $this->plugin[$page]->handle($twig, $request, $params);
         }
 
         throw new Exception(sprintf('no plugin for enhanced ecommerce found %s', __METHOD__));

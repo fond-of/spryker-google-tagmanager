@@ -2,12 +2,11 @@
 <script type="text/javascript">
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-        event: 'eec.checkout_option',
+        event: 'eec.checkout',
         ecommerce: {
-            checkout_option: {
+            checkout: {
                 actionField: {
-                    step: 2,
-                    option: 'Billing address'
+                    step: {{ step }},
                 }
             }
         }

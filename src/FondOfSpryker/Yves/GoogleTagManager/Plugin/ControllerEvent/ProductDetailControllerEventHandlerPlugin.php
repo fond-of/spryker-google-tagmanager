@@ -13,7 +13,9 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  */
 class ProductDetailControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
 {
-    public const CONTROLLER = 'Yves\ProductDetailPage\Controller\ProductController';
+    public const CONTROLLER = [
+        'Yves\ProductDetailPage\Controller\ProductController',
+    ];
 
     /**
      * Specification:
@@ -27,7 +29,7 @@ class ProductDetailControllerEventHandlerPlugin extends AbstractPlugin implement
      */
     public function handle(FilterControllerEvent $event): void
     {
-        if (\strpos(\get_class($event->getController()[0]), static::CONTROLLER) === false) {
+        if (in_array(\get_class($event->getController()[0]), static::CONTROLLER)) {
             return;
         }
 

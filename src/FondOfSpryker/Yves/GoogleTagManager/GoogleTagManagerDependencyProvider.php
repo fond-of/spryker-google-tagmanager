@@ -11,10 +11,13 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SummaryControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutShippingAddressPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutSummaryPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
@@ -285,6 +288,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         return [
             new AddProductControllerEventHandler(),
             new RemoveProductControllerEventHandler(),
+            new SummaryControllerEventHandler(),
+            new SuccessControllerEventHandler(),
         ];
     }
 
@@ -313,6 +318,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS => new EnhancedEcommerceCheckoutBillingAddressPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS => new EnhancedEcommerceCheckoutShippingAddressPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
+            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
         ];
     }

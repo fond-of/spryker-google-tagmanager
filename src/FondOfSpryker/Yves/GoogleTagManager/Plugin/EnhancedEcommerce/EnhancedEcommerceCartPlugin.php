@@ -38,7 +38,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function cartView(Request $request): array
     {
-        $quoteTransfer = $this->getFactory()->getCartClient()->getQuote();
+        $quoteTransfer = $this->getClient()->getCartClient()->getQuote();
         $products = [];
 
         foreach ($quoteTransfer->getItems() as $item) {
@@ -67,7 +67,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             'event' => 'eec.checkout',
             'ecommerce' => [
                 'actionField' => [
-                    'step' => 1,
+                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
                 ],
                 'products' => [],
             ],

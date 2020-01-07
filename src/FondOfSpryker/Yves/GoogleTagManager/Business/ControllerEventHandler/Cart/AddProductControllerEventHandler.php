@@ -77,7 +77,7 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
 
     /**
      * @param array $addProductEventArray
-     * @param array $addProduct
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param int $quantity
      *
      * @return array

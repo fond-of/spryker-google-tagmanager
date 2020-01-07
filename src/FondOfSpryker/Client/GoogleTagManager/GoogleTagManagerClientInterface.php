@@ -3,6 +3,7 @@
 
 namespace FondOfSpryker\Client\GoogleTagManager;
 
+use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToCartClientInterface;
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductStorageClientInterface;
 
@@ -17,4 +18,9 @@ interface GoogleTagManagerClientInterface
      * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToProductResourceAliasStorageClientInterface
      */
     public function getProductResourceAliasStorageClient(): GoogleTagManagerClientToProductResourceAliasStorageClientInterface;
+
+    /**
+     * @return \FondOfSpryker\Client\GoogleTagManager\Dependency\Client\GoogleTagManagerClientToCartClientInterface
+     */
+    public function getCartClient(): GoogleTagManagerClientToCartClientInterface;
 }

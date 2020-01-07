@@ -1,37 +1,38 @@
 <!-- enhanced ecommerce start -->
 <script type="text/javascript">
-    {% set shipping = (data.cart.shipment is not empty and data.cart.shipment.method is not empty)
-        ? data.cart.shipment.method.storeCurrencyPrice : 0 %}
-
+    {% if order is defined %}
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
         event: 'eec.purchase',
         ecommerce: {
-            currencyCode: 'EUR',
+            currencyCode: '{{ order.currency.code }}',
             purchase: {
                 actionField: {
-                    id: '{{ quote.orderReference }}',
-                    affiliation: '{{ quote.store.name }}',
-                    revenue: '{{ qoute.totals.priceToPay }}',
-                    tax: '{{ qoute.totals.taxTotal.amount }}',
-                    shipping: '2.00',
-                    coupon: '{{ voucherCode }}'
+                    id: '{{ order.orderReference }}',
+                    affiliation: '{{ order.store.name }}',
+                    revenue: '{{ order.totals.subtotal }}',
+                    tax: '{{ order.totals.taxTotal.amount }}',
+                    {% if shipment is defined  %}shipping: {{ shipment }},{% endif %}
+                    {% if voucherCode is defined %}coupon: '{{ voucherCode }}'{% endif %}
                 },
+                {% if products is defined and products | length > 0 and order.items | length > 0 %}
                 products: [
-                    {% for item in quote.items %}
+                    {% for item in order.items %}
                     {
                         id: '{{ item.sku }}',
                         name: '{{ item.name }}',
                         variant: '{{ products[item.sku].attributes.style }}',
-                        brand: '{{ quote.store.name }}',
+                        brand: '{{ order.store.name }}',
                         quantity: {{ item.quantity }},
                         dimension1: '{{ products[item.sku].attributes.size }}',
-                        price: '{{ item.priceProduct }}'{% if loop.last == false %},{% endif %}
-                    }
+                        price: '{{ item.unitPrice }}'
+                    }{% if loop.last == false %},{% endif %}
                     {% endfor %}
                 ]
+                {% endif %}
             }
         }
     });
+    {% endif %}
 </script>
 <!-- enhanced ecommerce end -->

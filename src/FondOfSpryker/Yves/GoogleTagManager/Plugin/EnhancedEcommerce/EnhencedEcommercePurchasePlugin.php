@@ -3,7 +3,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use Exception;
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,15 +34,12 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
-        $products = [];
-        $voucherCode = '';
+        /** @var \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer */
+        $quoteTransfer = $request->getSession()->get(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
+        //$request->getSession()->remove(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
 
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
-
-        foreach ($quoteTransfer->getVoucherDiscounts() as $discount) {
-            $voucherCode = $discount->getVoucherCode();
+        if (!$quoteTransfer instanceof QuoteTransfer) {
+            return '';
         }
 
         foreach ($quoteTransfer->getItems() as $item) {
@@ -57,9 +54,9 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
         }
 
         return $twig->render($this->getTemplate(), [
-            'quote' => $quoteTransfer,
+            'order' => $quoteTransfer,
             'products' => $products,
-            'voucherCode' => $voucherCode,
+            'voucherCode' => $this->getDiscountCode($quoteTransfer),
             'shipment' => $this->getShipment($quoteTransfer),
         ]);
     }
@@ -68,23 +65,18 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @throws
-     * @throws \Exception
      *
      * @return string
      */
-    protected function getDiscoutCode(QuoteTransfer $quoteTransfer): string
+    protected function getDiscountCode(QuoteTransfer $quoteTransfer): string
     {
-        if ($quoteTransfer->getVoucherDiscounts()->count() === 0) {
-            return '';
+        $voucherCodes = [];
+
+        foreach ($quoteTransfer->getVoucherDiscounts() as $voucherDiscount) {
+            array_push($voucherCodes, $voucherDiscount->getVoucherCode());
         }
 
-        if ($quoteTransfer->getVoucherDiscounts()->count() > 1) {
-            throw new Exception('only no or one discount voucher is supported');
-        }
-
-        $discountTransfer = $quoteTransfer->getVoucherDiscounts()[0];
-
-        return $discountTransfer->getVoucherCode();
+        return \implode(",", $voucherCodes);
     }
 
     /**
