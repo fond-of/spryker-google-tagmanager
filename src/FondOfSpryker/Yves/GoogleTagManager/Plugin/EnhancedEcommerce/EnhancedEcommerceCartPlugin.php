@@ -39,20 +39,8 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
     protected function cartView(Request $request): array
     {
         $quoteTransfer = $this->getClient()->getCartClient()->getQuote();
-        $products = [];
 
-        foreach ($quoteTransfer->getItems() as $item) {
-            $productData = $this->getClient()
-                ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
-
-            $products[$item->getSku()] = $this->getClient()->getProductStorageClient()->mapProductStorageData(
-                $productData,
-                $this->getLocale()
-            );
-        }
-
-        return $this->renderCartView($quoteTransfer, $products);
+        return $this->renderCartView($quoteTransfer);
     }
 
     /**
@@ -61,30 +49,45 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      * @return \Generated\Shared\Transfer\ProductViewTransfer[] $products
      * @return array
      */
-    protected function renderCartView(QuoteTransfer $quoteTransfer, array $products): array
+    protected function renderCartView(QuoteTransfer $quoteTransfer): array
     {
         $content = [
             'event' => 'eec.checkout',
             'ecommerce' => [
-                'actionField' => [
-                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
-                ],
-                'products' => [],
+                'checkout' => [
+                    'actionField' => [
+                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
+                    ],
+                    'products' => [],
+                ]
             ],
         ];
 
-        foreach ($quoteTransfer->getItems() as $item) {
-            $content['ecommerce']['products'] = [
-                'id' => $item->getSku(),
-                'name' => $item->getName(),
-                'variant' => $products[$item->getSku()]->getAttributes()['style'],
-                'brand' => $quoteTransfer->getStore()->getName(),
-                'quantity' => $item->getQuantity(),
-                'dimension1' => $products[$item->getSku()]->getAttributes()['size'],
-            ];
-        }
+        $content['ecommerce']['checkout']['products'] = $this->renderCartViewProducts($quoteTransfer);
 
         return $content;
+    }
+
+    /**
+     * @param QuoteTransfer $quoteTransfer
+     *
+     * @return array
+     */
+    protected function renderCartViewProducts(QuoteTransfer $quoteTransfer): array
+    {
+        $products = [];
+
+        foreach ($quoteTransfer->getItems() as $item) {
+            $productData = $this->getClient()
+                ->getProductStorageClient()
+                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
+
+            $products[] = $this->getFactory()
+                ->createEnhancedEcommerceProductMapper()
+                ->map(array_merge($productData, ['quantity' => $item->getQuantity()]));
+        }
+
+        return $products;
     }
 
     /**

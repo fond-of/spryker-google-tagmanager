@@ -9,6 +9,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Business\Mapper\EnhancedEcommerceProductMapper;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
@@ -262,5 +263,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function getStore(): Store
     {
         return Store::getInstance();
+    }
+
+    /**
+     * @return EnhancedEcommerceProductMapper
+     */
+    public function createEnhancedEcommerceProductMapper(): EnhancedEcommerceProductMapper
+    {
+        return new EnhancedEcommerceProductMapper();
     }
 }

@@ -8,13 +8,7 @@
                 actionField: {
                     list: 'product detail view'
                 },
-                products: [{
-                    id: '{{ product.sku }}',
-                    name: '{{ product.attributes.model }}',
-                    variant: '{{ product.attributes.style }}',
-                    brand: '{{ product.attributes.brand }}',
-                    dimension1: '{{ product.attributes.size }}'
-                }]
+                products: {{ products | json_encode | raw }}
             }
         }
     });

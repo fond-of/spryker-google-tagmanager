@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +39,7 @@ class SummaryControllerEventHandler implements ControllerEventHandlerInterface
             'ecommerce' => [
                 'checkout_option' => [
                     'actionField' => [
-                        'step' => 4,
+                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
                         'option' => $paymentProvider,
                     ],
                 ],

@@ -36,7 +36,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     {
         /** @var \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer */
         $quoteTransfer = $request->getSession()->get(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
-        //$request->getSession()->remove(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
+        $request->getSession()->remove(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
 
         if (!$quoteTransfer instanceof QuoteTransfer) {
             return '';
@@ -47,10 +47,9 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
                 ->getProductStorageClient()
                 ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
 
-            $products[$item->getSku()] = $this->getClient()->getProductStorageClient()->mapProductStorageData(
-                $productData,
-                $this->getLocale()
-            );
+            $products[] = $this->getFactory()
+                ->createEnhancedEcommerceProductMapper()
+                ->map(array_merge($productData, ['quantity' => $item->getQuantity()]));
         }
 
         return $twig->render($this->getTemplate(), [

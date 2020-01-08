@@ -16,19 +16,7 @@
                     {% if voucherCode is defined %}coupon: '{{ voucherCode }}'{% endif %}
                 },
                 {% if products is defined and products | length > 0 and order.items | length > 0 %}
-                products: [
-                    {% for item in order.items %}
-                    {
-                        id: '{{ item.sku }}',
-                        name: '{{ item.name }}',
-                        variant: '{{ products[item.sku].attributes.style }}',
-                        brand: '{{ order.store.name }}',
-                        quantity: {{ item.quantity }},
-                        dimension1: '{{ products[item.sku].attributes.size }}',
-                        price: '{{ item.unitPrice }}'
-                    }{% if loop.last == false %},{% endif %}
-                    {% endfor %}
-                ]
+                    products: {{ products | json_encode | raw }}
                 {% endif %}
             }
         }

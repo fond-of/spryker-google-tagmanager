@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
 
 /**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
 class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
@@ -31,8 +32,12 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
             ->getProductStorageClient()
             ->mapProductStorageData($productData, $this->getLocale());
 
+        $products[] = $this->getFactory()
+            ->createEnhancedEcommerceProductMapper()
+            ->map($productViewTransfer->toArray());
+
         return $twig->render($this->getTemplate(), [
-            'product' => $productViewTransfer,
+            'products' => $products,
         ]);
     }
 

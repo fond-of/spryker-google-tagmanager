@@ -62,6 +62,10 @@ class CategoryVariableBuilder
             $productData = $this->client->getProductResourceAliasStorageClient()
                 ->findProductAbstractStorageDataBySku($product['abstract_sku'], $this->locale);
 
+            if ($productData === null) {
+                continue;
+            }
+
             $product = $this->client->getProductStorageClient()
                 ->mapProductStorageData($productData, $this->locale);
 

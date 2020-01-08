@@ -50,11 +50,13 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     protected function renderCheckoutPaymentSelection(QuoteTransfer $quoteTransfer): array
     {
         return [
-            'event' => 'eec.checkout',
+            'event' => 'eec.checkout_option',
             'ecommerce' => [
-                'actionField' => [
-                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_PAYMENT,
-                    'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
+                'checkout_option' => [
+                    'actionField' => [
+                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_PAYMENT,
+                        'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
+                    ],
                 ],
             ],
         ];
@@ -68,9 +70,11 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
         return [
             'event' => 'eec.checkout',
             'ecommerce' => [
-                'actionField' => [
-                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
-                ],
+                'checkout' => [
+                    'actionField' => [
+                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
+                    ],
+                ]
             ],
         ];
     }
