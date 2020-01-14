@@ -16,10 +16,6 @@ class ChangeProductQuantityControllerEventHandler implements ControllerEventHand
      */
     public function handle(Request $request, GoogleTagManagerClientInterface $client, string $locale): void
     {
-        $quoteTransfer = $client->getCartClient()->getQuote();
-        $sku = $request->get('sku');
-        $quantity = $request->get('quantity');
-
         return;
     }
 
