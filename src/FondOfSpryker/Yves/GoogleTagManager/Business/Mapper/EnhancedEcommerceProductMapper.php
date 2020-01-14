@@ -94,7 +94,7 @@ class EnhancedEcommerceProductMapper
         }
 
         if (!array_key_exists(static::BRAND, $product[static::ATTR])) {
-            return[];
+            return [];
         }
 
         return [static::BRAND => $product[static::ATTR][static::BRAND]];

@@ -7,7 +7,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 interface GoogleTagManagerToCartClientInterface
 {
     /**
-     * @return QuoteTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function getQuote(): QuoteTransfer;
 }

@@ -74,7 +74,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
                     'actionField' => [
                         'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
                     ],
-                ]
+                ],
             ],
         ];
     }

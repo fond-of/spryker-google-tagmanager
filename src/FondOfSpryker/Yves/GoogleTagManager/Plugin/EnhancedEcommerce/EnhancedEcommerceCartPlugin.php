@@ -59,7 +59,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
                         'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
                     ],
                     'products' => [],
-                ]
+                ],
             ],
         ];
 
@@ -69,7 +69,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return array
      */

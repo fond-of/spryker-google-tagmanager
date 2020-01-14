@@ -266,7 +266,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return EnhancedEcommerceProductMapper
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Mapper\EnhancedEcommerceProductMapper
      */
     public function createEnhancedEcommerceProductMapper(): EnhancedEcommerceProductMapper
     {
