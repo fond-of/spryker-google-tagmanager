@@ -32,6 +32,10 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
         $productConcreteData = $client->getProductResourceAliasStorageClient()
             ->findProductConcreteStorageDataBySku($sku, $locale);
 
+        if (!isset($productConcreteData['id_product_abstract'])) {
+            return;
+        }
+
         $productDataAbstract = $client->getProductStorageClient()
             ->findProductAbstractStorageData($productConcreteData['id_product_abstract'], $locale);
 

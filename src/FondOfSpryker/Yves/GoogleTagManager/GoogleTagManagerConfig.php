@@ -51,4 +51,12 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     {
         return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_TO);
     }
+
+    /**
+     * @return array
+     */
+    public function getListenToControllers(): array
+    {
+        return $this->get(GoogleTagManagerConstants::EEC_LISTEN_TO_CONTROLLERS, []);
+    }
 }

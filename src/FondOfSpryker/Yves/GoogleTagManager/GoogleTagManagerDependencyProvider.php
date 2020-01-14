@@ -46,6 +46,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const QUOTE_VARIABLE_BUILDER_PLUGINS = 'QUOTE_VARIABLE_BUILDER_PLUGINS';
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
+    public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -66,6 +67,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addQuoteVariableBuilderPlugins($container);
         $this->addCartControllerEventHandler($container);
         $this->addEnhancedEcommercePlugins($container);
+        $this->addEnhancedEcommerceProductMapperPlugins($container);
 
         return $container;
     }
@@ -321,5 +323,27 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
             GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
         ];
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addEnhancedEcommerceProductMapperPlugins(Container $container): Container
+    {
+        $container[static::ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS] = function () {
+            return $this->getEnhancedEcommerceProductMapperPlugins();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getEnhancedEcommerceProductMapperPlugins(): array
+    {
+        return [];
     }
 }

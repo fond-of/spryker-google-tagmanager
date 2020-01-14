@@ -166,15 +166,15 @@ class QuoteVariableBuilder
      */
     protected function getProductName(ItemTransfer $product): string
     {
-        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getConcreteAttributes())) {
+        if (!isset($product->getAbstractAttributes()['_'])) {
             return $product->getName();
         }
 
-        if (!$product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
+        if (!isset($product->getAbstractAttributes()['_'][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
             return $product->getName();
         }
 
-        return $product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
+        return $product->getAbstractAttributes()['_'][GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**
