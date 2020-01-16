@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;

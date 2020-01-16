@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,21 +52,18 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function renderCartView(QuoteTransfer $quoteTransfer): array
     {
-        $content = [
-            'event' => 'eec.checkout',
-            'ecommerce' => [
-                'checkout' => [
-                    'actionField' => [
-                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
-                    ],
-                    'products' => [],
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'checkout' => [
+                'actionField' => [
+                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_CART,
                 ],
+                'products' => $this->renderCartViewProducts($quoteTransfer),
             ],
-        ];
+        ]);
 
-        $content['ecommerce']['checkout']['products'] = $this->renderCartViewProducts($quoteTransfer);
-
-        return $content;
+        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**

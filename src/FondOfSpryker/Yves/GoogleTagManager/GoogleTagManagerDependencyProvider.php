@@ -9,10 +9,11 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\AddProductControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SummaryControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\SummaryControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
@@ -131,12 +132,12 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     /**
      * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return void
+     * @return \Spryker\Yves\Kernel\Container
      */
-    protected function provideSessionClient(Container $container)
+    protected function provideSessionClient(Container $container): Container
     {
         $container[static::SESSION_CLIENT] = function (Container $container) {
-            return $container->getLocator()->session()->client();
+            return new GoogleTagManagerToSessionClientBridge($container->getLocator()->session()->client());
         };
 
         return $container;

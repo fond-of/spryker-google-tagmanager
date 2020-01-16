@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler;
+namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use Symfony\Component\HttpFoundation\Request;

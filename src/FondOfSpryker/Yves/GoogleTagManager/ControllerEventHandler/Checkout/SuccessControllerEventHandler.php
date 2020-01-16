@@ -1,11 +1,11 @@
 <?php
 
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout;
+namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SuccessControllerEventHandler implements ControllerEventHandlerInterface

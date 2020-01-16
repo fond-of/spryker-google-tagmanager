@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use Spryker\Shared\Kernel\Store;
 

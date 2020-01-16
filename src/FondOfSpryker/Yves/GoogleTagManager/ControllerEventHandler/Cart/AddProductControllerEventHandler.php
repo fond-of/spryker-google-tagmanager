@@ -1,11 +1,13 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart;
+namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
+use Propel\Runtime\Collection\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
@@ -66,17 +68,18 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
     /**
      * @return array
      */
-    protected function getEnhancedEcommerceAddProductEventArray(): array
+    protected function getEnhancedEcommerceAddProductEventArray(ProductViewTransfer $productViewTransfer): array
     {
-        return [
-            'event' => 'eec.add',
-            'ecommerce' => [
-                'add' => [
-                    'actionField' => ['list' => 'Shopping cart'],
-                    'products' => [],
-                ],
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'add' => [
+                'actionField' => ['list' => 'Shopping cart'],
+                'products' => [],
             ],
-        ];
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**

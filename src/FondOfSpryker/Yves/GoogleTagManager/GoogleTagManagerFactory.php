@@ -10,15 +10,15 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Mapper\EnhancedEcommerceProductMapper;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\CategoryVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\ProductVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\QuoteVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
-use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -180,9 +180,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \Spryker\Client\Session\SessionClientInterface;
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface
      */
-    protected function getSessionClient(): SessionClientInterface
+    protected function getSessionClient(): GoogleTagManagerToSessionClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::SESSION_CLIENT);
     }

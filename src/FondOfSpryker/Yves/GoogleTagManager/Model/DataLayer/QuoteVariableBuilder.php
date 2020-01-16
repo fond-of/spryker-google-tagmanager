@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Generated\Shared\Transfer\AddressTransfer;
@@ -185,6 +185,18 @@ class QuoteVariableBuilder
     protected function getTotalWithoutShippingAmount(QuoteTransfer $quoteTransfer): int
     {
         if ($quoteTransfer->getShipment()) {
+            if ($quoteTransfer->getTotals() === null) {
+                return 0;
+            }
+
+            if (!$quoteTransfer->getShipment() === null) {
+                return 0;
+            }
+
+            if (!$quoteTransfer->getShipment()->getMethod() === null) {
+                return 0;
+            }
+
             return $quoteTransfer->getTotals()->getGrandTotal() - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
 

@@ -90,6 +90,7 @@ interface GoogleTagManagerConstants
 
     public const EEC_EVENT_ADD = 'eec.add';
     public const EEC_EVENT_REMOVE = 'eec.remove';
+    public const EEC_EVENT_CHECKOUT = 'eec.checkout';
 
     public const EEC_PRODUCT_ID = 'id';
     public const EEC_PRODUCT_NAME = 'name';
@@ -98,6 +99,8 @@ interface GoogleTagManagerConstants
     public const EEC_PRODUCT_QUNATITY = 'quantity';
     public const EEC_PRODUCT_DIMENSION1 = 'dimension1';
     public const EEC_PRODUCT_PRICE = 'price';
+
+
 
     public const EEC_LISTEN_TO_CONTROLLERS = 'EEC_LISTEN_TO_CONTROLLERS';
 }

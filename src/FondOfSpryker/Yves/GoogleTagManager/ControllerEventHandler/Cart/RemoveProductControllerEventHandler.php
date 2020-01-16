@@ -1,11 +1,11 @@
 <?php
 
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart;
+namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface

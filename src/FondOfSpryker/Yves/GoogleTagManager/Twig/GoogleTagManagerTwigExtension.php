@@ -9,6 +9,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Client\Cart\CartClientInterface;
@@ -71,15 +72,14 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param bool $isEnabled
      * @param array $variableBuilders
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
-     * @param \Spryker\Client\Session\SessionClientInterface $sessionClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
+     * @param GoogleTagManagerToSessionClientInterface $sessionClient
      */
     public function __construct(
         string $containerID,
         bool $isEnabled,
         array $variableBuilders,
         CartClientInterface $cartClient,
-        SessionClientInterface $sessionClient
+        GoogleTagManagerToSessionClientInterface $sessionClient
     ) {
         $this->sessionClient = $sessionClient;
         $this->containerID = $containerID;
