@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
@@ -24,15 +25,31 @@ class OrderVariableBuilder
     protected $orderVariableBuilderPlugins;
 
     /**
+     * @var GoogleTagManagerClientToProductStorageClientInterface
+     */
+    protected $productStorageClient;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $productStorageClient
+     * @param array $orderVariableBuilderPlugins
+     * @param string $locale
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
-        array $orderVariableBuilderPlugins = []
+        GoogleTagManagerToProductStorageClientInterface $productStorageClient,
+        array $orderVariableBuilderPlugins = [],
+        string $locale
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->orderVariableBuilderPlugins = $orderVariableBuilderPlugins;
+        $this->productStorageClient = $productStorageClient;
+        $this->locale = $locale;
     }
 
     /**
@@ -95,6 +112,11 @@ class OrderVariableBuilder
         $collection = [];
 
         foreach ($orderTransfer->getItems() as $item) {
+            $productData = $this->productStorageClient
+                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->locale);
+
+            $item->setConcreteAttributes($productData['attributes']);
+
             $collection[] = $this->getProductForTransaction($item);
         }
 
@@ -143,15 +165,11 @@ class OrderVariableBuilder
      */
     protected function getProductName(ItemTransfer $product): string
     {
-        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getConcreteAttributes())) {
-            return $product->getName();
+        if (isset($product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
+            return $product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
         }
 
-        if (!$product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
-            return $product->getName();
-        }
-
-        return $product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
+        return $product->getName();
     }
 
     /**

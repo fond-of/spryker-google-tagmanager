@@ -13,6 +13,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\Add
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\Checkout\SummaryControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
@@ -47,6 +48,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
     public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
+    public const PRODUCT_STORAGE_CLIENT = 'PRODUCT_STORAGE_CLIENT';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -68,6 +70,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addCartControllerEventHandler($container);
         $this->addEnhancedEcommercePlugins($container);
         $this->addEnhancedEcommerceProductMapperPlugins($container);
+        $this->addProductStorageClient($container);
 
         return $container;
     }
@@ -340,10 +343,18 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @return array
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
      */
-    protected function getEnhancedEcommerceProductMapperPlugins(): array
+    protected function addProductStorageClient(Container $container): Container
     {
-        return [];
+        $container[static::PRODUCT_STORAGE_CLIENT] = function (Container $container) {
+            return new GoogleTagManagerToProductStorageClientBridge(
+                $container->getLocator()->productStorage()->client()
+            );
+        };
+
+        return $container;
     }
 }

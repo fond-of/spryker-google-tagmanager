@@ -15,6 +15,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariable
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Client\Cart\CartClientInterface;
@@ -86,7 +87,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new OrderVariableBuilder(
             $this->createMoneyPlugin(),
-            $this->getOrderVariableBuilderPlugins()
+            $this->getProductStorageClient(),
+            $this->getOrderVariableBuilderPlugins(),
+            $this->getStore()->getCurrentLocale()
         );
     }
 
@@ -271,5 +274,15 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function createEnhancedEcommerceProductMapper(): EnhancedEcommerceProductMapper
     {
         return new EnhancedEcommerceProductMapper();
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
+     */
+    public function getProductStorageClient(): GoogleTagManagerToProductStorageClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_STORAGE_CLIENT);
     }
 }
