@@ -73,6 +73,9 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function renderCartViewProducts(QuoteTransfer $quoteTransfer): array
     {
+        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
+        $sessionHandler->
+
         $products = [];
 
         foreach ($quoteTransfer->getItems() as $item) {
@@ -95,17 +98,9 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function addProduct(Request $request): array
     {
-        if (!$request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD)) {
-            return [];
-        }
-
-        $addProductEventArray = unserialize($request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD));
-
-        if (!array_key_exists('event', $addProductEventArray) || $addProductEventArray['event'] !== GoogleTagManagerConstants::EEC_EVENT_ADD) {
-            return [];
-        }
-
-        $request->getSession()->remove(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $addProductEventArray = $this->getFactory()
+            ->createEnhancedEcommerceSessionHandler()
+            ->renderAddProductToCartViewJson();
 
         return $addProductEventArray;
     }

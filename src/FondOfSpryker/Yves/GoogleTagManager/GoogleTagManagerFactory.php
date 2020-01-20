@@ -282,6 +282,8 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     public function createEnhancedEcommerceSessionHandler(): EnhancedEcommerceSessionHandlerInterface
     {
-        return new EnhancedEcommerceSessionHandler($this->getSessionClient(), $this->createEnhancedEcommerceProductMapper());
+        return new EnhancedEcommerceSessionHandler(
+            $this->getSessionClient(),
+            $this->getEnhancedEcommerceProductMapperPlugin());
     }
 }

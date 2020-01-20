@@ -52,14 +52,14 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
             ->mapProductStorageData($productDataAbstract, $locale, []);
 
         $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
-        $sessionHandler->addProductToAddProductEvent();
+        $sessionHandler->addProductToAddProductEvent($productViewTransfer);
 
-        $addProductEventArray = $request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD)
+        /*$addProductEventArray = $request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD)
             ? unserialize($request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD))
             : $this->getEnhancedEcommerceAddProductEventArray();
 
         $addProductEventArray = $this->addProduct($addProductEventArray, $productViewTransfer);
-        $this->storeInSession($request, $addProductEventArray);
+        $this->storeInSession($request, $addProductEventArray);*/
 
         return;
     }

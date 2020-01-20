@@ -6,6 +6,7 @@ use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 
 class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandlerInterface
@@ -37,7 +38,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      *
      * @return void
      */
-    public function setAddProductEvent(array $eventArray): void
+    protected function setAddProductEventArray(array $eventArray): void
     {
         $this->sessionClient->set(GoogleTagManagerConstants::EEC_EVENT_ADD, $eventArray);
     }
@@ -47,9 +48,29 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      *
      * @return mixed
      */
-    public function getAddProductEvent(string $name)
+    public function getAddProductEventArray(string $name)
     {
         return $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD);
+    }
+
+    /**
+     * @param bool $removeFromSessionAfterRendering
+     *
+     * @return string|null
+     */
+    public function renderAddProductToCartViewJson(bool $removeFromSessionAfterRendering = true): ?string
+    {
+        $eecProductAddEvent = $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD);
+
+        if (!is_array($eecProductAddEvent)) {
+            return null;
+        }
+
+        if ($removeFromSessionAfterRendering === true) {
+            $this->sessionClient->remove(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        }
+
+        return json_encode($eecProductAddEvent);
     }
 
     /**
@@ -58,23 +79,28 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      *
      * @return void
      */
-    public function addProductToAddProductEvent(ProductViewTransfer $productViewTransfer, int $quantity = 1)
+    public function addProductToAddProductEvent(ProductViewTransfer $productViewTransfer, int $quantity = 1): void
     {
         if ($this->containsAddProductEventProduct($productViewTransfer->getSku())) {
-            $this->increaseProductQuantityInAddProductEvent($productViewTransfer->getSku();
+            $this->increaseProductQuantityInAddProductEvent($productViewTransfer->getSku());
 
             return;
         }
 
-        $eecProductAddEvent = $this->getAddProductEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
+
+        if ($eecProductAddEvent === null) {
+            $eecProductAddEvent = $this->getEnhancedEcommerceAddProductEventArray();
+        }
+
         $newProduct = $this->createProduct(array_merge(
             $productViewTransfer->toArray(),
             [GoogleTagManagerConstants::EEC_PRODUCT_QUNATITY => $quantity]
         ));
 
-        \array_push($eecProductAddEvent['ecommerce']['add']['products'], $newProduct);
+        \array_push($eecProductAddEvent['ecommerce']['add']['products'], $newProduct->toArray());
 
-        $this->setAddProductEvent($eecProductAddEvent);
+        $this->setAddProductEventArray($eecProductAddEvent);
 
         return;
     }
@@ -86,7 +112,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     protected function containsAddProductEventProduct(string $sku): bool
     {
-        $eecProductAddEvent = $this->getAddProductEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
 
         if (!$eecProductAddEvent) {
             return false;
@@ -113,7 +139,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     protected function increaseProductQuantityInAddProductEvent(string $sku, int $quanity = 1): bool
     {
-        $eecProductAddEvent = $this->getAddProductEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
 
         if (!$eecProductAddEvent) {
             return false;
@@ -123,7 +149,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
             return false;
         }
 
-        if (count($eecProductAddEvent['ecommerce']['add']['products'] === 0)) {
+        if (count($eecProductAddEvent['ecommerce']['add']['products']) === 0) {
             return false;
         }
 
@@ -146,5 +172,22 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     protected function createProduct(array $product): EnhancedEcommerceProductTransfer
     {
         return $this->productMapper->map($product);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getEnhancedEcommerceAddProductEventArray(): array
+    {
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'add' => [
+                'actionField' => ['list' => 'Shopping cart'],
+                'products' => [],
+            ],
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
     }
 }
