@@ -13,7 +13,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSess
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Client\Cart\CartClientInterface;
-use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Config\Config;
 use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Shared\Twig\TwigExtension;
@@ -72,7 +71,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param bool $isEnabled
      * @param array $variableBuilders
      * @param \Spryker\Client\Cart\CartClientInterface $cartClient
-     * @param GoogleTagManagerToSessionClientInterface $sessionClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface $sessionClient
      */
     public function __construct(
         string $containerID,

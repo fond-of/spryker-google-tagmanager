@@ -81,7 +81,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
                 ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
 
             $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapper()
+                ->getEnhancedEcommerceProductMapperPlugin()
                 ->map(array_merge($productData, ['quantity' => $item->getQuantity()]));
         }
 

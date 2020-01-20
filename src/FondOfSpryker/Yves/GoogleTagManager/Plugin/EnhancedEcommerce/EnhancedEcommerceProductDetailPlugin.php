@@ -3,6 +3,8 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -33,12 +35,35 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
             ->mapProductStorageData($productData, $this->getLocale());
 
         $products[] = $this->getFactory()
-            ->createEnhancedEcommerceProductMapper()
-            ->map($productViewTransfer->toArray());
+            ->getEnhancedEcommerceProductMapperPlugin()
+            ->map($productViewTransfer->toArray())->toArray();
 
         return $twig->render($this->getTemplate(), [
-            'products' => $products,
+            'data' => [
+                $this->renderProductDetail($products),
+            ],
         ]);
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    protected function renderProductDetail(array $products): array
+    {
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_DETAIL);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'detail' => [
+                'actionField' => [
+                    'list' => 'product detail view',
+                ],
+                'products' => $products,
+            ],
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**
@@ -46,6 +71,6 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
      */
     public function getTemplate(): string
     {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-product-detail.twig';
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 }

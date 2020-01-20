@@ -21,6 +21,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommer
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutSummaryPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
@@ -49,6 +50,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
     public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
 
+    public const EEC_PRODUCT_MAPPER_PLUGIN = 'EEC_PRODUCT_MAPPER_PLUGIN';
+
     /**
      * @param \Spryker\Yves\Kernel\Container $container
      *
@@ -68,7 +71,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addQuoteVariableBuilderPlugins($container);
         $this->addCartControllerEventHandler($container);
         $this->addEnhancedEcommercePlugins($container);
-        $this->addEnhancedEcommerceProductMapperPlugins($container);
+        $this->addEnhancedEcommerceProductMapperPlugin($container);
 
         return $container;
     }
@@ -331,20 +334,12 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function addEnhancedEcommerceProductMapperPlugins(Container $container): Container
+    protected function addEnhancedEcommerceProductMapperPlugin(Container $container): Container
     {
-        $container[static::ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS] = function () {
-            return $this->getEnhancedEcommerceProductMapperPlugins();
+        $container[static::EEC_PRODUCT_MAPPER_PLUGIN] = function () {
+            return new EnhancedEcommerceProductMapperPlugin();
         };
 
         return $container;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getEnhancedEcommerceProductMapperPlugins(): array
-    {
-        return [];
     }
 }

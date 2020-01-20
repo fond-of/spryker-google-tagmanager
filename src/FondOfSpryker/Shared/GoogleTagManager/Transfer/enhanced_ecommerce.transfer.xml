@@ -15,6 +15,7 @@
         <property name="brand" type="string" />
         <property name="dimension1" type="string" />
         <property name="quantity" type="string" />
+        <property name="price" type="int" />
     </transfer>
 
 </transfers>

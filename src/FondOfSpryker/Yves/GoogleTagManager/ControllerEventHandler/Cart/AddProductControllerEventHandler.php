@@ -7,11 +7,18 @@ use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
-use Propel\Runtime\Collection\ArrayCollection;
+use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class AddProductControllerEventHandler
+ * @package FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
 {
+    use FactoryResolverAwareTrait;
+
     /**
      * @return string
      */
@@ -44,6 +51,9 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
         $productViewTransfer = $client->getProductStorageClient()
             ->mapProductStorageData($productDataAbstract, $locale, []);
 
+        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
+        $sessionHandler->addProductToAddProductEvent();
+
         $addProductEventArray = $request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD)
             ? unserialize($request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_ADD))
             : $this->getEnhancedEcommerceAddProductEventArray();
@@ -68,7 +78,7 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
     /**
      * @return array
      */
-    protected function getEnhancedEcommerceAddProductEventArray(ProductViewTransfer $productViewTransfer): array
+    protected function getEnhancedEcommerceAddProductEventArray(): array
     {
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
         $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
