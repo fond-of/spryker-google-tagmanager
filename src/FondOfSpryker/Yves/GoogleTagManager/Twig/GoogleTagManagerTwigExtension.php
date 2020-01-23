@@ -16,7 +16,7 @@ use Spryker\Client\Session\SessionClientInterface;
 use Spryker\Shared\Config\Config;
 use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Shared\Twig\TwigExtension;
-use Twig_Environment;
+use Twig\Environment;
 use Twig_SimpleFunction;
 
 class GoogleTagManagerTwigExtension extends TwigExtension
@@ -130,14 +130,14 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param \Twig\Environment $twig
      * @param string $templateName
      *
      * @throws
      *
      * @return string
      */
-    public function renderGoogleTagManager(Twig_Environment $twig, $templateName): string
+    public function renderGoogleTagManager(Environment $twig, $templateName): string
     {
         if (!$this->isEnabled || !$this->containerID) {
             return '';
@@ -149,7 +149,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param \Twig\Environment $twig
      * @param string $page
      * @param array $params
      *
@@ -157,7 +157,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      *
      * @return string
      */
-    public function renderDataLayer(Twig_Environment $twig, $page, $params): string
+    public function renderDataLayer(Environment $twig, $page, $params): string
     {
         if (!$this->isEnabled || !$this->containerID) {
             return '';

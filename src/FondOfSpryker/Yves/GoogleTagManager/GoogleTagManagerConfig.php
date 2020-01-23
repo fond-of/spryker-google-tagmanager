@@ -17,7 +17,7 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
      */
     public function getContainerID()
     {
-        return $this->get(GoogleTagManagerConstants::CONTAINER_ID);
+        return $this->get(GoogleTagManagerConstants::CONTAINER_ID, '');
     }
 
     /**
