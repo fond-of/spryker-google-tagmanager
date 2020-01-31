@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\Client;
 
-
 interface GoogleTagManagerToProductResourceAliasStorageClientInterface
 {
     /**

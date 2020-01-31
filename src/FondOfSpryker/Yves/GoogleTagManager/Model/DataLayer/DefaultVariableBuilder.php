@@ -2,9 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
-use Spryker\Shared\Kernel\Store;
-
 class DefaultVariableBuilder
 {
     /**
@@ -15,7 +12,7 @@ class DefaultVariableBuilder
     /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
      * @param \Spryker\Shared\Kernel\Store $store
-     * @param GoogleTagManagerToCartClientInterface $cartClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      */
     public function __construct(
         array $defaultVariableBuilderPlugins

@@ -15,6 +15,7 @@ interface EnhancedEcommerceSessionHandlerInterface
 
     /**
      * @param bool $removeFromSessionAfterOutput
+     *
      * @return array
      */
     public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array;
@@ -36,7 +37,7 @@ interface EnhancedEcommerceSessionHandlerInterface
     public function changeProductQuantity(ProductViewTransfer $productViewTransfer, int $quanity = 1): void;
 
     /**
-     * @param ProductViewTransfer $productViewTransfer
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      */
     public function removeProduct(ProductViewTransfer $productViewTransfer): void;
 }

@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\Client;
 
-
 use Generated\Shared\Transfer\ProductViewTransfer;
 
 interface GoogleTagManagerToProductStorageClientInterface
@@ -21,7 +20,7 @@ interface GoogleTagManagerToProductStorageClientInterface
      * @param $localeName
      * @param array $selectedAttributes
      *
-     * @return ProductViewTransfer
+     * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
     public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = []): ProductViewTransfer;
 }

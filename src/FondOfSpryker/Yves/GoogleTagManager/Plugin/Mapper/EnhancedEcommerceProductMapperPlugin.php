@@ -42,7 +42,7 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
     /**
      * @param array $product
      *
-     * @return EnhancedEcommerceProductTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer
      */
     public function map(array $product): EnhancedEcommerceProductTransfer
     {
@@ -56,8 +56,6 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
 
         return $this->enhancedEcommerceProductTransfer;
     }
-
-
 
     /**
      * @param array $product

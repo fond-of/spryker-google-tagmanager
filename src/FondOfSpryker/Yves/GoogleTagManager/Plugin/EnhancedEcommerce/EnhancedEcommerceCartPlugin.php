@@ -15,12 +15,13 @@ use Twig_Environment;
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
     /**
-     * @param Twig_Environment $twig
+     * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @return string
      * @throws
+     *
+     * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {

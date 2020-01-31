@@ -3,13 +3,12 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\Client;
 
-
 use Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface;
 
 class GoogleTagManagerToProductResourceAliasStorageClientBridge implements GoogleTagManagerToProductResourceAliasStorageClientInterface
 {
     /**
-     * @var ProductResourceAliasStorageClientInterface
+     * @var \Spryker\Client\ProductResourceAliasStorage\ProductResourceAliasStorageClientInterface
      */
     protected $storageClient;
 

@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
-use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;

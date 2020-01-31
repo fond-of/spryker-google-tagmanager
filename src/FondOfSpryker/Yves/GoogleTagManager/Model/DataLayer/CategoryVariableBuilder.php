@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
-use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
@@ -27,17 +26,18 @@ class CategoryVariableBuilder
     protected $locale;
 
     /**
-     * @var GoogleTagManagerToProductResourceAliasStorageClientInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface
      */
     protected $aliasStorageClient;
+
     /**
-     * @var GoogleTagManagerToProductStorageClientInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
      */
     private $storageClient;
 
     /**
-     * @param GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient
-     * @param GoogleTagManagerToProductStorageClientInterface $storageClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
      * @param string|array $locale
      * @param array|string $categoryVariableBuilderPlugins

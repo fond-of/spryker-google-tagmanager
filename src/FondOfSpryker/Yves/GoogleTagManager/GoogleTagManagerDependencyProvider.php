@@ -361,9 +361,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Yves\Kernel\Container
      */
     protected function addProductStorageClient(Container $container): Container
     {
@@ -377,9 +377,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Yves\Kernel\Container
      */
     protected function addProductResourceAliasStorageClient(Container $container): Container
     {

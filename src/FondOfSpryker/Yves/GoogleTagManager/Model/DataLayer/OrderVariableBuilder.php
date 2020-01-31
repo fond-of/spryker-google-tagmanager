@@ -7,7 +7,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCart
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
-use Propel\Runtime\Collection\ArrayCollection;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
 
@@ -26,13 +25,13 @@ class OrderVariableBuilder
     protected $orderVariableBuilderPlugins;
 
     /**
-     * @var GoogleTagManagerToCartClientInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface
      */
     protected $cartClient;
 
     /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param GoogleTagManagerToCartClientInterface $cartClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
      */
     public function __construct(
@@ -102,13 +101,13 @@ class OrderVariableBuilder
      */
     protected function getTransactionProducts(OrderTransfer $orderTransfer): array
     {
-        /** @var ItemTransfer[] $collection */
+        /** @var \Generated\Shared\Transfer\ItemTransfer[] $collection */
         $collection = [];
         $returnCollection = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (\array_key_exists($itemTransfer->getSku(), $collection)) {
-                $quantity = $collection[$itemTransfer->getSku()]->getQuantity()+1;
+                $quantity = $collection[$itemTransfer->getSku()]->getQuantity() + 1;
                 $collection[$itemTransfer->getSku()]->setQuantity($quantity);
 
                 continue;

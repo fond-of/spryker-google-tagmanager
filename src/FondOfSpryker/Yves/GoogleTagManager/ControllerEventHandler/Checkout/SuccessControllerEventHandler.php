@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout;
 
-use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;

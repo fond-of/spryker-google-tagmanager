@@ -281,9 +281,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return GoogleTagManagerToProductStorageClientInterface
-     *
      * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
      */
     public function getProductStorageClient(): GoogleTagManagerToProductStorageClientInterface
     {
@@ -291,9 +291,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return GoogleTagManagerToProductResourceAliasStorageClientInterface
-     *
      * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface
      */
     public function getProductResourceAliasStorageClient(): GoogleTagManagerToProductResourceAliasStorageClientInterface
     {

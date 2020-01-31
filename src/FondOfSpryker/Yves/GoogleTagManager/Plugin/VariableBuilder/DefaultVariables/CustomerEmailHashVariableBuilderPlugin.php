@@ -3,7 +3,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
-
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -13,7 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class CustomerEmailHashVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
-
     /**
      * @return string
      */

@@ -84,6 +84,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
 
     /**
      * @param bool $removeFromSessionAfterOutput
+     *
      * @return array
      */
     public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array
@@ -155,7 +156,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     }
 
     /**
-     * @param ProductViewTransfer $productViewTransfer
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      *
      * @return void
      */
