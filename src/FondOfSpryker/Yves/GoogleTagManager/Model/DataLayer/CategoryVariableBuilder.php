@@ -4,6 +4,8 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
@@ -20,31 +22,38 @@ class CategoryVariableBuilder
     protected $categoryVariableBuilderPlugins;
 
     /**
-     * @var \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface
-     */
-    protected $client;
-
-    /**
      * @var string
      */
     protected $locale;
 
     /**
-     * @param \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface $client
+     * @var GoogleTagManagerToProductResourceAliasStorageClientInterface
+     */
+    protected $aliasStorageClient;
+    /**
+     * @var GoogleTagManagerToProductStorageClientInterface
+     */
+    private $storageClient;
+
+    /**
+     * @param GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient
+     * @param GoogleTagManagerToProductStorageClientInterface $storageClient
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param array|string $categoryVariableBuilderPlugins
      * @param string|array $locale
+     * @param array|string $categoryVariableBuilderPlugins
      */
     public function __construct(
-        GoogleTagManagerClientInterface $client,
+        GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient,
+        GoogleTagManagerToProductStorageClientInterface $storageClient,
         MoneyPluginInterface $moneyPlugin,
         string $locale,
         array $categoryVariableBuilderPlugins = []
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->categoryVariableBuilderPlugins = $categoryVariableBuilderPlugins;
-        $this->client = $client;
         $this->locale = $locale;
+        $this->aliasStorageClient = $aliasStorageClient;
+        $this->storageClient = $storageClient;
     }
 
     /**
@@ -59,14 +68,14 @@ class CategoryVariableBuilder
         $productSkus = [];
 
         foreach ($products as $product) {
-            $productData = $this->client->getProductResourceAliasStorageClient()
+            $productData = $this->aliasStorageClient
                 ->findProductAbstractStorageDataBySku($product['abstract_sku'], $this->locale);
 
             if ($productData === null) {
                 continue;
             }
 
-            $product = $this->client->getProductStorageClient()
+            $product = $this->storageClient
                 ->mapProductStorageData($productData, $this->locale);
 
             $categoryProducts[] = [
