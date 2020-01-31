@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use Spryker\Shared\Kernel\Store;
 
 class DefaultVariableBuilder
@@ -12,20 +13,14 @@ class DefaultVariableBuilder
     protected $defaultVariableBuilderPlugins;
 
     /**
-     * @var \Spryker\Shared\Kernel\Store
-     */
-    protected $store;
-
-    /**
-     * DefaultVariableBuilder constructor.
-     *
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
      * @param \Spryker\Shared\Kernel\Store $store
+     * @param GoogleTagManagerToCartClientInterface $cartClient
      */
-    public function __construct(array $defaultVariableBuilderPlugins, Store $store)
-    {
+    public function __construct(
+        array $defaultVariableBuilderPlugins
+    ) {
         $this->defaultVariableBuilderPlugins = $defaultVariableBuilderPlugins;
-        $this->store = $store;
     }
 
     /**
@@ -37,8 +32,6 @@ class DefaultVariableBuilder
     {
         $variables = [
             'pageType' => $page,
-            'currency' => $this->store->getCurrencyIsoCode(),
-            'store' => $this->store->getStoreName(),
         ];
 
         return $this->executePlugins($variables);
@@ -52,7 +45,7 @@ class DefaultVariableBuilder
     protected function executePlugins(array $variables): array
     {
         foreach ($this->defaultVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle());
+            $variables = array_merge($variables, $plugin->handle($variables));
         }
 
         return $variables;

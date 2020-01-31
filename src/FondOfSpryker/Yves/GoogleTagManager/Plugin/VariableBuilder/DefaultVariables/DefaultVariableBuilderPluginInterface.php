@@ -10,10 +10,10 @@ interface DefaultVariableBuilderPluginInterface
     public function getName(): string;
 
     /**
-     * @param array $category
-     * @param array $products
+     * @param array $variables
+     * @param array $params
      *
      * @return array
      */
-    public function handle(array $category, array $products): array;
+    public function handle(array $variables, array $params = []): array;
 }
