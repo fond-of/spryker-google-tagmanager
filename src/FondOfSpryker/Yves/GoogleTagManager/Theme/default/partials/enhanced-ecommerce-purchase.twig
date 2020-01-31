@@ -10,9 +10,9 @@
                 actionField: {
                     id: '{{ order.orderReference }}',
                     affiliation: '{{ order.store.name }}',
-                    revenue: '{{ order.totals.grandTotal }}',
-                    tax: '{{ order.totals.taxTotal.amount }}',
-                    {% if shipment is defined  %}shipping: {{ shipment }},{% endif %}
+                    revenue: {{ order.totals.grandTotal | moneyRaw }},
+                    tax: '{{ order.totals.taxTotal.amount | moneyRaw }}',
+                    {% if shipment is defined  %}shipping: {{ shipment | moneyRaw }},{% endif %}
                     {% if voucherCode is defined %}coupon: '{{ voucherCode }}'{% endif %}
                 },
                 {% if products is defined and products | length > 0 and order.items | length > 0 %}
