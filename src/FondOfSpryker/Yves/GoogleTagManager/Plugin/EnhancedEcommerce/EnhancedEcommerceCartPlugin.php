@@ -16,42 +16,34 @@ use Twig_Environment;
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
     /**
+     * @param Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @return array
+     * @return string
+     * @throws
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
+        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
+
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->cartView($request),
-                $this->addProduct($request),
-                $this->removeProduct($request),
+                $this->renderCartView(),
+                $sessionHandler->getAddProductEventArray(true),
+                $sessionHandler->getChangeProductQuantityEventArray(true),
             ],
         ]);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return array
-     */
-    protected function cartView(Request $request): array
-    {
-        $quoteTransfer = $this->getClient()->getCartClient()->getQuote();
-
-        return $this->renderCartView($quoteTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
      * @return \Generated\Shared\Transfer\ProductViewTransfer[] $products
      * @return array
      */
-    protected function renderCartView(QuoteTransfer $quoteTransfer): array
+    protected function renderCartView(): array
     {
+        $quoteTransfer = $this->getClient()->getCartClient()->getQuote();
+
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
         $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
         $enhancedEcommerceTransfer->setEcommerce([
@@ -73,9 +65,6 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function renderCartViewProducts(QuoteTransfer $quoteTransfer): array
     {
-        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
-        $sessionHandler->
-
         $products = [];
 
         foreach ($quoteTransfer->getItems() as $item) {
@@ -89,42 +78,6 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         }
 
         return $products;
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return array
-     */
-    protected function addProduct(Request $request): array
-    {
-        $addProductEventArray = $this->getFactory()
-            ->createEnhancedEcommerceSessionHandler()
-            ->renderAddProductToCartViewJson();
-
-        return $addProductEventArray;
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return array
-     */
-    protected function removeProduct(Request $request): array
-    {
-        if (!$request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_REMOVE)) {
-            return [];
-        }
-
-        $removeProductEventArray = unserialize($request->getSession()->get(GoogleTagManagerConstants::EEC_EVENT_REMOVE));
-
-        if (!array_key_exists('event', $removeProductEventArray) || $removeProductEventArray['event'] !== GoogleTagManagerConstants::EEC_EVENT_REMOVE) {
-            return [];
-        }
-
-        $request->getSession()->remove(GoogleTagManagerConstants::EEC_EVENT_REMOVE);
-
-        return $removeProductEventArray;
     }
 
     /**

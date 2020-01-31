@@ -6,6 +6,9 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMappe
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements EnhancedEcommerceProductMapperInterface
 {
     public const SKU = 'sku';
@@ -29,23 +32,32 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
     protected $enhancedEcommerceProductTransfer;
 
     /**
+     * EnhancedEcommerceProductMapperPlugin constructor.
+     */
+    public function __construct()
+    {
+        $this->enhancedEcommerceProductTransfer = new EnhancedEcommerceProductTransfer();
+    }
+
+    /**
      * @param array $product
      *
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer
+     * @return EnhancedEcommerceProductTransfer
      */
     public function map(array $product): EnhancedEcommerceProductTransfer
     {
-        $this->enhancedEcommerceProductTransfer = new EnhancedEcommerceProductTransfer();
-
         $this->setId($product);
         $this->setName($product);
         $this->setVariant($product);
         $this->setBrand($product);
         $this->setDimension1($product);
         $this->setQuantity($product);
+        $this->setPrice($product);
 
         return $this->enhancedEcommerceProductTransfer;
     }
+
+
 
     /**
      * @param array $product
@@ -160,6 +172,10 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
             return;
         }
 
-        $this->enhancedEcommerceProductTransfer->setPrice($product[static::PRICE]);
+        $moneyPlugin = $this->getFactory()->createMoneyPlugin();
+
+        $this->enhancedEcommerceProductTransfer->setPrice(
+            $moneyPlugin->convertIntegerToDecimal($product[static::PRICE])
+        );
     }
 }

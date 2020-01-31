@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -28,7 +29,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->renderCheckoutPaymentSelection($this->getClient()->getCartClient()->getQuote()),
+                $this->renderCheckoutPaymentSelection(),
                 $this->renderSummary(),
             ],
         ]);
@@ -47,19 +48,24 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
      *
      * @return array
      */
-    protected function renderCheckoutPaymentSelection(QuoteTransfer $quoteTransfer): array
+    protected function renderCheckoutPaymentSelection(): array
     {
-        return [
-            'event' => 'eec.checkout_option',
-            'ecommerce' => [
-                'checkout_option' => [
-                    'actionField' => [
-                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_PAYMENT,
-                        'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
-                    ],
+        $cartClient = $this->getFactory()->getCartClient();
+        $quoteTransfer = $cartClient->getQuote();
+
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT_OPTION);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'checkout_option' => [
+                'actionField' => [
+                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_PAYMENT,
+                    'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer
+                        ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
                 ],
             ],
-        ];
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**
@@ -67,15 +73,16 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
      */
     protected function renderSummary(): array
     {
-        return [
-            'event' => 'eec.checkout',
-            'ecommerce' => [
-                'checkout' => [
-                    'actionField' => [
-                        'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
-                    ],
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'checkout' => [
+                'actionField' => [
+                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
                 ],
             ],
-        ];
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
     }
 }

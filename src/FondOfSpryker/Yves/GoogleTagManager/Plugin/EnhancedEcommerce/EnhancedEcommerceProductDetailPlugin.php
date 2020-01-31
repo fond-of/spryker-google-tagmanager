@@ -26,13 +26,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
-        $productData = $this->getClient()
-            ->getProductStorageClient()
-            ->findProductAbstractStorageData($params['idProductAbstract'], $this->getLocale());
-
-        $productViewTransfer = $this->getClient()
-            ->getProductStorageClient()
-            ->mapProductStorageData($productData, $this->getLocale());
+        $productViewTransfer = $params['product'];
 
         $products[] = $this->getFactory()
             ->getEnhancedEcommerceProductMapperPlugin()
