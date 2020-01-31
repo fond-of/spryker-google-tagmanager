@@ -4,12 +4,17 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface
 {
+    use FactoryResolverAwareTrait;
+
     /**
      * @return string
      */
@@ -20,68 +25,35 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface $client
      * @param string $locale
      *
      * @return void
      */
-    public function handle(Request $request, GoogleTagManagerClientInterface $client, string $locale): void
+    public function handle(Request $request, string $locale): void
     {
         $sku = $request->get('sku');
 
-        $product = $client->getProductResourceAliasStorageClient()
+        if (!$sku) {
+            return;
+        }
+
+        $productConcreteData = $this->getFactory()
+            ->getProductResourceAliasStorageClient()
             ->findProductConcreteStorageDataBySku($sku, $locale);
 
-        $removeProductEventArray = $this->getEnhancedEcommerceRemoveProductEventArray();
-        $removeProductEventArray = $this->removeProduct($removeProductEventArray, $product);
+        if (!isset($productConcreteData['id_product_abstract'])) {
+            return;
+        }
 
-        $this->storeInSession($request, $removeProductEventArray);
-    }
+        $productDataAbstract = $this->getFactory()
+            ->getProductStorageClient()
+            ->findProductAbstractStorageData($productConcreteData['id_product_abstract'], $locale);
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param array $removeProductEventArray
-     *
-     * @return void
-     */
-    protected function storeInSession(Request $request, array $removeProductEventArray): void
-    {
-        $request->getSession()->set(GoogleTagManagerConstants::EEC_EVENT_REMOVE, serialize($removeProductEventArray));
-    }
+        $productViewTransfer = $this->getFactory()
+            ->getProductStorageClient()
+            ->mapProductStorageData($productDataAbstract, $locale, []);
 
-    /**
-     * @return array
-     */
-    protected function getEnhancedEcommerceRemoveProductEventArray(): array
-    {
-        return [
-            'event' => 'eec.remove',
-            'ecommerce' => [
-                'remove' => [
-                    'actionField' => ['list' => 'Shopping cart'],
-                    'products' => [],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @param array $removeProductEventArray
-     * @param array $addToProduct
-     *
-     * @return array
-     */
-    protected function removeProduct(array $removeProductEventArray, array $removeProduct): array
-    {
-        array_push($removeProductEventArray['ecommerce']['remove']['products'], [
-            GoogleTagManagerConstants::EEC_PRODUCT_ID => $removeProduct['sku'],
-            GoogleTagManagerConstants::EEC_PRODUCT_NAME => $removeProduct['attributes']['model'],
-            GoogleTagManagerConstants::EEC_PRODUCT_VARIANT => $removeProduct['attributes']['style'],
-            GoogleTagManagerConstants::EEC_PRODUCT_BRAND => $removeProduct['attributes']['brand'],
-            GoogleTagManagerConstants::EEC_PRODUCT_QUNATITY => 1,
-            GoogleTagManagerConstants::EEC_PRODUCT_DIMENSION1 => $removeProduct['attributes']['size'],
-        ]);
-
-        return $removeProductEventArray;
+        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
+        $sessionHandler->removeProduct($productViewTransfer);
     }
 }

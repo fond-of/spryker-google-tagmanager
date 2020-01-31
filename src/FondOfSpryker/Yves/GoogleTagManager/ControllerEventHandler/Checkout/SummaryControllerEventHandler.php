@@ -5,10 +5,16 @@ namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout;
 use FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClientInterface;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class SummaryControllerEventHandler implements ControllerEventHandlerInterface
 {
+    use FactoryResolverAwareTrait;
+
     /**
      * @return string
      */
@@ -19,13 +25,12 @@ class SummaryControllerEventHandler implements ControllerEventHandlerInterface
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $locale
      *
      * @return void
      */
-    public function handle(Request $request, GoogleTagManagerClientInterface $client, string $locale): void
+    public function handle(Request $request, string $locale): void
     {
-        $quoteTransfer = $client->getCartClient()->getQuote();
-
         return;
     }
 
