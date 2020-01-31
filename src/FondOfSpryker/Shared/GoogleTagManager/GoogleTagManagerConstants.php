@@ -89,8 +89,10 @@ interface GoogleTagManagerConstants
     public const EEC_CHECKOUT_STEP_SUMMARY = 5;
 
     public const EEC_EVENT_ADD = 'eec.add';
+    public const EEC_EVENT_CHANGE_QUANTITY = 'eec.change_quantity';
     public const EEC_EVENT_REMOVE = 'eec.remove';
     public const EEC_EVENT_CHECKOUT = 'eec.checkout';
+    public const EEC_EVENT_CHECKOUT_OPTION = 'eec.checkout_option';
     public const EEC_EVENT_DETAIL = 'eec.detail';
 
     public const EEC_PRODUCT_ID = 'id';

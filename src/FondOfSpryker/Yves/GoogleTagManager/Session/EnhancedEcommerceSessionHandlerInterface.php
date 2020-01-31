@@ -7,24 +7,36 @@ use Generated\Shared\Transfer\ProductViewTransfer;
 interface EnhancedEcommerceSessionHandlerInterface
 {
     /**
-     * @param string $name
+     * @param bool $removeFromSessionAfterOutput
      *
-     * @return mixed
+     * @return array
      */
-    public function getAddProductEventArray(string $name);
+    public function getAddProductEventArray(bool $removeFromSessionAfterOutput = false): array;
 
     /**
-     * @param bool $removeFromSessionAfterRendering
-     *
-     * @return string|null
+     * @param bool $removeFromSessionAfterOutput
+     * @return array
      */
-    public function renderAddProductToCartViewJson(bool $removeFromSessionAfterRendering = true): ?string;
+    public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array;
 
     /**
-     * @param ProductViewTransfer $productViewTransfer
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param int $quantity
      *
      * @return void
      */
     public function addProductToAddProductEvent(ProductViewTransfer $productViewTransfer, int $quantity = 1): void;
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
+     * @param int $quanity
+     *
+     * @return void
+     */
+    public function changeProductQuantity(ProductViewTransfer $productViewTransfer, int $quanity = 1): void;
+
+    /**
+     * @param ProductViewTransfer $productViewTransfer
+     */
+    public function removeProduct(ProductViewTransfer $productViewTransfer): void;
 }

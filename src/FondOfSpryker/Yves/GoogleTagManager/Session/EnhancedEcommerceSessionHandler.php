@@ -3,10 +3,11 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
-use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 
 class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandlerInterface
@@ -22,15 +23,23 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     protected $productMapper;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge
+     */
+    protected $cartClient;
+
+    /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface $sessionClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge $cartClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface $productMapper
      */
     public function __construct(
         GoogleTagManagerToSessionClientInterface $sessionClient,
+        GoogleTagManagerToCartClientBridge $cartClient,
         EnhancedEcommerceProductMapperInterface $productMapper
     ) {
         $this->sessionClient = $sessionClient;
         $this->productMapper = $productMapper;
+        $this->cartClient = $cartClient;
     }
 
     /**
@@ -44,33 +53,52 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     }
 
     /**
-     * @param string $name
+     * @param array $eventArray
      *
-     * @return mixed
+     * @return void
      */
-    public function getAddProductEventArray(string $name)
+    protected function setChangeProductQuantityEventArray(array $eventArray): void
     {
-        return $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $this->sessionClient->set(GoogleTagManagerConstants::EEC_EVENT_CHANGE_QUANTITY, $eventArray);
     }
 
     /**
-     * @param bool $removeFromSessionAfterRendering
+     * @param bool $removeFromSessionAfterOutput
      *
-     * @return string|null
+     * @return array
      */
-    public function renderAddProductToCartViewJson(bool $removeFromSessionAfterRendering = true): ?string
+    public function getAddProductEventArray(bool $removeFromSessionAfterOutput = false): array
     {
-        $eecProductAddEvent = $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD);
-
-        if (!is_array($eecProductAddEvent)) {
-            return null;
+        if (!\is_array($this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD))) {
+            return [];
         }
 
-        if ($removeFromSessionAfterRendering === true) {
+        $eventArray = $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_ADD);
+
+        if ($removeFromSessionAfterOutput === true) {
             $this->sessionClient->remove(GoogleTagManagerConstants::EEC_EVENT_ADD);
         }
 
-        return json_encode($eecProductAddEvent);
+        return $eventArray;
+    }
+
+    /**
+     * @param bool $removeFromSessionAfterOutput
+     * @return array
+     */
+    public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array
+    {
+        if (!\is_array($this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_CHANGE_QUANTITY))) {
+            return [];
+        }
+
+        $eventArray = $this->sessionClient->get(GoogleTagManagerConstants::EEC_EVENT_CHANGE_QUANTITY);
+
+        if ($removeFromSessionAfterOutput === true) {
+            $this->sessionClient->remove(GoogleTagManagerConstants::EEC_EVENT_CHANGE_QUANTITY);
+        }
+
+        return $eventArray;
     }
 
     /**
@@ -81,19 +109,13 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     public function addProductToAddProductEvent(ProductViewTransfer $productViewTransfer, int $quantity = 1): void
     {
-        if ($this->containsAddProductEventProduct($productViewTransfer->getSku())) {
-            $this->increaseProductQuantityInAddProductEvent($productViewTransfer->getSku());
-
-            return;
-        }
-
         $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
 
-        if ($eecProductAddEvent === null) {
-            $eecProductAddEvent = $this->getEnhancedEcommerceAddProductEventArray();
+        if (!isset($eecProductAddEvent['ecommerce'])) {
+            $eecProductAddEvent = $this->createAddProductEventArray();
         }
 
-        $newProduct = $this->createProduct(array_merge(
+        $newProduct = $this->productMapper->map(array_merge(
             $productViewTransfer->toArray(),
             [GoogleTagManagerConstants::EEC_PRODUCT_QUNATITY => $quantity]
         ));
@@ -107,82 +129,131 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
 
     /**
      * @param string $sku
+     * @param int $quanity
      *
-     * @return bool
+     * @return void
      */
-    protected function containsAddProductEventProduct(string $sku): bool
+    public function changeProductQuantity(ProductViewTransfer $productViewTransfer, int $quanity = 1): void
     {
-        $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $itemTransfer = $this->getProductFromQuote($productViewTransfer->getSku());
 
-        if (!$eecProductAddEvent) {
-            return false;
+        if ($itemTransfer === null) {
+            return;
         }
 
-        if (!isset($eecProductAddEvent['ecommerce']['add']['products'])) {
-            return false;
+        if ($itemTransfer->getQuantity() < $quanity) {
+            $this->increaseProductQuantity($productViewTransfer, $quanity - $itemTransfer->getQuantity());
+
+            return;
         }
 
-        foreach ($eecProductAddEvent['ecommerce']['add']['products'] as $index => $product) {
-            if ($product[GoogleTagManagerConstants::EEC_PRODUCT_ID] === $sku) {
-                return true;
-            }
+        if ($itemTransfer->getQuantity() > $quanity) {
+            $this->reduceProductQuantity($productViewTransfer, $itemTransfer->getQuantity() - $quanity);
+
+            return;
+        }
+    }
+
+    /**
+     * @param ProductViewTransfer $productViewTransfer
+     *
+     * @return void
+     */
+    public function removeProduct(ProductViewTransfer $productViewTransfer): void
+    {
+        $itemTransfer = $this->getProductFromQuote($productViewTransfer->getSku());
+
+        if ($itemTransfer === null) {
+            return;
         }
 
-        return false;
+        $this->reduceProductQuantity($productViewTransfer, $itemTransfer->getQuantity());
     }
 
     /**
      * @param string $sku
-     * @param int $quanity
      *
      * @return bool
      */
-    protected function increaseProductQuantityInAddProductEvent(string $sku, int $quanity = 1): bool
+    protected function getProductFromQuote(string $sku): ?ItemTransfer
     {
-        $eecProductAddEvent = $this->getAddProductEventArray(GoogleTagManagerConstants::EEC_EVENT_ADD);
+        $quoteTransfer = $this->cartClient->getQuote();
 
-        if (!$eecProductAddEvent) {
-            return false;
-        }
-
-        if (!isset($eecProductAddEvent['ecommerce']['add']['products'])) {
-            return false;
-        }
-
-        if (count($eecProductAddEvent['ecommerce']['add']['products']) === 0) {
-            return false;
-        }
-
-        foreach ($eecProductAddEvent['ecommerce']['add']['products'] as $index => $product) {
-            if ($product[GoogleTagManagerConstants::EEC_PRODUCT_ID] === $sku) {
-                $eecProductAddEvent['ecommerce']['add']['products'][$index][GoogleTagManagerConstants::EEC_PRODUCT_QUNATITY] += $quanity;
-
-                return true;
+        foreach ($quoteTransfer->getItems() as $product) {
+            if ($product->getSku() === $sku) {
+                return $product;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * @param array $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param int $quantity
      *
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer
+     * @return void
      */
-    protected function createProduct(array $product): EnhancedEcommerceProductTransfer
+    protected function increaseProductQuantity(ProductViewTransfer $productViewTransfer, int $quantity): void
     {
-        return $this->productMapper->map($product);
+        $eecProductAddEvent = $this->getAddProductEventArray();
+
+        if (!isset($eecProductAddEvent['ecommerce'])) {
+            $eecProductAddEvent = $this->createAddProductEventArray();
+        }
+
+        $productViewTransfer->setQuantity($quantity);
+        $enhancedEcommerceProductTransfer = $this->productMapper->map($productViewTransfer->toArray());
+
+        \array_push($eecProductAddEvent['ecommerce']['add']['products'], $enhancedEcommerceProductTransfer->toArray());
+
+        $this->setChangeProductQuantityEventArray($eecProductAddEvent);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param int $quantity
+     *
+     * @return void
+     */
+    protected function reduceProductQuantity(ProductViewTransfer $productViewTransfer, int $quantity): void
+    {
+        $productViewTransfer->setQuantity($quantity);
+
+        $enhancedEcommerceProductTransfer = $this->productMapper->map($productViewTransfer->toArray());
+
+        $eecProductRemoveEvent = $this->createRemoveProductEventArray();
+        \array_push($eecProductRemoveEvent['ecommerce']['remove']['products'], $enhancedEcommerceProductTransfer->toArray());
+
+        $this->setChangeProductQuantityEventArray($eecProductRemoveEvent);
     }
 
     /**
      * @return array
      */
-    protected function getEnhancedEcommerceAddProductEventArray(): array
+    protected function createAddProductEventArray(): array
     {
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
         $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_ADD);
         $enhancedEcommerceTransfer->setEcommerce([
             'add' => [
+                'actionField' => ['list' => 'Shopping cart'],
+                'products' => [],
+            ],
+        ]);
+
+        return $enhancedEcommerceTransfer->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    protected function createRemoveProductEventArray(): array
+    {
+        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
+        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_REMOVE);
+        $enhancedEcommerceTransfer->setEcommerce([
+            'remove' => [
                 'actionField' => ['list' => 'Shopping cart'],
                 'products' => [],
             ],
