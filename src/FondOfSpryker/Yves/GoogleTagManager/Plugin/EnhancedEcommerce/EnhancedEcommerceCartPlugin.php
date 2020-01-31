@@ -11,7 +11,6 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
@@ -42,7 +41,9 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      */
     protected function renderCartView(): array
     {
-        $quoteTransfer = $this->getClient()->getCartClient()->getQuote();
+        $quoteTransfer = $this->getFactory()
+            ->getCartClient()
+            ->getQuote();
 
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
         $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
@@ -68,7 +69,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         $products = [];
 
         foreach ($quoteTransfer->getItems() as $item) {
-            $productData = $this->getClient()
+            $productData = $this->getFactory()
                 ->getProductStorageClient()
                 ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
 

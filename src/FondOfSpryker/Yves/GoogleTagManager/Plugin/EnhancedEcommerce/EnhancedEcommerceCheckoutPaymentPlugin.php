@@ -10,7 +10,6 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
 class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {

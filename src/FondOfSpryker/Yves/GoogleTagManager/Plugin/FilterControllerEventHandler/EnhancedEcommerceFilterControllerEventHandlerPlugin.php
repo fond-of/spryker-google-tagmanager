@@ -9,7 +9,6 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()()
- * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
 class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
 {
@@ -44,7 +43,7 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
 
         foreach ($cartControllerEventHandler as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
-                $controllerEventHandler->handle($event->getRequest(), $this->getClient(), 'en_US');
+                $controllerEventHandler->handle($event->getRequest(), 'en_US');
             }
         }
 

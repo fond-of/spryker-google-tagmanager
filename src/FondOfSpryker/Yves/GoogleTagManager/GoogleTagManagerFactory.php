@@ -65,7 +65,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createCategoryVariableBuilder(): CategoryVariableBuilder
     {
         return new CategoryVariableBuilder(
-            $this->getClient(),
+            $this->getProductResourceAliasStorageClient(),
+            $this->getProductStorageClient(),
             $this->createMoneyPlugin(),
             $this->getStore()->getCurrentLocale(),
             $this->getCategoryVariableBuilderPlugins()

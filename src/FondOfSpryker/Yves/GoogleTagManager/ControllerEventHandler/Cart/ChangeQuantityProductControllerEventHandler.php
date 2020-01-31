@@ -25,10 +25,11 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $locale
      *
      * @return void
      */
-    public function handle(Request $request, GoogleTagManagerClientInterface $client, string $locale): void
+    public function handle(Request $request, string $locale): void
     {
         $sku = $request->get('sku');
         $newQuantity = $request->get('quantity');

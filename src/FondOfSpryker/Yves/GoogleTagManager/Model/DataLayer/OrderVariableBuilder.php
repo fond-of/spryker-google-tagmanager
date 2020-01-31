@@ -3,9 +3,11 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Propel\Runtime\Collection\ArrayCollection;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
 
@@ -24,15 +26,23 @@ class OrderVariableBuilder
     protected $orderVariableBuilderPlugins;
 
     /**
+     * @var GoogleTagManagerToCartClientInterface
+     */
+    protected $cartClient;
+
+    /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
+     * @param GoogleTagManagerToCartClientInterface $cartClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
+        GoogleTagManagerToCartClientInterface $cartClient,
         array $orderVariableBuilderPlugins = []
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->orderVariableBuilderPlugins = $orderVariableBuilderPlugins;
+        $this->cartClient = $cartClient;
     }
 
     /**
@@ -92,13 +102,26 @@ class OrderVariableBuilder
      */
     protected function getTransactionProducts(OrderTransfer $orderTransfer): array
     {
+        /** @var ItemTransfer[] $collection */
         $collection = [];
+        $returnCollection = [];
 
-        foreach ($orderTransfer->getItems() as $item) {
-            $collection[] = $this->getProductForTransaction($item);
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (\array_key_exists($itemTransfer->getSku(), $collection)) {
+                $quantity = $collection[$itemTransfer->getSku()]->getQuantity()+1;
+                $collection[$itemTransfer->getSku()]->setQuantity($quantity);
+
+                continue;
+            }
+
+            $collection[$itemTransfer->getSku()] = $itemTransfer;
         }
 
-        return $collection;
+        foreach ($collection as $itemTransfer) {
+            $returnCollection[] = $this->getProductForTransaction($itemTransfer);
+        }
+
+        return $returnCollection;
     }
 
     /**
@@ -110,8 +133,10 @@ class OrderVariableBuilder
     {
         $collection = [];
 
-        foreach ($orderTransfer->getItems() as $item) {
-            $collection[] = $item->getSku();
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (!\in_array($itemTransfer->getSku(), $collection)) {
+                $collection[] = $itemTransfer->getSku();
+            }
         }
 
         return $collection;

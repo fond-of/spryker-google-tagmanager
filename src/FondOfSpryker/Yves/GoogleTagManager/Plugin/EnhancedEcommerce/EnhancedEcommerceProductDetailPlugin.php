@@ -11,7 +11,6 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- * @method \FondOfSpryker\Client\GoogleTagManager\GoogleTagManagerClient getClient()
  */
 class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
