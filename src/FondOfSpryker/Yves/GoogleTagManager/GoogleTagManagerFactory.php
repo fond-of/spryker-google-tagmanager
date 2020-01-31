@@ -9,6 +9,9 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\CategoryVariableBuilder;
@@ -20,7 +23,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
-use Spryker\Client\Cart\CartClientInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -76,8 +78,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createDefaultVariableBuilder(): DefaultVariableBuilder
     {
         return new DefaultVariableBuilder(
-            $this->getDefaultVariableBuilderPlugins(),
-            $this->getStore()
+            $this->getDefaultVariableBuilderPlugins()
         );
     }
 
@@ -88,6 +89,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new OrderVariableBuilder(
             $this->createMoneyPlugin(),
+            $this->getCartClient(),
             $this->getOrderVariableBuilderPlugins()
         );
     }
@@ -162,9 +164,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \Spryker\Client\Cart\CartClientInterface CartClientInterface
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface
      */
-    public function getCartClient(): CartClientInterface
+    public function getCartClient(): GoogleTagManagerToCartClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CLIENT);
     }
@@ -252,7 +254,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
     public function getCartControllerEventHandler(): array
     {
@@ -262,7 +264,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @return \Spryker\Shared\Kernel\Store
      */
-    protected function getStore(): Store
+    public function getStore(): Store
     {
         return Store::getInstance();
     }
@@ -278,12 +280,34 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
+     * @return GoogleTagManagerToProductStorageClientInterface
+     *
+     * @throws
+     */
+    public function getProductStorageClient(): GoogleTagManagerToProductStorageClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_STORAGE_CLIENT);
+    }
+
+    /**
+     * @return GoogleTagManagerToProductResourceAliasStorageClientInterface
+     *
+     * @throws
+     */
+    public function getProductResourceAliasStorageClient(): GoogleTagManagerToProductResourceAliasStorageClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT);
+    }
+
+    /**
      * @return \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface
      */
     public function createEnhancedEcommerceSessionHandler(): EnhancedEcommerceSessionHandlerInterface
     {
         return new EnhancedEcommerceSessionHandler(
             $this->getSessionClient(),
-            $this->getEnhancedEcommerceProductMapperPlugin());
+            $this->getCartClient(),
+            $this->getEnhancedEcommerceProductMapperPlugin()
+        );
     }
 }
