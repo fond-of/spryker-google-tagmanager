@@ -4,16 +4,17 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConstants;
 
 class OrderVariableBuilder
 {
-    public const CUSTOMER_EMAIL = 'customerEmail';
-
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
@@ -30,18 +31,34 @@ class OrderVariableBuilder
     protected $cartClient;
 
     /**
+     * @var GoogleTagManagerToProductStorageClientInterface
+     */
+    protected $storageClient;
+
+    /**
+     * @var Store
+     */
+    private $store;
+
+    /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
+     * @param GoogleTagManagerToProductStorageClientInterface $storageClient
+     * @param Store $store
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
         GoogleTagManagerToCartClientInterface $cartClient,
+        GoogleTagManagerToProductStorageClientInterface $storageClient,
+        Store $store,
         array $orderVariableBuilderPlugins = []
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->orderVariableBuilderPlugins = $orderVariableBuilderPlugins;
         $this->cartClient = $cartClient;
+        $this->storageClient = $storageClient;
+        $this->store = $store;
     }
 
     /**
@@ -88,7 +105,7 @@ class OrderVariableBuilder
     protected function executePlugins(OrderTransfer $orderTransfer, array $variables): array
     {
         foreach ($this->orderVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle($orderTransfer, $variables));
+            $variables = \array_merge($variables, $plugin->handle($orderTransfer, $variables));
         }
 
         return $variables;
@@ -151,7 +168,7 @@ class OrderVariableBuilder
         return [
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($this->getProductViewTransfer($product)),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitPrice()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
@@ -161,21 +178,38 @@ class OrderVariableBuilder
     }
 
     /**
+     * @param ItemTransfer $itemTransfer
+     * @return ProductViewTransfer|null
+     *
+     * @throws \Spryker\Shared\Kernel\Locale\LocaleNotFoundException
+     */
+    protected function getProductViewTransfer(ItemTransfer $itemTransfer): ?ProductViewTransfer
+    {
+        $productDataAbstract = $this->storageClient
+            ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), $this->store->getCurrentLocale());
+
+        $productViewTransfer = $this->storageClient
+            ->mapProductStorageData($productDataAbstract, $this->store->getCurrentLocale(), []);
+
+        return $productViewTransfer;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\ItemTransfer $product
      *
      * @return string
      */
-    protected function getProductName(ItemTransfer $product): string
+    protected function getProductName(ProductViewTransfer $product): string
     {
-        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getConcreteAttributes())) {
+        if (!\array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
             return $product->getName();
         }
 
-        if (!$product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
+        if (!$product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
             return $product->getName();
         }
 
-        return $product->getConcreteAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
+        return $product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**
@@ -234,7 +268,7 @@ class OrderVariableBuilder
         $expenses = [];
 
         foreach ($orderTransfer->getExpenses() as $expense) {
-            $expenses[$expense->getType()] = (!array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
+            $expenses[$expense->getType()] = (!\array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
         }
 
         return $expenses;
@@ -267,7 +301,7 @@ class OrderVariableBuilder
     {
         $expenses = $this->getExpenses($orderTransfer);
 
-        if (array_key_exists(ShipmentConstants::SHIPMENT_EXPENSE_TYPE, $expenses)) {
+        if (\array_key_exists(ShipmentConstants::SHIPMENT_EXPENSE_TYPE, $expenses)) {
             return $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConstants::SHIPMENT_EXPENSE_TYPE];
         }
 
