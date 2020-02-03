@@ -31,20 +31,20 @@ class OrderVariableBuilder
     protected $cartClient;
 
     /**
-     * @var GoogleTagManagerToProductStorageClientInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
      */
     protected $storageClient;
 
     /**
-     * @var Store
+     * @var \Spryker\Shared\Kernel\Store
      */
     private $store;
 
     /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
-     * @param GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param Store $store
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
+     * @param \Spryker\Shared\Kernel\Store $store
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
      */
     public function __construct(
@@ -178,10 +178,9 @@ class OrderVariableBuilder
     }
 
     /**
-     * @param ItemTransfer $itemTransfer
-     * @return ProductViewTransfer|null
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @throws \Spryker\Shared\Kernel\Locale\LocaleNotFoundException
+     * @return \Generated\Shared\Transfer\ProductViewTransfer|null
      */
     protected function getProductViewTransfer(ItemTransfer $itemTransfer): ?ProductViewTransfer
     {

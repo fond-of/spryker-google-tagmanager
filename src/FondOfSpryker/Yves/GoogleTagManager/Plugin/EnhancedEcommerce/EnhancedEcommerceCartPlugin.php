@@ -38,7 +38,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
     /**
      * @return \Generated\Shared\Transfer\ProductViewTransfer[] $products
-     * @return EnhancedEcommerceTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
      */
     protected function renderCartView(): EnhancedEcommerceTransfer
     {

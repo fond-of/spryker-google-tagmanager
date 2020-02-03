@@ -44,7 +44,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return EnhancedEcommerceTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
      */
     protected function renderCheckoutPaymentSelection(): EnhancedEcommerceTransfer
     {
@@ -67,7 +67,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     }
 
     /**
-     * @return EnhancedEcommerceTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
      */
     protected function renderSummary(): EnhancedEcommerceTransfer
     {

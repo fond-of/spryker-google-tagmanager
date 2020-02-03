@@ -13,7 +13,6 @@ use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductCo
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\SummaryControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
@@ -394,9 +393,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Yves\Kernel\Container
      */
     protected function addStore(Container $container): Container
     {
@@ -408,7 +407,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @return Store
+     * @return \Spryker\Shared\Kernel\Store
      */
     protected function getStore(): Store
     {
