@@ -27,8 +27,8 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->renderCheckoutPaymentSelection(),
-                $this->renderSummary(),
+                $this->renderCheckoutPaymentSelection()->toArray(),
+                $this->renderSummary()->toArray(),
             ],
         ]);
     }
@@ -44,9 +44,9 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return array
+     * @return EnhancedEcommerceTransfer
      */
-    protected function renderCheckoutPaymentSelection(): array
+    protected function renderCheckoutPaymentSelection(): EnhancedEcommerceTransfer
     {
         $cartClient = $this->getFactory()->getCartClient();
         $quoteTransfer = $cartClient->getQuote();
@@ -63,13 +63,13 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ],
         ]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer;
     }
 
     /**
-     * @return array
+     * @return EnhancedEcommerceTransfer
      */
-    protected function renderSummary(): array
+    protected function renderSummary(): EnhancedEcommerceTransfer
     {
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
         $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
@@ -81,6 +81,6 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ],
         ]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer;
     }
 }

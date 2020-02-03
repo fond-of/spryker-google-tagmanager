@@ -29,7 +29,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->renderCartView(),
+                $this->renderCartView()->toArray(),
                 $sessionHandler->getAddProductEventArray(true),
                 $sessionHandler->getChangeProductQuantityEventArray(true),
             ],
@@ -38,9 +38,9 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
     /**
      * @return \Generated\Shared\Transfer\ProductViewTransfer[] $products
-     * @return array
+     * @return EnhancedEcommerceTransfer
      */
-    protected function renderCartView(): array
+    protected function renderCartView(): EnhancedEcommerceTransfer
     {
         $quoteTransfer = $this->getFactory()
             ->getCartClient()
@@ -57,7 +57,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ],
         ]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer;
     }
 
     /**
