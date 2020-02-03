@@ -38,7 +38,7 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
 
         $productConcreteData = $this->getFactory()
             ->getProductResourceAliasStorageClient()
-            ->findProductConcreteStorageDataBySku($sku, $locale);
+            ->getProductConcreteStorageDataBySku($sku, $locale);
 
         if (!isset($productConcreteData['id_product_abstract'])) {
             return;
