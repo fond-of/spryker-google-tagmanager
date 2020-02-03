@@ -15,10 +15,6 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
     protected function checkForValidController(string $className): bool
     {
         foreach ($this->getConfig()->getListenToControllers() as $controller) {
-            if (\strpos($className, $controller) === false) {
-                continue;
-            }
-
             if (\strpos($className, $controller) !== false) {
                 return true;
             }
