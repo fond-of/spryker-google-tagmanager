@@ -91,6 +91,8 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new OrderVariableBuilder(
             $this->createMoneyPlugin(),
             $this->getCartClient(),
+            $this->getProductStorageClient(),
+            $this->getStore(),
             $this->getOrderVariableBuilderPlugins()
         );
     }
@@ -267,7 +269,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     public function getStore(): Store
     {
-        return Store::getInstance();
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::STORE);
     }
 
     /**

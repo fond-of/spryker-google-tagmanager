@@ -31,6 +31,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Yves\Kernel\Container;
 use Spryker\Yves\Money\Plugin\MoneyPlugin;
@@ -58,6 +59,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
     public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
+    public const STORE = 'STORE';
 
     public const EEC_PRODUCT_MAPPER_PLUGIN = 'EEC_PRODUCT_MAPPER_PLUGIN';
 
@@ -83,6 +85,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addEnhancedEcommerceProductMapperPlugin($container);
         $this->addProductStorageClient($container);
         $this->addProductResourceAliasStorageClient($container);
+        $this->addStore($container);
 
         return $container;
     }
@@ -96,7 +99,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         $container[static::CART_CLIENT] = function (Container $container) {
             return new GoogleTagManagerToCartClientBridge($container->getLocator()->cart()->client());
-            //return $container->getLocator()->cart()->client();
         };
 
         return $container;
@@ -311,7 +313,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new AddProductControllerEventHandler(),
             new ChangeQuantityProductControllerEventHandler(),
             new RemoveProductControllerEventHandler(),
-            new SummaryControllerEventHandler(),
             new SuccessControllerEventHandler(),
         ];
     }
@@ -390,5 +391,27 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         };
 
         return $container;
+    }
+
+    /**
+     * @param Container $container
+     *
+     * @return Container
+     */
+    protected function addStore(Container $container): Container
+    {
+        $container[static::STORE] = function (Container $container) {
+            return $this->getStore();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return Store
+     */
+    protected function getStore(): Store
+    {
+        return Store::getInstance();
     }
 }
