@@ -19,6 +19,9 @@ use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\ProductVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductArrayModel;
+use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
@@ -65,10 +68,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createCategoryVariableBuilder(): CategoryVariableBuilder
     {
         return new CategoryVariableBuilder(
-            $this->getProductResourceAliasStorageClient(),
-            $this->getProductStorageClient(),
             $this->createMoneyPlugin(),
-            $this->getStore()->getCurrentLocale(),
             $this->getCategoryVariableBuilderPlugins()
         );
     }
@@ -277,10 +277,10 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface
      */
-    public function getEnhancedEcommerceProductMapperPlugin(): EnhancedEcommerceProductMapperInterface
+    /*public function getEnhancedEcommerceProductMapperPlugin(): EnhancedEcommerceProductMapperInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::EEC_PRODUCT_MAPPER_PLUGIN);
-    }
+    }*/
 
     /**
      * @throws
@@ -310,7 +310,37 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new EnhancedEcommerceSessionHandler(
             $this->getSessionClient(),
             $this->getCartClient(),
-            $this->getEnhancedEcommerceProductMapperPlugin()
+            $this->createEnhancedEcommerceProductMapperPlugin()
         );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface
+     */
+    public function createEnhancedEcommerceProductArrayBuilder(): ProductModelBuilderInterface
+    {
+        return new ProductArrayModel(
+            $this->getCartClient(),
+            $this->getProductStorageClient(),
+            $this->createEnhancedEcommerceProductMapperPlugin()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface
+     */
+    public function createEnhancedEcommerceProductMapperPlugin(): EnhancedEcommerceProductMapperInterface
+    {
+        return new EnhancedEcommerceProductMapperPlugin($this->getProductFieldMapperPlugin());
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\ProductFieldMapperPluginInterface[]
+     */
+    protected function getProductFieldMapperPlugin(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_FIELD_MAPPER_PLUGINS);
     }
 }

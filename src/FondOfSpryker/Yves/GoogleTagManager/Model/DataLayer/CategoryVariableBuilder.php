@@ -3,9 +3,6 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
-use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class CategoryVariableBuilder
@@ -21,39 +18,15 @@ class CategoryVariableBuilder
     protected $categoryVariableBuilderPlugins;
 
     /**
-     * @var string
-     */
-    protected $locale;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface
-     */
-    protected $aliasStorageClient;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
-     */
-    private $storageClient;
-
-    /**
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param string|array $locale
-     * @param array|string $categoryVariableBuilderPlugins
+     * @param array $categoryVariableBuilderPlugins
      */
     public function __construct(
-        GoogleTagManagerToProductResourceAliasStorageClientInterface $aliasStorageClient,
-        GoogleTagManagerToProductStorageClientInterface $storageClient,
         MoneyPluginInterface $moneyPlugin,
-        string $locale,
         array $categoryVariableBuilderPlugins = []
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->categoryVariableBuilderPlugins = $categoryVariableBuilderPlugins;
-        $this->locale = $locale;
-        $this->aliasStorageClient = $aliasStorageClient;
-        $this->storageClient = $storageClient;
     }
 
     /**
@@ -68,24 +41,14 @@ class CategoryVariableBuilder
         $productSkus = [];
 
         foreach ($products as $product) {
-            $productData = $this->aliasStorageClient
-                ->findProductAbstractStorageDataBySku($product['abstract_sku'], $this->locale);
-
-            if ($productData === null) {
-                continue;
-            }
-
-            $product = $this->storageClient
-                ->mapProductStorageData($productData, $this->locale);
-
             $categoryProducts[] = [
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product['id_product_abstract'],
                 GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
-                GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getPrice()),
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product['abstract_sku'],
+                GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product['price']),
             ];
 
-            $productSkus[] = $product->getSku();
+            $productSkus[] = $product['abstract_sku'];
         }
 
         $variables = [
@@ -100,21 +63,21 @@ class CategoryVariableBuilder
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer|array $product
      *
      * @return string
      */
-    protected function getProductName(ProductViewTransfer $product): string
+    protected function getProductName(array $product): string
     {
-        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
-            return $product->getName();
+        if (!\array_key_exists('attributes', $product)) {
+            return $product['abstract_name'];
         }
 
-        if (!$product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED]) {
-            return $product->getName();
+        if (isset($product['attributes']['name_untranslated'])) {
+            return $product['attributes']['name_untranslated'];
         }
 
-        return $product->getAttributes()[GoogleTagManagerConstants::NAME_UNTRANSLATED];
+        return $product['abstract_name'];
     }
 
     /**
