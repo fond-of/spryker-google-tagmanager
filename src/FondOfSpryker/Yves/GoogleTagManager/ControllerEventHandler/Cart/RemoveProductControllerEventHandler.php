@@ -3,7 +3,10 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
+use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,29 +33,46 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
      */
     public function handle(Request $request, string $locale): void
     {
-        $sku = $request->get('sku');
+        $sku = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU);
 
         if (!$sku) {
             return;
         }
 
-        $productConcreteData = $this->getFactory()
-            ->getProductResourceAliasStorageClient()
-            ->getProductConcreteStorageDataBySku($sku, $locale);
+        $itemTransfer = $this->getProductFromQuote($sku);
 
-        if (!isset($productConcreteData['id_product_abstract'])) {
+        if ($itemTransfer === null) {
             return;
         }
 
-        $productDataAbstract = $this->getFactory()
-            ->getProductStorageClient()
-            ->findProductAbstractStorageData($productConcreteData['id_product_abstract'], $locale);
+        $enhancedEcommerceProductData = new EnhancedEcommerceProductDataTransfer();
+        $enhancedEcommerceProductData->setProductAbstractId($itemTransfer->getIdProductAbstract());
+        $enhancedEcommerceProductData->setSku($sku);
+        $enhancedEcommerceProductData->setQuantity($itemTransfer->getQuantity());
+        $enhancedEcommerceProductData->setPrice($itemTransfer->getUnitPrice());
 
-        $productViewTransfer = $this->getFactory()
-            ->getProductStorageClient()
-            ->mapProductStorageData($productDataAbstract, $locale, []);
+        $this->getFactory()
+            ->createEnhancedEcommerceSessionHandler()
+            ->removeProduct($enhancedEcommerceProductData);
+    }
 
-        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
-        $sessionHandler->removeProduct($productViewTransfer);
+    /**
+     * @param string $sku
+     *
+     * @return \Generated\Shared\Transfer\ItemTransfer|null
+     */
+    protected function getProductFromQuote(string $sku): ?ItemTransfer
+    {
+        $quoteTransfer = $this->getFactory()
+            ->getCartClient()
+            ->getQuote();
+
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            if ($itemTransfer->getSku() === $sku) {
+                return $itemTransfer;
+            }
+        }
+
+        return null;
     }
 }

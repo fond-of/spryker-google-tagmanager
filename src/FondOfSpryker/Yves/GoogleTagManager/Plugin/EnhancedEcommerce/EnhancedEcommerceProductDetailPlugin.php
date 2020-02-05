@@ -3,7 +3,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +27,9 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
     {
         $productViewTransfer = $params['product'];
 
-        $products[] = $this->getFactory()
-            ->getEnhancedEcommerceProductMapperPlugin()
-            ->map($productViewTransfer->toArray())->toArray();
+        $products = $this->getFactory()
+            ->createEnhancedEcommerceProductMapperPlugin()
+            ->map($productViewTransfer)->toArray();
 
         return $twig->render($this->getTemplate(), [
             'data' => [
@@ -46,7 +46,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
     protected function renderProductDetail(array $products): array
     {
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_DETAIL);
+        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL);
         $enhancedEcommerceTransfer->setEcommerce([
             'detail' => [
                 'actionField' => [

@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -52,11 +52,11 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
         $quoteTransfer = $cartClient->getQuote();
 
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT_OPTION);
+        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION);
         $enhancedEcommerceTransfer->setEcommerce([
             'checkout_option' => [
                 'actionField' => [
-                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_PAYMENT,
+                    'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
                     'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer
                         ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
                 ],
@@ -72,11 +72,11 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     protected function renderSummary(): EnhancedEcommerceTransfer
     {
         $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(GoogleTagManagerConstants::EEC_EVENT_CHECKOUT);
+        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_CHECKOUT);
         $enhancedEcommerceTransfer->setEcommerce([
             'checkout' => [
                 'actionField' => [
-                    'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SUMMARY,
+                    'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
                 ],
             ],
         ]);

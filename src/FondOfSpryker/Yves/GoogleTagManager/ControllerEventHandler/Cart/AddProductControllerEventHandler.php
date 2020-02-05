@@ -2,7 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,30 +31,23 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
      */
     public function handle(Request $request, string $locale): void
     {
-        $sku = $request->get('sku');
+        $sku = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU);
+        $quantity = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY);
 
         if (!$sku) {
             return;
         }
 
-        $productConcreteData = $this->getFactory()
-            ->getProductResourceAliasStorageClient()
-            ->getProductConcreteStorageDataBySku($sku, $locale);
-
-        if (!isset($productConcreteData['id_product_abstract'])) {
-            return;
+        if (!$quantity) {
+            $quantity = 1;
         }
 
-        $productDataAbstract = $this->getFactory()
-            ->getProductStorageClient()
-            ->findProductAbstractStorageData($productConcreteData['id_product_abstract'], $locale);
-
-        $productViewTransfer = $this->getFactory()
-            ->getProductStorageClient()
-            ->mapProductStorageData($productDataAbstract, $locale, []);
+        $enhancedEcommerceProductData = new EnhancedEcommerceProductDataTransfer();
+        $enhancedEcommerceProductData->setSku($sku);
+        $enhancedEcommerceProductData->setQuantity($quantity);
 
         $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
-        $sessionHandler->addProductToAddProductEvent($productViewTransfer);
+        $sessionHandler->addProduct($enhancedEcommerceProductData);
 
         return;
     }

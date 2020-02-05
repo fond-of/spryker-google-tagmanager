@@ -3,7 +3,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -33,7 +33,7 @@ class EnhancedEcommerceCheckoutShippingAddressPlugin extends AbstractPlugin impl
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
         return $twig->render($this->getTemplate(), [
-            'step' => GoogleTagManagerConstants::EEC_CHECKOUT_STEP_SHIPPING_ADDRESS,
+            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SHIPPING_ADDRESS,
         ]);
     }
 }

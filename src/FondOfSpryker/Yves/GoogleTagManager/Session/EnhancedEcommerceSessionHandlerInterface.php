@@ -2,16 +2,23 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
-use Generated\Shared\Transfer\ProductViewTransfer;
+use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 
 interface EnhancedEcommerceSessionHandlerInterface
 {
     /**
-     * @param bool $removeFromSessionAfterOutput
+     * @param bool $removeFromSession
      *
      * @return array
      */
-    public function getAddProductEventArray(bool $removeFromSessionAfterOutput = false): array;
+    public function getAddedProducts($removeFromSession = false): array;
+
+    /**
+     * @param bool $removeFromSession
+     *
+     * @return array
+     */
+    public function getRemovedProducts($removeFromSession = false): array;
 
     /**
      * @param bool $removeFromSessionAfterOutput
@@ -21,23 +28,23 @@ interface EnhancedEcommerceSessionHandlerInterface
     public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array;
 
     /**
-     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
-     * @param int $quantity
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer $productDataTransfer
      *
      * @return void
      */
-    public function addProductToAddProductEvent(ProductViewTransfer $productViewTransfer, int $quantity = 1): void;
+    public function addProduct(EnhancedEcommerceProductDataTransfer $productDataTransfer): void;
 
     /**
-     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
-     * @param int $quanity
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer
      *
      * @return void
      */
-    public function changeProductQuantity(ProductViewTransfer $productViewTransfer, int $quanity = 1): void;
+    public function changeProductQuantity(EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer): void;
 
     /**
-     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer $productDataTransfer
+     *
+     * @return void
      */
-    public function removeProduct(ProductViewTransfer $productViewTransfer): void;
+    public function removeProduct(EnhancedEcommerceProductDataTransfer $productDataTransfer): void;
 }

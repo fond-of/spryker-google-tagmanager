@@ -8,11 +8,10 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\SuccessControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
@@ -24,7 +23,13 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommer
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutSummaryPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\BrandProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\Dimension1ProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\IdProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\NameProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\PriceProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\QuantityProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\VariantProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CustomerEmailHashVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin;
@@ -59,6 +64,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
     public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
     public const STORE = 'STORE';
+    public const PRODUCT_FIELD_MAPPER_PLUGINS = 'PRODUCT_FIELD_MAPPER_PLUGINS';
 
     public const EEC_PRODUCT_MAPPER_PLUGIN = 'EEC_PRODUCT_MAPPER_PLUGIN';
 
@@ -81,10 +87,10 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addQuoteVariableBuilderPlugins($container);
         $this->addCartControllerEventHandler($container);
         $this->addEnhancedEcommercePlugins($container);
-        $this->addEnhancedEcommerceProductMapperPlugin($container);
         $this->addProductStorageClient($container);
         $this->addProductResourceAliasStorageClient($container);
         $this->addStore($container);
+        $this->addProductFieldMapperPlugins($container);
 
         return $container;
     }
@@ -312,7 +318,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new AddProductControllerEventHandler(),
             new ChangeQuantityProductControllerEventHandler(),
             new RemoveProductControllerEventHandler(),
-            new SuccessControllerEventHandler(),
         ];
     }
 
@@ -336,28 +341,14 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function getEnhancedEcommercePlugins(): array
     {
         return [
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_CART => new EnhancedEcommerceCartPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_PRODUCT_DETAIL => new EnhancedEcommerceProductDetailPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS => new EnhancedEcommerceCheckoutBillingAddressPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS => new EnhancedEcommerceCheckoutShippingAddressPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
-            GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_CART => new EnhancedEcommerceCartPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_PRODUCT_DETAIL => new EnhancedEcommerceProductDetailPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_BILLING_ADDRESS => new EnhancedEcommerceCheckoutBillingAddressPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS => new EnhancedEcommerceCheckoutShippingAddressPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
         ];
-    }
-
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
-    protected function addEnhancedEcommerceProductMapperPlugin(Container $container): Container
-    {
-        $container[static::EEC_PRODUCT_MAPPER_PLUGIN] = function () {
-            return new EnhancedEcommerceProductMapperPlugin();
-        };
-
-        return $container;
     }
 
     /**
@@ -412,5 +403,35 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function getStore(): Store
     {
         return Store::getInstance();
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addProductFieldMapperPlugins(Container $container): Container
+    {
+        $container[static::PRODUCT_FIELD_MAPPER_PLUGINS] = function (Container $container) {
+            return $this->getProductFieldMapperPlugins();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\ProductFieldMapperPluginInterface[]
+     */
+    protected function getProductFieldMapperPlugins(): array
+    {
+        return [
+            new IdProductFieldMapperPlugin(),
+            new NameProductFieldMapperPlugin(),
+            new VariantProductFieldMapperPlugin(),
+            new BrandProductFieldMapperPlugin(),
+            new Dimension1ProductFieldMapperPlugin(),
+            new QuantityProductFieldMapperPlugin(),
+            new PriceProductFieldMapperPlugin(),
+        ];
     }
 }
