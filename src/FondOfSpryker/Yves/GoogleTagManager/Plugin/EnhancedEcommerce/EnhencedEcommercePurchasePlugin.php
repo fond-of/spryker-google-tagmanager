@@ -3,6 +3,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -35,8 +36,15 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     {
         /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
         $orderTransfer = $params['order'];
+        $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (isset($products[$itemTransfer->getSku()])) {
+                $products[$itemTransfer->getSku()][EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY] += $itemTransfer->getQuantity();
+
+                continue;
+            }
+
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
                 ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), 'en_US');
@@ -45,14 +53,14 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             $productViewTransfer->setPrice($itemTransfer->getUnitPrice());
             $productViewTransfer->setQuantity($itemTransfer->getQuantity());
 
-            $products[] = $this->getFactory()
+            $products[$itemTransfer->getSku()] = $this->getFactory()
                 ->createEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer)->toArray();
         }
 
         return $twig->render($this->getTemplate(), [
             'order' => $orderTransfer,
-            'products' => $products,
+            'products' => \array_values($products),
             'voucherCode' => $this->getDiscountCode($orderTransfer),
             //'shipment' => $this->getShipment($quoteTransfer),
         ]);
