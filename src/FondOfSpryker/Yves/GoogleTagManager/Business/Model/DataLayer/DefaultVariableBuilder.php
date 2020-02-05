@@ -10,8 +10,6 @@ class DefaultVariableBuilder
     protected $defaultVariableBuilderPlugins;
 
     /**
-     * DefaultVariableBuilder constructor.
-     *
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
      */
     public function __construct(array $defaultVariableBuilderPlugins)

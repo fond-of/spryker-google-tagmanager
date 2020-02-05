@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Google Tag Manager tracking integration for Spryker
- *
- * @author      Jozsef Geng <jozsefgeng@86gmail.com>
- */
-
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;

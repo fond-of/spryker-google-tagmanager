@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Google Tag Manager tracking integration for Spryker
- *
- * @author      Jozsef Geng <gengjozsef86@gmail.com>
- */
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
@@ -21,8 +15,8 @@ use Twig_SimpleFunction;
 
 class GoogleTagManagerTwigExtension extends TwigExtension
 {
-    const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
-    const FUNCTION_DATA_LAYER = 'dataLayer';
+    public const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
+    public const FUNCTION_DATA_LAYER = 'dataLayer';
 
     /**
      * @var \Silex\Application
@@ -65,8 +59,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $variableBuilders;
 
     /**
-     * GoogleTagManagerTwigExtension constructor.
-     *
      * @param string $containerID
      * @param bool $isEnabled
      * @param array $variableBuilders
@@ -133,8 +125,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param \Twig\Environment $twig
      * @param string $templateName
      *
-     * @throws
-     *
      * @return string
      */
     public function renderGoogleTagManager(Environment $twig, $templateName): string
@@ -152,8 +142,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @param \Twig\Environment $twig
      * @param string $page
      * @param array $params
-     *
-     * @throws
      *
      * @return string
      */
