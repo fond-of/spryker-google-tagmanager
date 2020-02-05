@@ -74,34 +74,5 @@ interface GoogleTagManagerConstants
 
     public const CUSTOMER_EMAIL = 'customerEmail';
 
-    public const EEC_PAGE_TYPE_CART = 'cart';
-    public const EEC_PAGE_TYPE_PRODUCT_DETAIL = 'productDetail';
-    public const EEC_PAGE_TYPE_CHECKOUT_BILLING_ADDRESS = 'checkoutBillingAddress';
-    public const EEC_PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS = 'checkoutShippingAddress';
-    public const EEC_PAGE_TYPE_CHECKOUT_PAYMENT = 'checkoutPayment';
-    public const EEC_PAGE_TYPE_CHECKOUT_SUMMARY = 'checkoutSummary';
-    public const EEC_PAGE_TYPE_PURCHASE = 'purchase';
-
-    public const EEC_CHECKOUT_STEP_CART = 1;
-    public const EEC_CHECKOUT_STEP_BILLING_ADDRESS = 2;
-    public const EEC_CHECKOUT_STEP_SHIPPING_ADDRESS = 3;
-    public const EEC_CHECKOUT_STEP_PAYMENT = 4;
-    public const EEC_CHECKOUT_STEP_SUMMARY = 5;
-
-    public const EEC_EVENT_ADD = 'eec.add';
-    public const EEC_EVENT_CHANGE_QUANTITY = 'eec.change_quantity';
-    public const EEC_EVENT_REMOVE = 'eec.remove';
-    public const EEC_EVENT_CHECKOUT = 'eec.checkout';
-    public const EEC_EVENT_CHECKOUT_OPTION = 'eec.checkout_option';
-    public const EEC_EVENT_DETAIL = 'eec.detail';
-
-    public const EEC_PRODUCT_ID = 'id';
-    public const EEC_PRODUCT_NAME = 'name';
-    public const EEC_PRODUCT_VARIANT = 'variant';
-    public const EEC_PRODUCT_BRAND = 'brand';
-    public const EEC_PRODUCT_QUNATITY = 'quantity';
-    public const EEC_PRODUCT_DIMENSION1 = 'dimension1';
-    public const EEC_PRODUCT_PRICE = 'price';
-
     public const EEC_LISTEN_TO_CONTROLLERS = 'EEC_LISTEN_TO_CONTROLLERS';
 }
