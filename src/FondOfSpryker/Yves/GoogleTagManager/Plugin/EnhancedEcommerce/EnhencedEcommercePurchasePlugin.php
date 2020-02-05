@@ -3,8 +3,8 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -33,34 +33,28 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
-        /** @var \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer */
-        $quoteTransfer = $request->getSession()->get(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
-        $request->getSession()->remove(GoogleTagManagerConstants::EEC_PAGE_TYPE_PURCHASE);
-        $products = [];
+        /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
+        $orderTransfer = $params['order'];
 
-        if (!$quoteTransfer instanceof QuoteTransfer) {
-            return '';
-        }
-
-        foreach ($quoteTransfer->getItems() as $item) {
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
+                ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), 'en_US');
 
-            $productViewTransfer = $this->getFactory()
-                ->getProductStorageClient()
-                ->mapProductStorageData($productDataAbstract, $this->getLocale(), []);
+            $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
+            $productViewTransfer->setPrice($itemTransfer->getUnitPrice());
+            $productViewTransfer->setQuantity($itemTransfer->getQuantity());
 
             $products[] = $this->getFactory()
-                ->getEnhancedEcommerceProductMapperPlugin()
-                ->map(array_merge($productViewTransfer->toArray(), ['quantity' => $item->getQuantity()]))->toArray();
+                ->createEnhancedEcommerceProductMapperPlugin()
+                ->map($productViewTransfer)->toArray();
         }
 
         return $twig->render($this->getTemplate(), [
-            'order' => $quoteTransfer,
+            'order' => $orderTransfer,
             'products' => $products,
-            'voucherCode' => $this->getDiscountCode($quoteTransfer),
-            'shipment' => $this->getShipment($quoteTransfer),
+            'voucherCode' => $this->getDiscountCode($orderTransfer),
+            //'shipment' => $this->getShipment($quoteTransfer),
         ]);
     }
 
@@ -71,12 +65,12 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      *
      * @return string
      */
-    protected function getDiscountCode(QuoteTransfer $quoteTransfer): string
+    protected function getDiscountCode(OrderTransfer $orderTransfer): string
     {
         $voucherCodes = [];
 
-        foreach ($quoteTransfer->getVoucherDiscounts() as $voucherDiscount) {
-            array_push($voucherCodes, $voucherDiscount->getVoucherCode());
+        foreach ($orderTransfer->getCalculatedDiscounts() as $discountTransfer) {
+            array_push($voucherCodes, $discountTransfer->getVoucherCode());
         }
 
         return \implode(",", $voucherCodes);
@@ -87,7 +81,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      *
      * @return int
      */
-    protected function getShipment(QuoteTransfer $quoteTransfer): int
+    protected function getShipment(OrderTransfer $quoteTransfer): int
     {
         if ($quoteTransfer->getShipment() === null) {
             return 0;

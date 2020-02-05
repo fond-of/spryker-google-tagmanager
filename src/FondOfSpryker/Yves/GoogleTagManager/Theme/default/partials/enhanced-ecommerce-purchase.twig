@@ -5,11 +5,11 @@
     window.dataLayer.push({
         event: 'eec.purchase',
         ecommerce: {
-            currencyCode: '{{ order.currency.code }}',
+            currencyCode: '{{ order.currencyIsoCode }}',
             purchase: {
                 actionField: {
                     id: '{{ order.orderReference }}',
-                    affiliation: '{{ order.store.name }}',
+                    affiliation: '{{ order.store }}',
                     revenue: {{ order.totals.grandTotal | moneyRaw }},
                     tax: '{{ order.totals.taxTotal.amount | moneyRaw }}',
                     {% if shipment is defined  %}shipping: {{ shipment | moneyRaw }},{% endif %}
