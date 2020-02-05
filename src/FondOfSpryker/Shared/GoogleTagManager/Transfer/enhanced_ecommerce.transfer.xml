@@ -18,4 +18,11 @@
         <property name="price" type="int" />
     </transfer>
 
+    <transfer name="EnhancedEcommerceProductData">
+        <property name="productAbstractId" type="int" />
+        <property name="sku" type="string" />
+        <property name="quantity" type="int" />
+        <property name="price" type="int" />
+    </transfer>
+
 </transfers>
