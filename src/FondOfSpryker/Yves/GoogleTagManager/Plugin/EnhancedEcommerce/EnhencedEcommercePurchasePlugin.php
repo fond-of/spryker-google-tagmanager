@@ -40,8 +40,6 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (isset($products[$itemTransfer->getSku()])) {
-                $products[$itemTransfer->getSku()][EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY] += $itemTransfer->getQuantity();
-
                 continue;
             }
 
