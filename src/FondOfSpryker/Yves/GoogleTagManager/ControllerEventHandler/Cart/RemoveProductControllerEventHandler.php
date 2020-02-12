@@ -5,6 +5,8 @@ namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
@@ -15,7 +17,27 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface
 {
-    use FactoryResolverAwareTrait;
+    /**
+     * @var EnhancedEcommerceSessionHandlerInterface
+     */
+    protected $sessionHandler;
+
+    /**
+     * @var GoogleTagManagerToCartClientInterface
+     */
+    protected $cartClient;
+
+    /**
+     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     * @param GoogleTagManagerToCartClientInterface $cartClient
+     */
+    public function __construct(
+        EnhancedEcommerceSessionHandlerInterface $sessionHandler,
+        GoogleTagManagerToCartClientInterface $cartClient
+    ) {
+        $this->sessionHandler = $sessionHandler;
+        $this->cartClient = $cartClient;
+    }
 
     /**
      * @return string
@@ -51,9 +73,7 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
         $enhancedEcommerceProductData->setQuantity($itemTransfer->getQuantity());
         $enhancedEcommerceProductData->setPrice($itemTransfer->getUnitPrice());
 
-        $this->getFactory()
-            ->createEnhancedEcommerceSessionHandler()
-            ->removeProduct($enhancedEcommerceProductData);
+        $this->sessionHandler->removeProduct($enhancedEcommerceProductData);
     }
 
     /**
@@ -63,9 +83,7 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
      */
     protected function getProductFromQuote(string $sku): ?ItemTransfer
     {
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
+        $quoteTransfer = $this->cartClient->getQuote();
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             if ($itemTransfer->getSku() === $sku) {

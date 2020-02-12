@@ -5,17 +5,37 @@ namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
+
 class ChangeQuantityProductControllerEventHandler implements ControllerEventHandlerInterface
 {
-    use FactoryResolverAwareTrait;
+    /**
+     * @var EnhancedEcommerceSessionHandlerInterface
+     */
+    protected $sessionHandler;
+
+    /**
+     * @var GoogleTagManagerToCartClientInterface
+     */
+    protected $cartClient;
+
+    /**
+     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     * @param GoogleTagManagerToCartClientInterface $cartClient
+     */
+    public function __construct(
+        EnhancedEcommerceSessionHandlerInterface $sessionHandler,
+        GoogleTagManagerToCartClientInterface $cartClient
+    ) {
+        $this->sessionHandler = $sessionHandler;
+        $this->cartClient = $cartClient;
+    }
 
     /**
      * @return string
@@ -46,7 +66,9 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
             return;
         }
 
-        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
+        if ((int)$quantity === $itemTransfer->getQuantity()) {
+            return;
+        }
 
         $enhancedEcommerceProductData = new EnhancedEcommerceProductDataTransfer();
         $enhancedEcommerceProductData->setProductAbstractId($itemTransfer->getIdProductAbstract());
@@ -56,7 +78,7 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
         if ($quantity > $itemTransfer->getQuantity()) {
             $enhancedEcommerceProductData->setQuantity($quantity - $itemTransfer->getQuantity());
 
-            $sessionHandler->addProduct($enhancedEcommerceProductData);
+            $this->sessionHandler->addProduct($enhancedEcommerceProductData);
 
             return;
         }
@@ -64,7 +86,7 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
         if ($quantity < $itemTransfer->getQuantity()) {
             $enhancedEcommerceProductData->setQuantity($itemTransfer->getQuantity() - $quantity);
 
-            $sessionHandler->removeProduct($enhancedEcommerceProductData);
+            $this->sessionHandler->removeProduct($enhancedEcommerceProductData);
 
             return;
         }
@@ -77,9 +99,7 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
      */
     protected function getProductFromQuote(string $sku): ?ItemTransfer
     {
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
+        $quoteTransfer = $this->cartClient->getQuote();
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             if ($itemTransfer->getSku() === $sku) {

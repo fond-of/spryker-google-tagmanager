@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
@@ -32,7 +32,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     public function __construct(
         GoogleTagManagerToSessionClientInterface $sessionClient,
-        GoogleTagManagerToCartClientBridge $cartClient,
+        GoogleTagManagerToCartClientInterface $cartClient,
         EnhancedEcommerceProductMapperInterface $productMapper
     ) {
         $this->sessionClient = $sessionClient;
@@ -67,7 +67,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
-        if (!\is_array($addedProducts)) {
+        if (!\is_array($addedProducts) && count($addedProducts > 0)) {
             return [];
         }
 

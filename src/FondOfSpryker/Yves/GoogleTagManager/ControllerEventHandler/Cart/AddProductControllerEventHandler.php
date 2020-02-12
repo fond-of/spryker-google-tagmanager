@@ -4,16 +4,24 @@ namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
-use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
 {
-    use FactoryResolverAwareTrait;
+    /**
+     * @var EnhancedEcommerceSessionHandlerInterface
+     */
+    protected $sessionHandler;
+
+    /**
+     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     */
+    public function __construct(EnhancedEcommerceSessionHandlerInterface $sessionHandler)
+    {
+        $this->sessionHandler = $sessionHandler;
+    }
 
     /**
      * @return string
@@ -46,8 +54,7 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
         $enhancedEcommerceProductData->setSku($sku);
         $enhancedEcommerceProductData->setQuantity($quantity);
 
-        $sessionHandler = $this->getFactory()->createEnhancedEcommerceSessionHandler();
-        $sessionHandler->addProduct($enhancedEcommerceProductData);
+        $this->sessionHandler->addProduct($enhancedEcommerceProductData);
 
         return;
     }

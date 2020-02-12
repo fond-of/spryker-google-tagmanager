@@ -9,6 +9,9 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
@@ -261,7 +264,19 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     public function getCartControllerEventHandler(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CART_CONTROLLER_EVENT_HANDLER);
+        return [
+            new AddProductControllerEventHandler(
+                $this->createEnhancedEcommerceSessionHandler()
+            ),
+            new ChangeQuantityProductControllerEventHandler(
+                $this->createEnhancedEcommerceSessionHandler(),
+                $this->getCartClient()
+            ),
+            new RemoveProductControllerEventHandler(
+                $this->createEnhancedEcommerceSessionHandler(),
+                $this->getCartClient()
+            ),
+        ];
     }
 
     /**
@@ -275,31 +290,11 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface
-     */
-    /*public function getEnhancedEcommerceProductMapperPlugin(): EnhancedEcommerceProductMapperInterface
-    {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::EEC_PRODUCT_MAPPER_PLUGIN);
-    }*/
-
-    /**
-     * @throws
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
      */
     public function getProductStorageClient(): GoogleTagManagerToProductStorageClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_STORAGE_CLIENT);
-    }
-
-    /**
-     * @throws
-     *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface
-     */
-    public function getProductResourceAliasStorageClient(): GoogleTagManagerToProductResourceAliasStorageClientInterface
-    {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT);
     }
 
     /**

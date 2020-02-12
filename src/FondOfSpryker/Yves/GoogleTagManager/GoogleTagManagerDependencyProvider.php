@@ -9,11 +9,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
-use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
-use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
@@ -41,7 +37,6 @@ use Spryker\Yves\Kernel\Container;
 use Spryker\Yves\Money\Plugin\MoneyPlugin;
 
 /**
- * @package FondOfSpryker\Yves\GoogleTagManager
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
 class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvider
@@ -49,12 +44,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const CART_CLIENT = 'CART_CLIENT';
     public const PRODUCT_CLIENT = 'PRODUCT_CLIENT';
     public const PRODUCT_STORAGE_CLIENT = 'PRODUCT_STORAGE_CLIENT';
-    public const PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT = 'PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT';
     public const TAX_PRODUCT_CONNECTOR_CLIENT = 'TAX_PRODUCT_CONNECTOR_CLIENT';
     public const PLUGIN_MONEY = 'PLUGIN_MONEY';
-    public const PLUGIN_DATA_LAYER_VARIABLE = 'PLUGIN_DATA_LAYER_VARIABLE';
     public const SESSION_CLIENT = 'SESSION_CLIENT';
-    public const VARIABLE_BUILDER_PLUGINS = 'VARIABLE_BUILDER_PLUGINS';
     public const PRODUCT_VARIABLE_BUILDER_PLUGINS = 'PRODUCT_VARIABLE_BUILDER_PLUGINS';
     public const DEFAULT_VARIABLE_BUILDER_PLUGINS = 'DEFAULT_VARIABLE_BUILDER_PLUGINS';
     public const CATEGORY_VARIABLE_BUILDER_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_PLUGINS';
@@ -62,11 +54,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const QUOTE_VARIABLE_BUILDER_PLUGINS = 'QUOTE_VARIABLE_BUILDER_PLUGINS';
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
-    public const ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS = 'ENHANCED_ECOMMERCE_PRODUCT_MAPPER_PLUGINS';
     public const STORE = 'STORE';
     public const PRODUCT_FIELD_MAPPER_PLUGINS = 'PRODUCT_FIELD_MAPPER_PLUGINS';
-
-    public const EEC_PRODUCT_MAPPER_PLUGIN = 'EEC_PRODUCT_MAPPER_PLUGIN';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -85,10 +74,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addDefaultVariableBuilderPlugins($container);
         $this->addOrderVariableBuilderPlugins($container);
         $this->addQuoteVariableBuilderPlugins($container);
-        $this->addCartControllerEventHandler($container);
         $this->addEnhancedEcommercePlugins($container);
         $this->addProductStorageClient($container);
-        $this->addProductResourceAliasStorageClient($container);
         $this->addStore($container);
         $this->addProductFieldMapperPlugins($container);
 
@@ -298,34 +285,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container $container
      */
-    protected function addCartControllerEventHandler(Container $container): Container
-    {
-        $container[static::CART_CONTROLLER_EVENT_HANDLER] = function (Container $container) {
-            return $this->getCartControllerEventHandler($container);
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\ControllerEventHandler\ControllerEventHandlerInterface[]
-     */
-    protected function getCartControllerEventHandler(Container $container): array
-    {
-        return [
-            new AddProductControllerEventHandler(),
-            new ChangeQuantityProductControllerEventHandler(),
-            new RemoveProductControllerEventHandler(),
-        ];
-    }
-
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container $container
-     */
     protected function addEnhancedEcommercePlugins(Container $container): Container
     {
         $container[static::ENHANCED_ECOMMERCE_PAGE_PLUGINS] = function () {
@@ -361,22 +320,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $container[static::PRODUCT_STORAGE_CLIENT] = function (Container $container) {
             return new GoogleTagManagerToProductStorageClientBridge(
                 $container->getLocator()->productStorage()->client()
-            );
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
-    protected function addProductResourceAliasStorageClient(Container $container): Container
-    {
-        $container[static::PRODUCT_RESOURCE_ALIAS_STORAGE_CLIENT] = function (Container $container) {
-            return new GoogleTagManagerToProductResourceAliasStorageClientBridge(
-                $container->getLocator()->productResourceAliasStorage()->client()
             );
         };
 
