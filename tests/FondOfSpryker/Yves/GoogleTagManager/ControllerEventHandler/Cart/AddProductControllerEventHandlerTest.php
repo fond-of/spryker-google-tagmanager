@@ -26,6 +26,19 @@ class AddProductControllerEventHandlerTest extends Unit
     protected $enhancedEcommerceProductDataTransferMock;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler
+     */
+    protected $eventHandler;
+
+    /**
+     * @return void
+     */
+    public function testGetMethodName(): void
+    {
+        $this->assertEquals(AddProductControllerEventHandler::METHOD_NAME, $this->eventHandler->getMethodName());
+    }
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -41,6 +54,8 @@ class AddProductControllerEventHandlerTest extends Unit
         $this->enhancedEcommerceProductDataTransferMock = $this->getMockBuilder(EnhancedEcommerceProductDataTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->eventHandler = new AddProductControllerEventHandler($this->sessionHandlerMock);
     }
 
     /**
@@ -58,8 +73,7 @@ class AddProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->once())
             ->method('addProduct');
 
-        $addProductControllerEventHandler = new AddProductControllerEventHandler($this->sessionHandlerMock);
-        $addProductControllerEventHandler->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -76,8 +90,7 @@ class AddProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->once())
             ->method('addProduct');
 
-        $addProductControllerEventHandler = new AddProductControllerEventHandler($this->sessionHandlerMock);
-        $addProductControllerEventHandler->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -94,7 +107,6 @@ class AddProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('addProduct');
 
-        $addProductControllerEventHandler = new AddProductControllerEventHandler($this->sessionHandlerMock);
-        $addProductControllerEventHandler->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 }

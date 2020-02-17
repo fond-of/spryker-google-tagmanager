@@ -11,9 +11,6 @@ use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
 class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface
 {
     /**

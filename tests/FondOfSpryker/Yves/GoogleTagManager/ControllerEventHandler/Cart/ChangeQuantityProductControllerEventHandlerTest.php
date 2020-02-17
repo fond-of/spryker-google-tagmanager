@@ -46,7 +46,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
     /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler
      */
-    protected $plugin;
+    protected $eventHandler;
 
     /**
      * @return void
@@ -98,7 +98,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->plugin = new ChangeQuantityProductControllerEventHandler(
+        $this->eventHandler = new ChangeQuantityProductControllerEventHandler(
             $this->sessionHandlerMock,
             $this->cartClientMock
         );
@@ -109,7 +109,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testGetMethodName(): void
     {
-        $this->assertEquals(ChangeQuantityProductControllerEventHandler::METHOD_NAME, $this->plugin->getMethodName());
+        $this->assertEquals(ChangeQuantityProductControllerEventHandler::METHOD_NAME, $this->eventHandler->getMethodName());
     }
 
     /**
@@ -139,7 +139,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->method('removeProduct');
 
         $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
-        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU-111']);
+        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU-111']);
         $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
         $itemTransferMock->expects($this->once())
@@ -154,7 +154,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->method('getQuantity')
             ->willReturn($this->itemTransferListMock[0]->getQuantity());
 
-        $this->plugin->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -184,7 +184,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->method('removeProduct');
 
         $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
-        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU-111']);
+        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU-111']);
         $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
         $itemTransferMock->expects($this->once())
@@ -199,7 +199,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->method('getQuantity')
             ->willReturn($this->itemTransferListMock[0]->getQuantity());
 
-        $this->plugin->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -220,7 +220,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->willReturn($this->quoteTransferMock)
             ->method('getQuote');
 
-        $this->plugin->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -238,7 +238,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->willReturn($this->quoteTransferMock)
             ->method('getQuote');
 
-        $this->plugin->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -268,10 +268,10 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
             ->method('removeProduct');
 
         $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
-        $result = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU_NOT_IN_QUOTE']);
+        $result = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU_NOT_IN_QUOTE']);
         $this->assertNull($result);
 
-        $this->plugin->handle($this->requestMock, 'xx_XX');
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
     }
 
     /**
