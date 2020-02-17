@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
 {
     /**
-     * @var EnhancedEcommerceSessionHandlerInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface
      */
     protected $sessionHandler;
 
     /**
-     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface $sessionHandler
      */
     public function __construct(EnhancedEcommerceSessionHandlerInterface $sessionHandler)
     {

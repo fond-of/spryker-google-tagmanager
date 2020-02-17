@@ -67,7 +67,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
-        if (!\is_array($addedProducts) && count($addedProducts > 0)) {
+        if (!\is_array($addedProducts)) {
             return [];
         }
 
@@ -177,5 +177,35 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
         }
 
         $addedProducts[$ecommerceProductDataTransfer->getSku()]['quantity'] += $ecommerceProductDataTransfer->getQuantity();
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return void
+     */
+    public function setPurchase(array $params): void
+    {
+        $this->sessionClient->set(EnhancedEcommerceConstants::SESSION_PURCHASE, $params);
+    }
+
+    /**
+     * @param bool $removeFromSessionAfterOutput
+     *
+     * @return array
+     */
+    public function getPurchase($removeFromSessionAfterOutput = false): array
+    {
+        $purchaseArray = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_PURCHASE);
+
+        if (!\is_array($purchaseArray)) {
+            return [];
+        }
+
+        if ($removeFromSessionAfterOutput === true) {
+            $this->sessionClient->remove(EnhancedEcommerceConstants::SESSION_PURCHASE);
+        }
+
+        return $purchaseArray;
     }
 }

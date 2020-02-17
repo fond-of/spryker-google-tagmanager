@@ -29,6 +29,7 @@ class ProductArrayModel implements ProductModelBuilderInterface
     /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientBridge $aliasStorageClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface $productMapper
      */
     public function __construct(
@@ -59,7 +60,11 @@ class ProductArrayModel implements ProductModelBuilderInterface
                 continue;
             }
 
-            $itemTransfer = $this->getProductFromQuote($product[EnhancedEcommerceConstants::PRODUCT_FIELD_SKU]);
+            $itemTransfer = $this->getItemTransferFromQuote($product[EnhancedEcommerceConstants::PRODUCT_FIELD_SKU]);
+
+            if ($itemTransfer === null) {
+                continue;
+            }
 
             if (!isset($product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID])) {
                 $product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID] = $itemTransfer->getIdProductAbstract();
@@ -87,7 +92,7 @@ class ProductArrayModel implements ProductModelBuilderInterface
      *
      * @return \Generated\Shared\Transfer\ItemTransfer|null
      */
-    protected function getProductFromQuote(string $sku): ?ItemTransfer
+    protected function getItemTransferFromQuote(string $sku): ?ItemTransfer
     {
         $quoteTransfer = $this->cartClient
             ->getQuote();

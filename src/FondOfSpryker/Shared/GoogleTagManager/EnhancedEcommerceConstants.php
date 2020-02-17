@@ -27,11 +27,9 @@ interface EnhancedEcommerceConstants
     public const EVENT_CHECKOUT = 'eec.checkout';
     public const EVENT_CHECKOUT_OPTION = 'eec.checkout_option';
 
-    public const CHECKOUT_STEP_CART = 1;
-    public const CHECKOUT_STEP_BILLING_ADDRESS = 2;
-    public const CHECKOUT_STEP_SHIPPING_ADDRESS = 3;
-    public const CHECKOUT_STEP_PAYMENT = 4;
-    public const CHECKOUT_STEP_SUMMARY = 5;
+    public const CHECKOUT_STEP_BILLING_ADDRESS = 1;
+    public const CHECKOUT_STEP_PAYMENT = 2;
+    public const CHECKOUT_STEP_SUMMARY = 3;
 
     public const PAGE_TYPE_CART = 'cart';
     public const PAGE_TYPE_PRODUCT_DETAIL = 'productDetail';

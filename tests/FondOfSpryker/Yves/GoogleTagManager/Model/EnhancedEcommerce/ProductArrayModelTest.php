@@ -38,7 +38,7 @@ class ProductArrayModelTest extends Unit
                 EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->once())
@@ -85,7 +85,7 @@ class ProductArrayModelTest extends Unit
                 EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 // EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->once())
@@ -132,7 +132,7 @@ class ProductArrayModelTest extends Unit
                 EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 // EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->once())
@@ -179,7 +179,7 @@ class ProductArrayModelTest extends Unit
                 EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 // EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 // EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->once())
@@ -226,7 +226,7 @@ class ProductArrayModelTest extends Unit
                 EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->never())
@@ -258,7 +258,7 @@ class ProductArrayModelTest extends Unit
                 // EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY => 11,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID => 666,
                 EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE => 1111,
-            ]
+            ],
         ];
 
         $cartClientMock->expects($this->never())
@@ -302,13 +302,13 @@ class ProductArrayModelTest extends Unit
                 'attribute_variants' => [],
                 'super_attributes' => [
                     'model' => [
-                        'Small Friend'
+                        'Small Friend',
                     ],
                     'product_concrete_ids' => [
-                        'AFZ-FAS-004-001' => 54
-                    ]
-                ]
-            ]
+                        'AFZ-FAS-004-001' => 54,
+                    ],
+                ],
+            ],
         ];
 
         $storageClientMock = $this->createMock(GoogleTagManagerToProductStorageClientInterface::class);
@@ -379,7 +379,7 @@ class ProductArrayModelTest extends Unit
     }
 
     /**
-     * @param QuoteTransfer|null $quoteTransferMock
+     * @param \Generated\Shared\Transfer\QuoteTransfer|null $quoteTransferMock
      *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface|\PHPUnit\Framework\MockObject\MockObject
      */

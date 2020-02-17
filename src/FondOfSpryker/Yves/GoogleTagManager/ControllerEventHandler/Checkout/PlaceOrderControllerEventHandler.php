@@ -1,20 +1,13 @@
 <?php
 
+namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout;
 
-namespace FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart;
-
-use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
-use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
-use Generated\Shared\Transfer\ItemTransfer;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
-class RemoveProductControllerEventHandler implements ControllerEventHandlerInterface
+class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterface
 {
     /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface
@@ -43,7 +36,7 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
      */
     public function getMethodName(): string
     {
-        return 'removeAction';
+        return 'placeOrderAction';
     }
 
     /**
@@ -54,42 +47,37 @@ class RemoveProductControllerEventHandler implements ControllerEventHandlerInter
      */
     public function handle(Request $request, string $locale): void
     {
-        $sku = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU);
+        $purchase = $this->sessionHandler->getPurchase();
 
-        if (!$sku) {
-            return;
-        }
-
-        $itemTransfer = $this->getProductFromQuote($sku);
-
-        if ($itemTransfer === null) {
-            return;
-        }
-
-        $enhancedEcommerceProductData = new EnhancedEcommerceProductDataTransfer();
-        $enhancedEcommerceProductData->setProductAbstractId($itemTransfer->getIdProductAbstract());
-        $enhancedEcommerceProductData->setSku($sku);
-        $enhancedEcommerceProductData->setQuantity($itemTransfer->getQuantity());
-        $enhancedEcommerceProductData->setPrice($itemTransfer->getUnitPrice());
-
-        $this->sessionHandler->removeProduct($enhancedEcommerceProductData);
+        $this->sessionHandler->setPurchase(\array_merge(
+            $purchase,
+            ['shipment' => $this->getShippingCost()]
+        ));
     }
 
     /**
-     * @param string $sku
-     *
-     * @return \Generated\Shared\Transfer\ItemTransfer|null
+     * @return int
      */
-    protected function getProductFromQuote(string $sku): ?ItemTransfer
+    protected function getShippingCost(): int
     {
         $quoteTransfer = $this->cartClient->getQuote();
 
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            if ($itemTransfer->getSku() === $sku) {
-                return $itemTransfer;
+        if ($quoteTransfer->getShipment()) {
+            if ($quoteTransfer->getTotals() === null) {
+                return 0;
             }
+
+            if (!$quoteTransfer->getShipment() === null) {
+                return 0;
+            }
+
+            if (!$quoteTransfer->getShipment()->getMethod() === null) {
+                return 0;
+            }
+
+            return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
 
-        return null;
+        return 0;
     }
 }

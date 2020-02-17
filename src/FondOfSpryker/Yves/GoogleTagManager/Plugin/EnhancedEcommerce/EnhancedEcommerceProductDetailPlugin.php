@@ -27,7 +27,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
     {
         $productViewTransfer = $params['product'];
 
-        $products = $this->getFactory()
+        $products[] = $this->getFactory()
             ->createEnhancedEcommerceProductMapperPlugin()
             ->map($productViewTransfer)->toArray();
 
@@ -49,14 +49,30 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
         $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL);
         $enhancedEcommerceTransfer->setEcommerce([
             'detail' => [
-                'actionField' => [
-                    'list' => 'product detail view',
-                ],
-                'products' => $products,
+                'actionField' => [],
+                'products' => $this->stripEmptyValuesFromProductsArray($products),
             ],
         ]);
 
         return $enhancedEcommerceTransfer->toArray();
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    protected function stripEmptyValuesFromProductsArray(array $products): array
+    {
+        foreach ($products as $index => $product) {
+            foreach ($product as $key => $value) {
+                if ($value !== 0 && !$value) {
+                    unset($products[$index][$key]);
+                }
+            }
+        }
+
+        return $products;
     }
 
     /**

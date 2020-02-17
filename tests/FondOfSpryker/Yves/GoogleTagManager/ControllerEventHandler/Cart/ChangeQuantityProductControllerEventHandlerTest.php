@@ -8,6 +8,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCart
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
 
 class ChangeQuantityProductControllerEventHandlerTest extends Unit
@@ -17,19 +18,98 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     protected $sessionHandlerMock;
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $requestMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\ItemTransfer[]|\PHPUnit\Framework\MockObject\MockObject[]
+     */
+    protected $itemTransferListMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\ItemTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $itemTransferMock1;
+
+    /**
+     * @var \Generated\Shared\Transfer\QuoteTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $quoteTransferMock;
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $cartClientMock;
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler
+     */
+    protected $plugin;
+
+    /**
+     * @return void
+     */
     protected function _before(): void
     {
         $this->sessionHandlerMock = $this->getMockBuilder(EnhancedEcommerceSessionHandlerInterface::class)
-            ->setMethods([
-                'getAddedProducts',
-                'getRemovedProducts',
-                'getChangeProductQuantityEventArray',
-                'addProduct',
-                'changeProductQuantity',
-                'removeProduct'
-            ])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->requestMock = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $itemTransferMock1 = $this->getMockBuilder(ItemTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $itemTransferMock2 = $this->getMockBuilder(ItemTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $itemTransferMock1
+            ->method('getSku')
+            ->willReturn('SKU-111');
+
+        $itemTransferMock1
+            ->method('getQuantity')
+            ->willReturn(3);
+
+        $itemTransferMock2
+            ->method('getSku')
+            ->willReturn('SKU-222');
+
+        $itemTransferMock2
+            ->method('getQuantity')
+            ->willReturn(3);
+
+        $this->itemTransferListMock = [
+            $itemTransferMock1,
+            $itemTransferMock2,
+        ];
+
+        $this->quoteTransferMock = $this->getMockBuilder(QuoteTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->cartClientMock = $this->getMockBuilder(GoogleTagManagerToCartClientInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->plugin = new ChangeQuantityProductControllerEventHandler(
+            $this->sessionHandlerMock,
+            $this->cartClientMock
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetMethodName(): void
+    {
+        $this->assertEquals(ChangeQuantityProductControllerEventHandler::METHOD_NAME, $this->plugin->getMethodName());
     }
 
     /**
@@ -37,27 +117,20 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testHandleSuccessIncreaseQuantity(): void
     {
-        $requestMock = $this->getRequestMock('TEST_SKU', 3);
-        $itemTransferMock = $this->getItemTransferMock('TEST_SKU', 1);
-        $quoteTransferMock = $this->getQuoteTransfer($itemTransferMock);
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
+        $this->requestMock->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, 'SKU-111'],
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null, 99],
+            ]));
 
-        $addProductControllerEventHandler = new ChangeQuantityProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
+        $this->cartClientMock->expects($this->atLeastOnce())
+            ->method('getQuote')
+            ->willReturn($this->quoteTransferMock);
 
-        $requestMock->expects($this->exactly(2))
-            ->method('get');
-
-        $cartClientMock->expects($this->once())
-            ->method('getQuote');
-
-        $itemTransferMock->expects($this->once())
-            ->method('getSku');
-
-        $itemTransferMock->expects($this->atLeastOnce())
-            ->method('getQuantity');
+        $this->quoteTransferMock->expects($this->atLeastOnce())
+            ->method('getItems')
+            ->willReturn($this->itemTransferListMock);
 
         $this->sessionHandlerMock->expects($this->once())
             ->method('addProduct');
@@ -65,7 +138,23 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('removeProduct');
 
-        $addProductControllerEventHandler->handle($requestMock, 'xx_XX');
+        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU-111']);
+        $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
+
+        $itemTransferMock->expects($this->once())
+            ->method('getIdProductAbstract')
+            ->willReturn(666);
+
+        $itemTransferMock->expects($this->once())
+            ->method('getUnitPrice')
+            ->willReturn(1234);
+
+        $itemTransferMock->expects($this->atLeastOnce())
+            ->method('getQuantity')
+            ->willReturn($this->itemTransferListMock[0]->getQuantity());
+
+        $this->plugin->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -73,22 +162,20 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testHandleSuccessReduceQuantity(): void
     {
-        $requestMock = $this->getRequestMock('TEST_SKU', 1);
-        $itemTransferMock = $this->getItemTransferMock('TEST_SKU', 3);
-        $quoteTransferMock = $this->getQuoteTransfer($itemTransferMock);
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
+        $this->requestMock->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, 'SKU-111'],
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null, 1],
+            ]));
 
-        $requestMock->expects($this->exactly(2))
-            ->method('get');
+        $this->cartClientMock->expects($this->atLeastOnce())
+            ->method('getQuote')
+            ->willReturn($this->quoteTransferMock);
 
-        $cartClientMock->expects($this->once())
-            ->method('getQuote');
-
-        $itemTransferMock->expects($this->atLeastOnce())
-            ->method('getSku');
-
-        $itemTransferMock->expects($this->atLeastOnce())
-            ->method('getQuantity');
+        $this->quoteTransferMock->expects($this->atLeastOnce())
+            ->method('getItems')
+            ->willReturn($this->itemTransferListMock);
 
         $this->sessionHandlerMock->expects($this->never())
             ->method('addProduct');
@@ -96,12 +183,23 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->once())
             ->method('removeProduct');
 
-        $addProductControllerEventHandler = new ChangeQuantityProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
+        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU-111']);
+        $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
-        $addProductControllerEventHandler->handle($requestMock, 'xx_XX');
+        $itemTransferMock->expects($this->once())
+            ->method('getIdProductAbstract')
+            ->willReturn(666);
+
+        $itemTransferMock->expects($this->once())
+            ->method('getUnitPrice')
+            ->willReturn(1234);
+
+        $itemTransferMock->expects($this->atLeastOnce())
+            ->method('getQuantity')
+            ->willReturn($this->itemTransferListMock[0]->getQuantity());
+
+        $this->plugin->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -109,23 +207,20 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testHandleFailureMissingSku(): void
     {
-        $requestMock = $this->getRequestMock('', 1);
-        $itemTransferMock = $this->getItemTransferMock('TEST_SKU', 3);
-        $quoteTransferMock = $this->getQuoteTransfer($itemTransferMock);
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
+        $this->requestMock->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null, 1],
+            ]));
 
-        $requestMock->expects($this->exactly(2))
+        $this->requestMock->expects($this->exactly(2))
             ->method('get');
 
-        $cartClientMock->expects($this->never())
+        $this->cartClientMock->expects($this->never())
+            ->willReturn($this->quoteTransferMock)
             ->method('getQuote');
 
-        $addProductControllerEventHandler = new ChangeQuantityProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
-
-        $addProductControllerEventHandler->handle($requestMock, 'xx_XX');
+        $this->plugin->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -133,23 +228,17 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testHandleFailureMissingQuantity(): void
     {
-        $requestMock = $this->getRequestMock('TEST_SKU', 0);
-        $itemTransferMock = $this->getItemTransferMock('TEST_SKU', 3);
-        $quoteTransferMock = $this->getQuoteTransfer($itemTransferMock);
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
+        $this->requestMock->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, 'SKU-111'],
+            ]));
 
-        $requestMock->expects($this->exactly(2))
-            ->method('get');
-
-        $cartClientMock->expects($this->never())
+        $this->cartClientMock->expects($this->never())
+            ->willReturn($this->quoteTransferMock)
             ->method('getQuote');
 
-        $addProductControllerEventHandler = new ChangeQuantityProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
-
-        $addProductControllerEventHandler->handle($requestMock, 'xx_XX');
+        $this->plugin->handle($this->requestMock, 'xx_XX');
     }
 
     /**
@@ -157,18 +246,20 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      */
     public function testHandleFailureProductNotInQuote(): void
     {
-        $requestMock = $this->getRequestMock('TEST_SKU', 3);
-        $quoteTransferMock = $this->getQuoteTransfer(null);
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
+        $this->requestMock->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, 'SKU_NOT_IN_QUOTE'],
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null, 3],
+            ]));
 
-        $requestMock->expects($this->exactly(2))
-            ->method('get');
+        $this->quoteTransferMock->expects($this->atLeastOnce())
+            ->method('getItems')
+            ->willReturn($this->itemTransferListMock);
 
-        $quoteTransferMock->expects($this->once())
-            ->method('getItems');
-
-        $cartClientMock->expects($this->once())
-            ->method('getQuote');
+        $this->cartClientMock->expects($this->atLeastOnce())
+            ->method('getQuote')
+            ->willReturn($this->quoteTransferMock);
 
         $this->sessionHandlerMock->expects($this->never())
             ->method('addProduct');
@@ -176,94 +267,24 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('removeProduct');
 
-        $addProductControllerEventHandler = new ChangeQuantityProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
+        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $result = $methodGetProductFromQuote->invokeArgs($this->plugin, ['SKU_NOT_IN_QUOTE']);
+        $this->assertNull($result);
 
-        $addProductControllerEventHandler->handle($requestMock, 'xx_XX');
+        $this->plugin->handle($this->requestMock, 'xx_XX');
     }
 
     /**
-     * @param string $sku
-     * @param int $quantity
+     * @param string $name
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return \ReflectionMethod
      */
-    protected function getRequestMock(string $sku, int $quantity)
+    protected static function getMethod(string $name)
     {
-        $requestMock = $this->createMock(Request::class);
-        $requestMock->method('get')
-            ->will($this->returnValueMap([
-                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, $sku],
-                [EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null, $quantity],
-            ]));
+        $class = new ReflectionClass(ChangeQuantityProductControllerEventHandler::class);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
 
-        $this->assertEquals($sku, $requestMock->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null));
-        $this->assertEquals($quantity, $requestMock->get(EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY, null));
-
-        return $requestMock;
-    }
-
-    /**
-     * @param string $sku
-     * @param int $quantity
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getItemTransferMock(string $sku, int $quantity)
-    {
-        $itemTransferMock = $this->getMockBuilder(ItemTransfer::class)
-            ->setMethods(['getSku', 'getQuantity'])
-            ->getMock();
-
-        $itemTransferMock->method('getSku')->willReturn($sku);
-        $itemTransferMock->method('getQuantity')->willReturn($quantity);
-
-        return $itemTransferMock;
-    }
-
-    /**
-     * @param ItemTransfer|null $itemTransferMock
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getQuoteTransfer(?ItemTransfer $itemTransferMock)
-    {
-        $quoteTransferMock = $this->createMock(QuoteTransfer::class);
-
-        if ($itemTransferMock !== null) {
-            $quoteTransferMock->method('getItems')
-                ->willReturn([$itemTransferMock]);
-
-            $this->assertIsArray($quoteTransferMock->getItems());
-
-            return $quoteTransferMock;
-        }
-
-        $quoteTransferMock->method('getItems')
-            ->willReturn([]);
-
-        return $quoteTransferMock;
-    }
-
-    /**
-     * @param QuoteTransfer|null $quoteTransferMock
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getCartClient(?QuoteTransfer $quoteTransferMock)
-    {
-        $cartClientMock = $this->createMock(GoogleTagManagerToCartClientInterface::class);
-
-        if ($quoteTransferMock !== null) {
-            $cartClientMock->method('getQuote')
-                ->willReturn($quoteTransferMock);
-
-            $this->assertEquals($quoteTransferMock, $cartClientMock->getQuote());
-        }
-
-        return $cartClientMock;
-
+        return $method;
     }
 }

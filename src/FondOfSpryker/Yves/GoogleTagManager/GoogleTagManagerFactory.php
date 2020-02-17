@@ -12,8 +12,8 @@ use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\PlaceOrderControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
@@ -273,6 +273,10 @@ class GoogleTagManagerFactory extends AbstractFactory
                 $this->getCartClient()
             ),
             new RemoveProductControllerEventHandler(
+                $this->createEnhancedEcommerceSessionHandler(),
+                $this->getCartClient()
+            ),
+            new PlaceOrderControllerEventHandler(
                 $this->createEnhancedEcommerceSessionHandler(),
                 $this->getCartClient()
             ),

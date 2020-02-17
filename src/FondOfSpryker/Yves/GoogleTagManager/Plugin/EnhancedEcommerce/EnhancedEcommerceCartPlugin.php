@@ -15,6 +15,14 @@ use Twig_Environment;
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
     /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
+    }
+
+    /**
      * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
@@ -27,30 +35,10 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->getCartEvent(),
                 $this->getAddedProductsEvent(),
                 $this->getRemovedProductsEvent(),
             ],
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getCartEvent(): array
-    {
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_CHECKOUT);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'checkout' => [
-                'actionField' => [
-                    'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_CART,
-                ],
-                'products' => $this->renderCartViewProducts(),
-            ],
-        ]);
-
-        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**
@@ -74,7 +62,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD);
         $enhancedEcommerceTransfer->setEcommerce([
             'add' => [
-                'actionField' => ['list' => 'Shopping cart'],
+                'actionField' => [],
                 'products' => $addedProducts,
             ],
         ]);
@@ -97,39 +85,12 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE);
         $enhancedEcommerceTransfer->setEcommerce([
             'remove' => [
-                'actionField' => ['list' => 'Shopping cart'],
+                'actionField' => [],
                 'products' => $removedProducts,
             ],
         ]);
 
         return $enhancedEcommerceTransfer->toArray();
-    }
-
-    /**
-     * @return array
-     */
-    protected function renderCartViewProducts(): array
-    {
-        $products = [];
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
-
-        foreach ($quoteTransfer->getItems() as $item) {
-            $productDataAbstract = $this->getFactory()
-                ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
-
-            $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
-            $productViewTransfer->setPrice($item->getUnitPrice());
-            $productViewTransfer->setQuantity($item->getQuantity());
-
-            $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
-                ->map($productViewTransfer)->toArray();
-        }
-
-        return $products;
     }
 
     /**
@@ -178,13 +139,5 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         }
 
         return $products;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate(): string
-    {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 }

@@ -58,7 +58,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             'order' => $orderTransfer,
             'products' => \array_values($products),
             'voucherCode' => $this->getDiscountCode($orderTransfer),
-            //'shipment' => $this->getShipment($quoteTransfer),
+            'shipment' => $this->getShipping(),
         ]);
     }
 
@@ -81,20 +81,18 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     }
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return int
+     * @return string
      */
-    protected function getShipment(OrderTransfer $quoteTransfer): int
+    protected function getShipping(): string
     {
-        if ($quoteTransfer->getShipment() === null) {
-            return 0;
+        $purchaseSession = $this->getFactory()
+            ->createEnhancedEcommerceSessionHandler()
+            ->getPurchase(true);
+
+        if (isset($purchaseSession['shipment'])) {
+            return $purchaseSession['shipment'];
         }
 
-        if ($quoteTransfer->getShipment()->getMethod() === null) {
-            return 0;
-        }
-
-        return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
+        return '0';
     }
 }

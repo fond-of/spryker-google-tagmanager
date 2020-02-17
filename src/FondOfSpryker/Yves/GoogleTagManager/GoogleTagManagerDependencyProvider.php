@@ -15,7 +15,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSess
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutShippingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutSummaryPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
@@ -303,7 +302,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             EnhancedEcommerceConstants::PAGE_TYPE_CART => new EnhancedEcommerceCartPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_PRODUCT_DETAIL => new EnhancedEcommerceProductDetailPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_BILLING_ADDRESS => new EnhancedEcommerceCheckoutBillingAddressPlugin(),
-            EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS => new EnhancedEcommerceCheckoutShippingAddressPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
