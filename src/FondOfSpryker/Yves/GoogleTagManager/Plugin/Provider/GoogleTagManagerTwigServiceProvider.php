@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
+ */
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Provider;
 
 use Silex\Application;
@@ -19,15 +24,15 @@ class GoogleTagManagerTwigServiceProvider extends AbstractPlugin implements Serv
      */
     public function register(Application $app)
     {
-        $twigExtension = $this
+        $googleTagManagerTwigExtension = $this
             ->getFactory()
             ->createGoogleTagManagerTwigExtension();
 
         $app['twig'] = $app->share(
             $app->extend(
                 'twig',
-                function (Environment $twig) use ($twigExtension) {
-                    $twig->addExtension($twigExtension);
+                function (Environment $twig) use ($googleTagManagerTwigExtension) {
+                    $twig->addExtension($googleTagManagerTwigExtension);
 
                     return $twig;
                 }

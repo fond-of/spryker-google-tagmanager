@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Google Tag Manager tracking integration for Spryker
+ *
+ * @author      Jozsef Geng <gengjozsef86@gmail.com>
+ */
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
@@ -45,5 +50,13 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getSpecialPriceToAttribute(): string
     {
         return $this->get(GoogleTagManagerConstants::ATTRIBUTE_SPECIAL_PRICE_TO);
+    }
+
+    /**
+     * @return array
+     */
+    public function getListenToControllers(): array
+    {
+        return $this->get(GoogleTagManagerConstants::EEC_LISTEN_TO_CONTROLLERS, []);
     }
 }

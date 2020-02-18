@@ -30,6 +30,12 @@ interface GoogleTagManagerConstants
     public const PRODUCT_PRICE_EXCLUDING_TAX = 'productPriceExcludingTax';
     public const PRODUCT_TAX = 'productTax';
     public const PRODUCT_TAX_RATE = 'productTaxRate';
+    public const PRODUCT_CURRENCY = 'productCurrency';
+
+    public const SIZE_UNTRANSLATED = 'size_untranslated';
+    public const STYLE_UNTRANSLATED = 'style_untranslated';
+    public const NAME_UNTRANSLATED = 'name_untranslated';
+    public const MODEL_UNTRANSLATED = 'model_untranslated';
 
     public const TRANSACTION_PRODUCT_ID = 'id';
     public const TRANSACTION_PRODUCT_SKU = 'sku';
@@ -62,4 +68,6 @@ interface GoogleTagManagerConstants
     public const TRANSACTION_PRODUCTS_SKUS = 'transactionProductsSkus';
 
     public const CUSTOMER_EMAIL = 'customerEmail';
+
+    public const EEC_LISTEN_TO_CONTROLLERS = 'EEC_LISTEN_TO_CONTROLLERS';
 }

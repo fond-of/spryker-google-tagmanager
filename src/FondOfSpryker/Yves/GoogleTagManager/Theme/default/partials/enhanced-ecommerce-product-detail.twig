@@ -1,0 +1,16 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'eec.detail',
+        ecommerce: {
+            detail: {
+                actionField: {
+                    list: 'product detail view'
+                },
+                products: {{ products | json_encode | raw }}
+            }
+        }
+    });
+</script>
+<!-- enhanced ecommerce end -->

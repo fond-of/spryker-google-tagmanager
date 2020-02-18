@@ -1,0 +1,8 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    {% for array in data if array %}
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({{ array | json_encode() | raw }});
+    {% endfor %}
+</script>
+<!-- enhanced ecommerce end -->

@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 class DefaultVariableBuilder
 {
@@ -11,9 +11,12 @@ class DefaultVariableBuilder
 
     /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[] $defaultVariableBuilderPlugins
+     * @param \Spryker\Shared\Kernel\Store $store
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      */
-    public function __construct(array $defaultVariableBuilderPlugins)
-    {
+    public function __construct(
+        array $defaultVariableBuilderPlugins
+    ) {
         $this->defaultVariableBuilderPlugins = $defaultVariableBuilderPlugins;
     }
 
@@ -39,7 +42,7 @@ class DefaultVariableBuilder
     protected function executePlugins(array $variables): array
     {
         foreach ($this->defaultVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle());
+            $variables = array_merge($variables, $plugin->handle($variables));
         }
 
         return $variables;

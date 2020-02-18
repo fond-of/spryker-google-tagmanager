@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Generated\Shared\Transfer\AddressTransfer;
@@ -118,25 +118,13 @@ class QuoteVariableBuilder
         return [
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $product->getName(),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitPrice()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX_RATE => $product->getTaxRate(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_QUANTITY => $product->getQuantity(),
         ];
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return float|null
-     */
-    protected function getTransactionTotal(QuoteTransfer $quoteTransfer): ?float
-    {
-        $total = $quoteTransfer->getTotals()->getGrandTotal() - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
-
-        return $this->moneyPlugin->convertIntegerToDecimal($total);
     }
 
     /**
@@ -172,6 +160,24 @@ class QuoteVariableBuilder
     }
 
     /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     *
+     * @return string
+     */
+    protected function getProductName(ItemTransfer $product): string
+    {
+        if (!isset($product->getAbstractAttributes()['_'])) {
+            return $product->getName();
+        }
+
+        if (!isset($product->getAbstractAttributes()['_'][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
+            return $product->getName();
+        }
+
+        return $product->getAbstractAttributes()['_'][GoogleTagManagerConstants::NAME_UNTRANSLATED];
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return int
@@ -179,6 +185,18 @@ class QuoteVariableBuilder
     protected function getTotalWithoutShippingAmount(QuoteTransfer $quoteTransfer): int
     {
         if ($quoteTransfer->getShipment()) {
+            if ($quoteTransfer->getTotals() === null) {
+                return 0;
+            }
+
+            if (!$quoteTransfer->getShipment() === null) {
+                return 0;
+            }
+
+            if (!$quoteTransfer->getShipment()->getMethod() === null) {
+                return 0;
+            }
+
             return $quoteTransfer->getTotals()->getGrandTotal() - $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
         }
 
