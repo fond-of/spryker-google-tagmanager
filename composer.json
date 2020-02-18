@@ -28,8 +28,8 @@
     "spryker/kernel": "^3.42.4",
     "spryker/money": "^2.8.0",
     "spryker/product": "^6.17.1",
-    "spryker/product-storage": "~1.5.0",
-    "spryker/session": "~3.2.0"
+    "spryker/product-storage": "^1.18.1",
+    "spryker/session": "^4.6.0"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.14.7",
