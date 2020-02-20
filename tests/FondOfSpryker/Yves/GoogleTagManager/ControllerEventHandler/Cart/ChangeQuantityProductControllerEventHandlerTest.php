@@ -49,6 +49,11 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
     protected $eventHandler;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $storageClientMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -138,7 +143,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('removeProduct');
 
-        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
         $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU-111']);
         $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
@@ -183,7 +188,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->once())
             ->method('removeProduct');
 
-        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
         $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU-111']);
         $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
@@ -267,7 +272,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('removeProduct');
 
-        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
         $result = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU_NOT_IN_QUOTE']);
         $this->assertNull($result);
 
@@ -279,7 +284,7 @@ class ChangeQuantityProductControllerEventHandlerTest extends Unit
      *
      * @return \ReflectionMethod
      */
-    protected static function getMethod(string $name)
+    protected function getMethod(string $name)
     {
         $class = new ReflectionClass(ChangeQuantityProductControllerEventHandler::class);
         $method = $class->getMethod($name);

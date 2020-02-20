@@ -73,7 +73,7 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
         foreach ($quoteTransfer->getItems() as $item) {
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
+                ->findProductAbstractStorageData($item->getIdProductAbstract(), 'en_US');
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($item->getUnitPrice());

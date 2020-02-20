@@ -121,7 +121,7 @@ class RemoveProductControllerEventHandlerTest extends Unit
             ->method('getItems')
             ->willReturn($this->itemTransferListMock);
 
-        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
         $itemTransferMock = $methodGetProductFromQuote->invokeArgs($this->eventHandler, ['SKU-111']);
         $this->assertEquals($this->itemTransferListMock[0], $itemTransferMock);
 
@@ -149,6 +149,37 @@ class RemoveProductControllerEventHandlerTest extends Unit
         $this->requestMock->expects($this->atLeastOnce())
             ->method('get')
             ->will($this->returnValueMap([
+                [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, ''],
+            ]));
+
+        $this->cartClientMock->expects($this->atLeastOnce())
+            ->method('getQuote')
+            ->willReturn($this->quoteTransferMock);
+
+        $this->quoteTransferMock->expects($this->atLeastOnce())
+            ->method('getItems')
+            ->willReturn($this->itemTransferListMock);
+
+        $this->sessionHandlerMock->expects($this->never())
+            ->method('removeProduct');
+
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
+        $result = $methodGetProductFromQuote->invokeArgs($this->eventHandler, [
+            $this->requestMock->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU),
+        ]);
+        $this->assertNull($result);
+
+        $this->eventHandler->handle($this->requestMock, 'xx_XX');
+    }
+
+    /**
+     * @return void
+     */
+    public function testHandleFailureProductNotInQuote()
+    {
+        $this->requestMock->expects($this->atLeastOnce())
+            ->method('get')
+            ->will($this->returnValueMap([
                 [EnhancedEcommerceConstants::PRODUCT_FIELD_SKU, null, 'SKU_NOT_IN_QUOTE'],
             ]));
 
@@ -163,9 +194,9 @@ class RemoveProductControllerEventHandlerTest extends Unit
         $this->sessionHandlerMock->expects($this->never())
             ->method('removeProduct');
 
-        $methodGetProductFromQuote = static::getMethod('getProductFromQuote');
+        $methodGetProductFromQuote = $this->getMethod('getProductFromQuote');
         $result = $methodGetProductFromQuote->invokeArgs($this->eventHandler, [
-            $this->requestMock->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU)
+            $this->requestMock->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU),
         ]);
         $this->assertNull($result);
 
@@ -173,43 +204,11 @@ class RemoveProductControllerEventHandlerTest extends Unit
     }
 
     /**
-     * @return void
-     */
-    public function testHandleFailureProductNotInQuote()
-    {
-        /*$requestMock = $this->getRequestMock('TEST_SKU');
-        $quoteTransferMock = $this->getQuoteTransfer();
-        $cartClientMock = $this->getCartClient($quoteTransferMock);
-
-        $requestMock->expects($this->once())
-            ->method('get');
-
-        $cartClientMock->expects($this->once())
-            ->method('getQuote');
-
-        $cartClientMock->expects($this->once())
-            ->method('getQuote');
-
-        $quoteTransferMock->expects($this->once())
-            ->method('getItems');
-
-        $this->sessionHandlerMock->expects($this->never())
-            ->method('removeProduct');
-
-        $removeProductControllerEventHandler = new RemoveProductControllerEventHandler(
-            $this->sessionHandlerMock,
-            $cartClientMock
-        );
-
-        $removeProductControllerEventHandler->handle($requestMock, 'xx_XX');*/
-    }
-
-    /**
      * @param string $name
      *
      * @return \ReflectionMethod
      */
-    protected static function getMethod(string $name)
+    protected function getMethod(string $name)
     {
         $class = new ReflectionClass(RemoveProductControllerEventHandler::class);
         $method = $class->getMethod($name);

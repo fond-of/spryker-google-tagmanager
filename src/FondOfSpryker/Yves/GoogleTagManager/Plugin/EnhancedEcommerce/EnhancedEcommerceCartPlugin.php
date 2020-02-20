@@ -127,7 +127,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
             $productAbstractData = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID], $this->getLocale());
+                ->findProductAbstractStorageData($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID], 'en_US');
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productAbstractData, true);
             $productViewTransfer->setPrice($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE]);
