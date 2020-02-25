@@ -12,6 +12,7 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()()
  */
 class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
@@ -73,7 +74,7 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
         foreach ($quoteTransfer->getItems() as $item) {
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), 'en_US');
+                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getConfig()->getEnhancedEcommerceLocale());
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($item->getUnitPrice());

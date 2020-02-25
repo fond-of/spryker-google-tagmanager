@@ -64,22 +64,18 @@ class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterfac
     {
         $quoteTransfer = $this->cartClient->getQuote();
 
-        if ($quoteTransfer->getShipment()) {
-            if ($quoteTransfer->getTotals() === null) {
-                return 0;
-            }
-
-            if (!$quoteTransfer->getShipment() === null) {
-                return 0;
-            }
-
-            if (!$quoteTransfer->getShipment()->getMethod() === null) {
-                return 0;
-            }
-
-            return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
+        if ($quoteTransfer->getShipment() === null) {
+            return 0;
         }
 
-        return 0;
+        if (!$quoteTransfer->getShipment()->getMethod() === null) {
+            return 0;
+        }
+
+        if ($quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice() === null) {
+            return 0;
+        }
+
+        return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
     }
 }

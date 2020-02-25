@@ -7,6 +7,7 @@
  */
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Spryker\Yves\Kernel\AbstractBundleConfig;
 
@@ -58,5 +59,13 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getListenToControllers(): array
     {
         return $this->get(GoogleTagManagerConstants::EEC_LISTEN_TO_CONTROLLERS, []);
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnhancedEcommerceLocale(): string
+    {
+        return $this->get(EnhancedEcommerceConstants::EEC_LOCALE, 'en_US');
     }
 }

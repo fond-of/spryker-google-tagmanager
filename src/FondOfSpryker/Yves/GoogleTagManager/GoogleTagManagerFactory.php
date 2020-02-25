@@ -321,7 +321,8 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new ProductArrayModel(
             $this->getCartClient(),
             $this->getProductStorageClient(),
-            $this->createEnhancedEcommerceProductMapperPlugin()
+            $this->createEnhancedEcommerceProductMapperPlugin(),
+            $this->getConfig()
         );
     }
 

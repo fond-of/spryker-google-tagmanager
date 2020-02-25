@@ -7,6 +7,7 @@ use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductArrayModel;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -45,11 +46,22 @@ class ProductArrayModelTest extends Unit
     protected $quoteTransferMock;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $configMock;
+
+    /**
      * @return void
      */
     protected function _before()
     {
         parent::_before();
+
+        $this->configMock = $this->getMockBuilder(GoogleTagManagerConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->configMock->method('getEnhancedEcommerceLocale')->willReturn('en_US');
 
         $this->cartClientMock = $this->getMockBuilder(GoogleTagManagerToCartClientInterface::class)
             ->disableOriginalConstructor()
@@ -105,7 +117,8 @@ class ProductArrayModelTest extends Unit
         $this->modelMapper = new ProductArrayModel(
             $this->cartClientMock,
             $this->storageClientMock,
-            $this->productMapperMock
+            $this->productMapperMock,
+            $this->configMock
         );
     }
 

@@ -5,6 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -33,6 +34,11 @@ class EnhancedEcommerceCheckoutBillingAddressPluginTest extends Unit
      * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $factoryMock;
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $configMock;
 
     /**
      * @var \Generated\Shared\Transfer\ItemTransfer[]|\PHPUnit\Framework\MockObject\MockObject[]
@@ -70,6 +76,12 @@ class EnhancedEcommerceCheckoutBillingAddressPluginTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->configMock = $this->getMockBuilder(GoogleTagManagerConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->configMock->method('getEnhancedEcommerceLocale')->willReturn('en_US');
+
         $this->requestMock = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -100,6 +112,7 @@ class EnhancedEcommerceCheckoutBillingAddressPluginTest extends Unit
 
         $this->plugin = new EnhancedEcommerceCheckoutBillingAddressPlugin();
         $this->plugin->setFactory($this->factoryMock);
+        $this->plugin->setConfig($this->configMock);
     }
 
     /**

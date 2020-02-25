@@ -12,14 +12,6 @@ class OrderDiscountPlugin implements OrderVariableBuilderPluginInterface
     public const FIELD_DISCOUNT_TOTAL = 'discountTotal';
 
     /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        // TODO: Implement getName() method.
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $variables
      *

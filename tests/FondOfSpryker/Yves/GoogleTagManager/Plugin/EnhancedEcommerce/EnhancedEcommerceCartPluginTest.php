@@ -4,6 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
@@ -49,6 +50,11 @@ class EnhancedEcommerceCartPluginTest extends Unit
     protected $productStorageClientMock;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $configMock;
+
+    /**
      * @return void
      */
     protected function _before()
@@ -58,6 +64,12 @@ class EnhancedEcommerceCartPluginTest extends Unit
         $this->factoryMock = $this->getMockBuilder(GoogleTagManagerFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->configMock = $this->getMockBuilder(GoogleTagManagerConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->configMock->method('getEnhancedEcommerceLocale')->willReturn('en_US');
 
         $this->twigEnvironmentMock = $this->getMockBuilder(Twig_Environment::class)
             ->disableOriginalConstructor()
@@ -81,6 +93,7 @@ class EnhancedEcommerceCartPluginTest extends Unit
 
         $this->plugin = new EnhancedEcommerceCartPlugin();
         $this->plugin->setFactory($this->factoryMock);
+        $this->plugin->setConfig($this->configMock);
     }
 
     /**
