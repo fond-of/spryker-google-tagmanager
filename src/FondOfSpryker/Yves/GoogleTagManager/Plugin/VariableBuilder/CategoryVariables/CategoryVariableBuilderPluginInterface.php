@@ -7,11 +7,6 @@ use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 interface CategoryVariableBuilderPluginInterface
 {
     /**
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
      * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
      *
      * @return array

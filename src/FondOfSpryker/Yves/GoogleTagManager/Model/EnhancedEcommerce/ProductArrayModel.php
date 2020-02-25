@@ -28,15 +28,15 @@ class ProductArrayModel implements ProductModelBuilderInterface
     protected $cartClient;
 
     /**
-     * @var GoogleTagManagerConfig
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
      */
     protected $config;
 
     /**
-     * @param GoogleTagManagerToCartClientInterface $cartClient
-     * @param GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param EnhancedEcommerceProductMapperInterface $productMapper
-     * @param GoogleTagManagerConfig $config
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface $productMapper
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(
         GoogleTagManagerToCartClientInterface $cartClient,
@@ -86,7 +86,7 @@ class ProductArrayModel implements ProductModelBuilderInterface
                 ->findProductAbstractStorageData(
                     $product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID],
                     $this->config->getEnhancedEcommerceLocale()
-            );
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE]);

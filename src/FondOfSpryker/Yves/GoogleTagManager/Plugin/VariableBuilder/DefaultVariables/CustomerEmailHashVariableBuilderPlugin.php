@@ -13,14 +13,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class CustomerEmailHashVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        // TODO: Implement getName() method.
-    }
-
-    /**
      * @param array $variables
      * @param array $params
      *
