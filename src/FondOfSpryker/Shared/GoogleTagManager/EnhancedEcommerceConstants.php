@@ -34,8 +34,9 @@ interface EnhancedEcommerceConstants
     public const PAGE_TYPE_CART = 'cart';
     public const PAGE_TYPE_PRODUCT_DETAIL = 'productDetail';
     public const PAGE_TYPE_CHECKOUT_BILLING_ADDRESS = 'checkoutBillingAddress';
-    public const PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS = 'checkoutShippingAddress';
     public const PAGE_TYPE_CHECKOUT_PAYMENT = 'checkoutPayment';
     public const PAGE_TYPE_CHECKOUT_SUMMARY = 'checkoutSummary';
     public const PAGE_TYPE_PURCHASE = 'purchase';
+
+    public const EEC_LOCALE = 'EEC_LOCALE';
 }
