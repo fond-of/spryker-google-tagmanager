@@ -72,6 +72,7 @@ class ProductVariableBuilder
     protected function getProductTax(ProductAbstractTransfer $product): float
     {
         $productAbstract = $this->taxProductConnectorClient->getTaxAmountForProduct($product);
+
         if ($productAbstract->getTaxAmount() > 0) {
             return $this->moneyPlugin->convertIntegerToDecimal(
                 $productAbstract->getTaxAmount()

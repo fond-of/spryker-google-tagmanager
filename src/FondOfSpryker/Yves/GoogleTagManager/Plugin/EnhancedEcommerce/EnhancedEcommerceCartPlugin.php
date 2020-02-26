@@ -11,6 +11,7 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
@@ -127,7 +128,10 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
             $productAbstractData = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID], $this->getLocale());
+                ->findProductAbstractStorageData(
+                    $productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID],
+                    $this->getConfig()->getEnhancedEcommerceLocale()
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productAbstractData, true);
             $productViewTransfer->setPrice($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE]);

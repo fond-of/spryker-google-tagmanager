@@ -166,7 +166,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     public function changeProductQuantity(EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer): void
     {
-        $addedProducts = $this->sessionClient->get('eec_added_products');
+        $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
         if (!\is_array($addedProducts) || \count($addedProducts) === 0) {
             return;

@@ -230,7 +230,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[]
      */
     public function getDefaultVariableBuilderPlugins(): array
     {
@@ -321,7 +321,8 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new ProductArrayModel(
             $this->getCartClient(),
             $this->getProductStorageClient(),
-            $this->createEnhancedEcommerceProductMapperPlugin()
+            $this->createEnhancedEcommerceProductMapperPlugin(),
+            $this->getConfig()
         );
     }
 

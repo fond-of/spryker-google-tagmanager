@@ -19,6 +19,8 @@ class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterfac
      */
     protected $cartClient;
 
+    public const METHOD_NAME = 'placeOrderAction';
+
     /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface $sessionHandler
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
@@ -36,7 +38,7 @@ class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterfac
      */
     public function getMethodName(): string
     {
-        return 'placeOrderAction';
+        return static::METHOD_NAME;
     }
 
     /**
@@ -62,22 +64,18 @@ class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterfac
     {
         $quoteTransfer = $this->cartClient->getQuote();
 
-        if ($quoteTransfer->getShipment()) {
-            if ($quoteTransfer->getTotals() === null) {
-                return 0;
-            }
-
-            if (!$quoteTransfer->getShipment() === null) {
-                return 0;
-            }
-
-            if (!$quoteTransfer->getShipment()->getMethod() === null) {
-                return 0;
-            }
-
-            return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
+        if ($quoteTransfer->getShipment() === null) {
+            return 0;
         }
 
-        return 0;
+        if (!$quoteTransfer->getShipment()->getMethod() === null) {
+            return 0;
+        }
+
+        if ($quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice() === null) {
+            return 0;
+        }
+
+        return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
     }
 }

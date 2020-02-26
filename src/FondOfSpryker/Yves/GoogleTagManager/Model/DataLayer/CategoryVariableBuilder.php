@@ -15,7 +15,7 @@ class CategoryVariableBuilder
     protected $moneyPlugin;
 
     /**
-     * @var array|\FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\VariableBuilderPluginInterface[]
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
      */
     protected $categoryVariableBuilderPlugins;
 
@@ -48,16 +48,13 @@ class CategoryVariableBuilder
         $googleTagManagerCategoryTransfer->setSize(\count($products));
 
         foreach ($products as $product) {
-            $sku = \str_replace('ABSTRACT-', '', strtoupper($product['abstract_sku']));
-
             $gooleTagManagerCategoryProductTransfer = new GooleTagManagerCategoryProductTransfer();
             $gooleTagManagerCategoryProductTransfer->setIdProductAbstract($product['id_product_abstract']);
             $gooleTagManagerCategoryProductTransfer->setName($this->getProductName($product));
-            $gooleTagManagerCategoryProductTransfer->setSku($sku);
+            $gooleTagManagerCategoryProductTransfer->setSku($product['abstract_sku']);
             $gooleTagManagerCategoryProductTransfer->setPrice($this->moneyPlugin->convertIntegerToDecimal($product['price']));
 
             $googleTagManagerCategoryTransfer->addCategoryProducts($gooleTagManagerCategoryProductTransfer);
-            $googleTagManagerCategoryTransfer->addProducts($sku);
 
             $categoryProducts[] = $gooleTagManagerCategoryProductTransfer->toArray();
         }

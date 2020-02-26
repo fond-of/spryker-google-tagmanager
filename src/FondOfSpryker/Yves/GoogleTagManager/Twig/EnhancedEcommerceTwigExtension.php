@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
-use Exception;
 use Spryker\Shared\Twig\TwigExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -54,7 +53,6 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
      * @param array $params
      *
      * @throws
-     * @throws \Exception
      *
      * @return string
      */
@@ -64,7 +62,7 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
             return $this->plugin[$page]->handle($twig, $request, $params);
         }
 
-        throw new Exception(sprintf('no plugin for enhanced ecommerce found %s', __METHOD__));
+        return '';
     }
 
     /**

@@ -39,7 +39,7 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
 
         foreach ($cartControllerEventHandler as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
-                $controllerEventHandler->handle($event->getRequest(), 'en_US');
+                $controllerEventHandler->handle($event->getRequest(), $this->getConfig()->getEnhancedEcommerceLocale());
             }
         }
 

@@ -10,6 +10,7 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()()
  */
 class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
@@ -43,7 +44,10 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
 
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), 'en_US');
+                ->findProductAbstractStorageData(
+                    $itemTransfer->getIdProductAbstract(),
+                    $this->getConfig()->getEnhancedEcommerceLocale()
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($itemTransfer->getUnitPrice());

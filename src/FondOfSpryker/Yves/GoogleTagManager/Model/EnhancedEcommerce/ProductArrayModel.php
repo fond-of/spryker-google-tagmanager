@@ -6,6 +6,7 @@ use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 
@@ -27,19 +28,26 @@ class ProductArrayModel implements ProductModelBuilderInterface
     protected $cartClient;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
+     */
+    protected $config;
+
+    /**
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientBridge $aliasStorageClient
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface $productMapper
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(
         GoogleTagManagerToCartClientInterface $cartClient,
         GoogleTagManagerToProductStorageClientInterface $storageClient,
-        EnhancedEcommerceProductMapperInterface $productMapper
+        EnhancedEcommerceProductMapperInterface $productMapper,
+        GoogleTagManagerConfig $config
     ) {
         $this->productMapper = $productMapper;
         $this->storageClient = $storageClient;
         $this->cartClient = $cartClient;
+        $this->config = $config;
     }
 
     /**
@@ -75,7 +83,10 @@ class ProductArrayModel implements ProductModelBuilderInterface
             }
 
             $productDataAbstract = $this->storageClient
-                ->findProductAbstractStorageData($product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID], 'en_US');
+                ->findProductAbstractStorageData(
+                    $product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID],
+                    $this->config->getEnhancedEcommerceLocale()
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($product[EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE]);
