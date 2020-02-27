@@ -6,7 +6,7 @@ return [
         'name' => "Small Friend",
         'variant' => "Flamingo",
         'brand' => "Affenzahn",
-        'dimension1' => "",
+        'dimension10' => "",
         'quantity' => 1,
         'price' => "39.9",
     ]
