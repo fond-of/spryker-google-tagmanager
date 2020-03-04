@@ -45,14 +45,19 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
      */
     protected function renderProductDetail(array $products): array
     {
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'detail' => [
-                'actionField' => [],
-                'products' => $this->stripEmptyValuesFromProductsArray($products),
-            ],
-        ]);
+        $products = $this->stripEmptyValuesFromProductsArray($products);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL)
+            ->setEventLabel($products[0]['id'])
+            ->setEcommerce([
+                'detail' => [
+                    'actionField' => [],
+                    'products' => $products
+                ],
+            ]);
 
         return $enhancedEcommerceTransfer->toArray();
     }

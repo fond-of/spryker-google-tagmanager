@@ -30,6 +30,9 @@
 
     <transfer name="EnhancedEcommerce">
         <property name="event" type="string" />
+        <property name="eventCategory" type="string" />
+        <property name="eventAction" type="string" />
+        <property name="eventLabel" type="string" />
         <property name="ecommerce" type="array" />
     </transfer>
 
