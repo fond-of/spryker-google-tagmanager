@@ -4,6 +4,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -18,7 +19,7 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
      */
     public function getTemplate(): string
     {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-checkout-payment.twig';
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 
     /**
@@ -32,8 +33,22 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT)
+            ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
+            ->setEcommerce([
+                    EnhancedEcommerceConstants::EVENT_CHECKOUT => [
+                        'actionField' => [],
+                    ],
+                ]
+            );
+
         return $twig->render($this->getTemplate(), [
-            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
+            'data' => [
+                $enhancedEcommerceTransfer->toArray()
+            ],
         ]);
     }
 }

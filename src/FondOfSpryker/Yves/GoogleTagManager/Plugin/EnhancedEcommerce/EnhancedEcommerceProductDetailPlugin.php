@@ -27,7 +27,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
     {
         $productViewTransfer = $params['product'];
 
-        $products = $this->getFactory()
+        $products[] = $this->getFactory()
             ->createEnhancedEcommerceProductMapperPlugin()
             ->map($productViewTransfer)->toArray();
 
@@ -45,18 +45,39 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
      */
     protected function renderProductDetail(array $products): array
     {
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'detail' => [
-                'actionField' => [
-                    'list' => 'product detail view',
+        $products = $this->stripEmptyValuesFromProductsArray($products);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_DETAIL)
+            ->setEventLabel($products[0]['id'])
+            ->setEcommerce([
+                'detail' => [
+                    'actionField' => [],
+                    'products' => $products
                 ],
-                'products' => $products,
-            ],
-        ]);
+            ]);
 
         return $enhancedEcommerceTransfer->toArray();
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    protected function stripEmptyValuesFromProductsArray(array $products): array
+    {
+        foreach ($products as $index => $product) {
+            foreach ($product as $key => $value) {
+                if ($value !== 0 && !$value) {
+                    unset($products[$index][$key]);
+                }
+            }
+        }
+
+        return $products;
     }
 
     /**

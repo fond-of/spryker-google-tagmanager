@@ -12,8 +12,8 @@ use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\RemoveProductControllerEventHandler;
+use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\PlaceOrderControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductResourceAliasStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
@@ -230,7 +230,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[]
      */
     public function getDefaultVariableBuilderPlugins(): array
     {
@@ -276,6 +276,10 @@ class GoogleTagManagerFactory extends AbstractFactory
                 $this->createEnhancedEcommerceSessionHandler(),
                 $this->getCartClient()
             ),
+            new PlaceOrderControllerEventHandler(
+                $this->createEnhancedEcommerceSessionHandler(),
+                $this->getCartClient()
+            ),
         ];
     }
 
@@ -317,7 +321,8 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new ProductArrayModel(
             $this->getCartClient(),
             $this->getProductStorageClient(),
-            $this->createEnhancedEcommerceProductMapperPlugin()
+            $this->createEnhancedEcommerceProductMapperPlugin(),
+            $this->getConfig()
         );
     }
 

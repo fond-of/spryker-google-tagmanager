@@ -9,25 +9,25 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCart
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
-use Spryker\Yves\Kernel\FactoryResolverAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class ChangeQuantityProductControllerEventHandler implements ControllerEventHandlerInterface
 {
+    public const METHOD_NAME = 'changeAction';
+
     /**
-     * @var EnhancedEcommerceSessionHandlerInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface
      */
     protected $sessionHandler;
 
     /**
-     * @var GoogleTagManagerToCartClientInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface
      */
     protected $cartClient;
 
     /**
-     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
-     * @param GoogleTagManagerToCartClientInterface $cartClient
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
      */
     public function __construct(
         EnhancedEcommerceSessionHandlerInterface $sessionHandler,
@@ -42,7 +42,7 @@ class ChangeQuantityProductControllerEventHandler implements ControllerEventHand
      */
     public function getMethodName(): string
     {
-        return 'changeAction';
+        return static::METHOD_NAME;
     }
 
     /**

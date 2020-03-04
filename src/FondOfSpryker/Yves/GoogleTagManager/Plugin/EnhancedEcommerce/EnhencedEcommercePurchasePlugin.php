@@ -10,6 +10,7 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()()
  */
 class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
@@ -43,7 +44,10 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
 
             $productDataAbstract = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), 'en_US');
+                ->findProductAbstractStorageData(
+                    $itemTransfer->getIdProductAbstract(),
+                    $this->getConfig()->getEnhancedEcommerceLocale()
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($itemTransfer->getUnitPrice());
@@ -58,7 +62,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             'order' => $orderTransfer,
             'products' => \array_values($products),
             'voucherCode' => $this->getDiscountCode($orderTransfer),
-            //'shipment' => $this->getShipment($quoteTransfer),
+            'shipment' => $this->getShipping(),
         ]);
     }
 
@@ -81,20 +85,18 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     }
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return int
+     * @return string
      */
-    protected function getShipment(OrderTransfer $quoteTransfer): int
+    protected function getShipping(): string
     {
-        if ($quoteTransfer->getShipment() === null) {
-            return 0;
+        $purchaseSession = $this->getFactory()
+            ->createEnhancedEcommerceSessionHandler()
+            ->getPurchase(true);
+
+        if (isset($purchaseSession['shipment'])) {
+            return $purchaseSession['shipment'];
         }
 
-        if ($quoteTransfer->getShipment()->getMethod() === null) {
-            return 0;
-        }
-
-        return $quoteTransfer->getShipment()->getMethod()->getStoreCurrencyPrice();
+        return '0';
     }
 }

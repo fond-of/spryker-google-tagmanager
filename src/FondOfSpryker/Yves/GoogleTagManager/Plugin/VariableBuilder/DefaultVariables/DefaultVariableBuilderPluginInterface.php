@@ -5,11 +5,6 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVari
 interface DefaultVariableBuilderPluginInterface
 {
     /**
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
      * @param array $variables
      * @param array $params
      *

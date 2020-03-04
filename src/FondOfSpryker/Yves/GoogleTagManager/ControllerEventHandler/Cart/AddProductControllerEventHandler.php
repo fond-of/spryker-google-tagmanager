@@ -10,13 +10,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AddProductControllerEventHandler implements ControllerEventHandlerInterface
 {
+    public const METHOD_NAME = 'addAction';
+
     /**
-     * @var EnhancedEcommerceSessionHandlerInterface
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface
      */
     protected $sessionHandler;
 
     /**
-     * @param EnhancedEcommerceSessionHandlerInterface $sessionHandler
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface $sessionHandler
      */
     public function __construct(EnhancedEcommerceSessionHandlerInterface $sessionHandler)
     {
@@ -28,7 +30,7 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
      */
     public function getMethodName(): string
     {
-        return 'addAction';
+        return static::METHOD_NAME;
     }
 
     /**

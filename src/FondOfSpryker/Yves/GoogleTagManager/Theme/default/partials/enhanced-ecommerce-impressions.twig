@@ -1,0 +1,32 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    window.dataLayer.push({{ data | json_encode() | raw }});
+</script>
+
+<script type="text/javascript">
+    var productList = {{ data.ecommerce.impressions | json_encode() | raw }};
+
+    function productClick(productObj) {
+        dataLayer.push({
+            'event': 'productClick',
+            'ecommerce': {
+                'click': {
+                    'actionField': {'list': 'Search Results'},      // Optional list property.
+                    'products': [{
+                        'name': productObj.name,                      // Name or ID is required.
+                        'id': productObj.id,
+                        'price': productObj.price,
+                        'brand': productObj.brand,
+                        'category': productObj.cat,
+                        'variant': productObj.variant,
+                        'position': productObj.position
+                    }]
+                }
+            },
+            'eventCallback': function() {
+                document.location = productObj.url
+            }
+        });
+    }
+</script>
+<!-- enhanced ecommerce end -->

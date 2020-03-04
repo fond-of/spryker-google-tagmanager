@@ -47,4 +47,18 @@ interface EnhancedEcommerceSessionHandlerInterface
      * @return void
      */
     public function removeProduct(EnhancedEcommerceProductDataTransfer $productDataTransfer): void;
+
+    /**
+     * @param array $params
+     *
+     * @return void
+     */
+    public function setPurchase(array $params): void;
+
+    /**
+     * @param bool $removeFromSessionAfterOutput
+     *
+     * @return array
+     */
+    public function getPurchase($removeFromSessionAfterOutput = false): array;
 }

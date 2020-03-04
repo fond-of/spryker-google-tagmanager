@@ -21,7 +21,7 @@ class EnhancedEcommerceSessionHandlerTest extends Unit
 
         $sessionClientMock->method('get')
             ->willReturn([
-                [EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY, null, []]
+                [EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY, null, []],
             ]);
 
         $enhancedEcommerceSessionHandler = new EnhancedEcommerceSessionHandler(
@@ -47,7 +47,7 @@ class EnhancedEcommerceSessionHandlerTest extends Unit
 
         $sessionClientMock->method('get')
             ->willReturn([
-                [EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY, null, []]
+                [EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY, null, []],
             ]);
 
         $enhancedEcommerceSessionHandler = new EnhancedEcommerceSessionHandler(
@@ -82,6 +82,9 @@ class EnhancedEcommerceSessionHandlerTest extends Unit
         $enhancedEcommerceSessionHandler->getChangeProductQuantityEventArray();
     }
 
+    /**
+     * @return void
+     */
     public function testGetAddedProductsSuccess(): void
     {
         $sessionClientMock = $this->getSessionClientMock();
@@ -171,5 +174,4 @@ class EnhancedEcommerceSessionHandlerTest extends Unit
 
         return $sessionClientMock;
     }
-
 }

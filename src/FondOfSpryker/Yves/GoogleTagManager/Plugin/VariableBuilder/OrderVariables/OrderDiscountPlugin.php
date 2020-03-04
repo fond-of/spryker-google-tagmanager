@@ -12,14 +12,6 @@ class OrderDiscountPlugin implements OrderVariableBuilderPluginInterface
     public const FIELD_DISCOUNT_TOTAL = 'discountTotal';
 
     /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        // TODO: Implement getName() method.
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $variables
      *
@@ -33,13 +25,11 @@ class OrderDiscountPlugin implements OrderVariableBuilderPluginInterface
             $result[static::FIELD_DISCOUNT_TOTAL] = $orderTransfer->getTotals()->getDiscountTotal() / 100;
         }
 
-        if ($orderTransfer->getCalculatedDiscounts()->count() > 0) {
-            /** @var \Generated\Shared\Transfer\CalculatedDiscountTransfer $discountTotalTransfer */
-            foreach ($orderTransfer->getCalculatedDiscounts() as $calculatedDiscountTransfer) {
-                $result[static::FIELD_VOUCHER_CODE] = $calculatedDiscountTransfer->getVoucherCode();
+        /** @var \Generated\Shared\Transfer\CalculatedDiscountTransfer $discountTotalTransfer */
+        foreach ($orderTransfer->getCalculatedDiscounts() as $calculatedDiscountTransfer) {
+            $result[static::FIELD_VOUCHER_CODE] = $calculatedDiscountTransfer->getVoucherCode();
 
-                break; // we only accept one voucher
-            }
+            break; // we only accept one voucher
         }
 
         return $result;

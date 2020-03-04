@@ -21,23 +21,25 @@ interface EnhancedEcommerceConstants
     public const PRODUCT_FIELD_ATTRIBUTE_SIZE = 'size';
     public const PRODUCT_FIELD_ATTRIBUTE_SIZE_UNTRANSLATED = 'size_untranslated';
 
-    public const EVENT_PRODUCT_DETAIL = 'eec.detail';
-    public const EVENT_PRODUCT_ADD = 'eec.add';
-    public const EVENT_PRODUCT_REMOVE = 'eec.remove';
-    public const EVENT_CHECKOUT = 'eec.checkout';
-    public const EVENT_CHECKOUT_OPTION = 'eec.checkout_option';
+    public const EVENT_CATEGORY = 'ecommerce';
+    public const EVENT_GENERIC = 'genericEvent';
+    public const EVENT_PRODUCT_DETAIL = 'productDetail';
+    public const EVENT_PRODUCT_ADD = 'addToCart';
+    public const EVENT_PRODUCT_REMOVE = 'removeFromCart';
+    public const EVENT_CHECKOUT = 'checkout';
+    public const EVENT_CHECKOUT_OPTION = 'checkout_option';
 
-    public const CHECKOUT_STEP_CART = 1;
-    public const CHECKOUT_STEP_BILLING_ADDRESS = 2;
-    public const CHECKOUT_STEP_SHIPPING_ADDRESS = 3;
-    public const CHECKOUT_STEP_PAYMENT = 4;
-    public const CHECKOUT_STEP_SUMMARY = 5;
+    public const CHECKOUT_STEP_BILLING_ADDRESS = 1;
+    public const CHECKOUT_STEP_PAYMENT = 2;
+    public const CHECKOUT_STEP_SUMMARY = 3;
 
     public const PAGE_TYPE_CART = 'cart';
     public const PAGE_TYPE_PRODUCT_DETAIL = 'productDetail';
     public const PAGE_TYPE_CHECKOUT_BILLING_ADDRESS = 'checkoutBillingAddress';
-    public const PAGE_TYPE_CHECKOUT_SHIPPING_ADDRESS = 'checkoutShippingAddress';
     public const PAGE_TYPE_CHECKOUT_PAYMENT = 'checkoutPayment';
     public const PAGE_TYPE_CHECKOUT_SUMMARY = 'checkoutSummary';
     public const PAGE_TYPE_PURCHASE = 'purchase';
+    public const PAGE_TYPE_CATEGORY = 'category';
+
+    public const EEC_LOCALE = 'EEC_LOCALE';
 }

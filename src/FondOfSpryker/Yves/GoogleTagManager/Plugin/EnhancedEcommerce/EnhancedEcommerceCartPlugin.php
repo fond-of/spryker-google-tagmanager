@@ -11,9 +11,18 @@ use Twig_Environment;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
 class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
+    }
+
     /**
      * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -27,30 +36,10 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->getCartEvent(),
                 $this->getAddedProductsEvent(),
                 $this->getRemovedProductsEvent(),
             ],
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getCartEvent(): array
-    {
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_CHECKOUT);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'checkout' => [
-                'actionField' => [
-                    'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_CART,
-                ],
-                'products' => $this->renderCartViewProducts(),
-            ],
-        ]);
-
-        return $enhancedEcommerceTransfer->toArray();
     }
 
     /**
@@ -70,16 +59,42 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->createEnhancedEcommerceProductArrayBuilder()
             ->handle($addedProductsData);
 
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'add' => [
-                'actionField' => ['list' => 'Shopping cart'],
-                'products' => $addedProducts,
-            ],
-        ]);
+        $skuList = $this->getSkuListFromProducts($addedProducts);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD)
+            ->setEventLabel(\implode(',', $skuList))
+            ->setEcommerce([
+                'add' => [
+                    'actionField' => [],
+                    'products' => $addedProducts,
+                ],
+            ]
+        );
 
         return $enhancedEcommerceTransfer->toArray();
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    protected function getSkuListFromProducts(array $products): array
+    {
+        $skuList = [];
+
+        foreach ($products as $product) {
+            if (!isset($product['id'])) {
+                continue;
+            }
+
+            \array_push($skuList, $product['id']);
+        }
+
+        return $skuList;
     }
 
     /**
@@ -93,43 +108,22 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             return [];
         }
 
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'remove' => [
-                'actionField' => ['list' => 'Shopping cart'],
-                'products' => $removedProducts,
-            ],
-        ]);
+        $skuList = $this->getSkuListFromProducts($removedProducts);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE)
+            ->setEventLabel(\implode(',', $skuList))
+            ->setEcommerce([
+                    'remove' => [
+                        'actionField' => [],
+                        'products' => $removedProducts,
+                    ],
+                ]
+            );
 
         return $enhancedEcommerceTransfer->toArray();
-    }
-
-    /**
-     * @return array
-     */
-    protected function renderCartViewProducts(): array
-    {
-        $products = [];
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
-
-        foreach ($quoteTransfer->getItems() as $item) {
-            $productDataAbstract = $this->getFactory()
-                ->getProductStorageClient()
-                ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getLocale());
-
-            $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
-            $productViewTransfer->setPrice($item->getUnitPrice());
-            $productViewTransfer->setQuantity($item->getQuantity());
-
-            $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
-                ->map($productViewTransfer)->toArray();
-        }
-
-        return $products;
     }
 
     /**
@@ -166,7 +160,10 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
 
             $productAbstractData = $this->getFactory()
                 ->getProductStorageClient()
-                ->findProductAbstractStorageData($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID], $this->getLocale());
+                ->findProductAbstractStorageData(
+                    $productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRODUCT_ABSTRACT_ID],
+                    $this->getConfig()->getEnhancedEcommerceLocale()
+                );
 
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productAbstractData, true);
             $productViewTransfer->setPrice($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_PRICE]);
@@ -178,13 +175,5 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
         }
 
         return $products;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate(): string
-    {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 }

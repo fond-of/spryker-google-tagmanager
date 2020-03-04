@@ -11,14 +11,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class CurrencyVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        // TODO: Implement getName() method.
-    }
-
-    /**
      * @param array $variables
      * @param array $params
      *

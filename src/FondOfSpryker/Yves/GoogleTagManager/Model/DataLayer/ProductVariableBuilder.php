@@ -4,6 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
@@ -46,19 +47,21 @@ class ProductVariableBuilder
      */
     public function getVariables(ProductAbstractTransfer $product): array
     {
-        $variables = [
-            GoogleTagManagerConstants::PRODUCT_ID => $product->getIdProductAbstract(),
-            GoogleTagManagerConstants::PRODUCT_NAME => $this->getProductName($product),
-            GoogleTagManagerConstants::PRODUCT_SKU => $product->getSku(),
-            GoogleTagManagerConstants::PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($product->getPrice()),
-            GoogleTagManagerConstants::PRODUCT_PRICE_EXCLUDING_TAX => $this->moneyPlugin->convertIntegerToDecimal(
-                $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
-            ),
-            GoogleTagManagerConstants::PRODUCT_TAX => $this->getProductTax($product),
-            GoogleTagManagerConstants::PRODUCT_TAX_RATE => $product->getTaxRate(),
-        ];
+        $price = $this->moneyPlugin->convertIntegerToDecimal($product->getPrice());
+        $priceExcludingTax = $this->moneyPlugin->convertIntegerToDecimal(
+            $this->taxProductConnectorClient->getNetPriceForProduct($product)->getNetPrice()
+        );
 
-        return $this->executePlugins($product, $variables);
+        $gooleTagManagerProductDetailTransfer = (new GooleTagManagerProductDetailTransfer())
+            ->setProductId($product->getIdProductAbstract())
+            ->setName($this->getProductName($product))
+            ->setSku($product->getSku())
+            ->setProductPrice($price)
+            ->setProductPriceExcludingTax($priceExcludingTax)
+            ->setProductTax($this->getProductTax($product))
+            ->setProductTaxRate($product->getTaxRate());
+
+        return $this->executePlugins($product, $gooleTagManagerProductDetailTransfer->toArray());
     }
 
     /**
@@ -69,6 +72,7 @@ class ProductVariableBuilder
     protected function getProductTax(ProductAbstractTransfer $product): float
     {
         $productAbstract = $this->taxProductConnectorClient->getTaxAmountForProduct($product);
+
         if ($productAbstract->getTaxAmount() > 0) {
             return $this->moneyPlugin->convertIntegerToDecimal(
                 $productAbstract->getTaxAmount()
