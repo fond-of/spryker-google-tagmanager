@@ -6,7 +6,7 @@ $enhancedEcommerceProductTransfer
     ->setName('Large Friend')
     ->setVariant('Tiger')
     ->setBrand('Affenzahn')
-    ->setDimension1('')
+    ->setDimension10('')
     ->setPrice('49,9');
 
 return $enhancedEcommerceProductTransfer;

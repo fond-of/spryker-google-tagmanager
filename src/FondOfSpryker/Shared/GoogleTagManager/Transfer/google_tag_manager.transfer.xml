@@ -30,6 +30,9 @@
 
     <transfer name="EnhancedEcommerce">
         <property name="event" type="string" />
+        <property name="eventCategory" type="string" />
+        <property name="eventAction" type="string" />
+        <property name="eventLabel" type="string" />
         <property name="ecommerce" type="array" />
     </transfer>
 
@@ -38,7 +41,7 @@
         <property name="name" type="string" />
         <property name="variant" type="string" />
         <property name="brand" type="string" />
-        <property name="dimension1" type="string" />
+        <property name="dimension10" type="string" />
         <property name="quantity" type="string" />
         <property name="price" type="string" />
     </transfer>

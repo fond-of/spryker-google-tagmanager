@@ -59,16 +59,42 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->createEnhancedEcommerceProductArrayBuilder()
             ->handle($addedProductsData);
 
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'add' => [
-                'actionField' => [],
-                'products' => $addedProducts,
-            ],
-        ]);
+        $skuList = $this->getSkuListFromProducts($addedProducts);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD)
+            ->setEventLabel(\implode(',', $skuList))
+            ->setEcommerce([
+                'add' => [
+                    'actionField' => [],
+                    'products' => $addedProducts,
+                ],
+            ]
+        );
 
         return $enhancedEcommerceTransfer->toArray();
+    }
+
+    /**
+     * @param array $products
+     *
+     * @return array
+     */
+    protected function getSkuListFromProducts(array $products): array
+    {
+        $skuList = [];
+
+        foreach ($products as $product) {
+            if (!isset($product['id'])) {
+                continue;
+            }
+
+            \array_push($skuList, $product['id']);
+        }
+
+        return $skuList;
     }
 
     /**
@@ -82,14 +108,20 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             return [];
         }
 
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'remove' => [
-                'actionField' => [],
-                'products' => $removedProducts,
-            ],
-        ]);
+        $skuList = $this->getSkuListFromProducts($removedProducts);
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE)
+            ->setEventLabel(\implode(',', $skuList))
+            ->setEcommerce([
+                    'remove' => [
+                        'actionField' => [],
+                        'products' => $removedProducts,
+                    ],
+                ]
+            );
 
         return $enhancedEcommerceTransfer->toArray();
     }

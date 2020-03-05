@@ -6,7 +6,7 @@ return [
         'name' => "Kids Suitcase",
         'variant' => "Bird",
         'brand' => "Affenzahn",
-        'dimension1' => "",
+        'dimension10' => "",
         'quantity' => 1,
         'price' => "99.9",
     ]

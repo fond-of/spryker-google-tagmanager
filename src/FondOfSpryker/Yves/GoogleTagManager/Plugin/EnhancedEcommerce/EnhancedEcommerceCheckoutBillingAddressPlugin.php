@@ -47,16 +47,18 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
      */
     protected function getCartEvent(): array
     {
-        $enhancedEcommerceTransfer = new EnhancedEcommerceTransfer();
-        $enhancedEcommerceTransfer->setEvent(EnhancedEcommerceConstants::EVENT_CHECKOUT);
-        $enhancedEcommerceTransfer->setEcommerce([
-            'checkout' => [
-                'actionField' => [
-                    'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS,
-                ],
-                'products' => $this->renderCartViewProducts(),
-            ],
-        ]);
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT)
+            ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS)
+            ->setEcommerce([
+                    EnhancedEcommerceConstants::EVENT_CHECKOUT => [
+                        'actionField' => [],
+                        'products' => $this->renderCartViewProducts(),
+                    ],
+                ]
+            );
 
         return $enhancedEcommerceTransfer->toArray();
     }

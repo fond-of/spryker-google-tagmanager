@@ -7,7 +7,7 @@ use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 
-class Dimension1ProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
+class Dimension10ProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
@@ -24,13 +24,13 @@ class Dimension1ProductFieldMapperPlugin implements ProductFieldMapperPluginInte
         }
 
         if (isset($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE_UNTRANSLATED])) {
-            $enhancedEcommerceProductTransfer->setDimension1($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE_UNTRANSLATED]);
+            $enhancedEcommerceProductTransfer->setDimension10($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE_UNTRANSLATED]);
 
             return;
         }
 
         if (isset($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE])) {
-            $enhancedEcommerceProductTransfer->setDimension1($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE]);
+            $enhancedEcommerceProductTransfer->setDimension10($attributes[EnhancedEcommerceConstants::PRODUCT_FIELD_ATTRIBUTE_SIZE]);
 
             return;
         }
