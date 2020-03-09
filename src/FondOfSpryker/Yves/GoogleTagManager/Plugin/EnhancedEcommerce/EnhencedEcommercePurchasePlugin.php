@@ -49,9 +49,9 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
                     'actionField' => [
                         'id' => $orderTransfer->getOrderReference(),
                         'affiliation' => $orderTransfer->getStore(),
-                        'revenue' => "'" . $orderTransfer->getTotals()->getGrandTotal()/100 . "'",
-                        'tax' => "'" . $orderTransfer->getTotals()->getTaxTotal()->getAmount()/100 . "'",
-                        'shipping' => "'" . $this->getShipping()/100 . "'",
+                        'revenue' => \strval($orderTransfer->getTotals()->getGrandTotal()/100),
+                        'tax' => \strval($orderTransfer->getTotals()->getTaxTotal()->getAmount()/100),
+                        'shipping' => \strval($this->getShipping()/100),
                         'coupon' => $this->getDiscountCode($orderTransfer),
                     ],
                 ],
