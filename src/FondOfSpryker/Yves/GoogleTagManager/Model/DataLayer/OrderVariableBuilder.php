@@ -187,6 +187,10 @@ class OrderVariableBuilder
         $productDataAbstract = $this->storageClient
             ->findProductAbstractStorageData($itemTransfer->getIdProductAbstract(), $this->store->getCurrentLocale());
 
+        if ($productDataAbstract === null) {
+            return null;
+        }
+
         $productViewTransfer = $this->storageClient
             ->mapProductStorageData($productDataAbstract, $this->store->getCurrentLocale(), []);
 
