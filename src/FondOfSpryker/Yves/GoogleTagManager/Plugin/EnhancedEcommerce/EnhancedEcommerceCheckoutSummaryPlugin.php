@@ -60,6 +60,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION => [
                         'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
                             'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer
                                 ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
                         ],
@@ -82,7 +83,11 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        'actionField' => [],
+                        EnhancedEcommerceConstants::EVENT_CHECKOUT => [
+                            'actionField' => [
+                                'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
+                            ],
+                        ],
                     ],
                 ]
             );

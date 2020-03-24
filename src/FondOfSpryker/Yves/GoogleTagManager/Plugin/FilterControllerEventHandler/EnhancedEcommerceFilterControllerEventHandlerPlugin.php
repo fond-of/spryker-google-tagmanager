@@ -30,6 +30,10 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
      */
     public function handle(FilterControllerEvent $event): void
     {
+        if (!\is_array($event->getController())) {
+            return;
+        }
+
         if ($this->checkForValidController(\get_class($event->getController()[0])) === false) {
             return;
         }
@@ -42,7 +46,5 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
                 $controllerEventHandler->handle($event->getRequest(), $this->getConfig()->getEnhancedEcommerceLocale());
             }
         }
-
-        return;
     }
 }

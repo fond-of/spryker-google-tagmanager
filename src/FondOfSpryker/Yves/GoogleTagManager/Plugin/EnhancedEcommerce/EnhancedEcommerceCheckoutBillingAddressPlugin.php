@@ -54,7 +54,9 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        'actionField' => [],
+                        'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS,
+                        ],
                         'products' => $this->renderCartViewProducts(),
                     ],
                 ]
