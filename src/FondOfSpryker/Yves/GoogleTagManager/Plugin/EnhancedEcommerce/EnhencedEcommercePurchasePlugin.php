@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
+use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
+use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -19,7 +21,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      */
     public function getTemplate(): string
     {
-        return '@GoogleTagManager/partials/enhanced-ecommerce-purchase.twig';
+        return '@GoogleTagManager/partials/enhanced-ecommerce-default.twig';
     }
 
     /**
@@ -35,6 +37,42 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     {
         /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
         $orderTransfer = $params['order'];
+
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
+            ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
+            ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
+            ->setEventAction(EnhancedEcommerceConstants::EVENT_PURCHASE)
+            ->setEventLabel('')
+            ->setEcommerce([
+                'currencyCode' => $orderTransfer->getCurrencyIsoCode(),
+                EnhancedEcommerceConstants::EVENT_PURCHASE => [
+                    'actionField' => [
+                        'id' => $orderTransfer->getOrderReference(),
+                        'affiliation' => $orderTransfer->getStore(),
+                        'revenue' => \strval($orderTransfer->getTotals()->getGrandTotal()/100),
+                        'tax' => \strval($orderTransfer->getTotals()->getTaxTotal()->getAmount()/100),
+                        'shipping' => \strval($this->getShipping()/100),
+                        'coupon' => $this->getDiscountCode($orderTransfer),
+                    ],
+                ],
+                'products' => \array_values($this->getProducts($orderTransfer)),
+            ]
+        );
+
+        return $twig->render($this->getTemplate(), [
+            'data' => [
+                $enhancedEcommerceTransfer->toArray()
+            ],
+        ]);
+    }
+
+    /**
+     * @param OrderTransfer $orderTransfer
+     *
+     * @return array
+     */
+    protected function getProducts(OrderTransfer $orderTransfer): array
+    {
         $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
@@ -58,12 +96,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
                 ->map($productViewTransfer)->toArray();
         }
 
-        return $twig->render($this->getTemplate(), [
-            'order' => $orderTransfer,
-            'products' => \array_values($products),
-            'voucherCode' => $this->getDiscountCode($orderTransfer),
-            'shipment' => $this->getShipping(),
-        ]);
+        return $products;
     }
 
     /**
@@ -78,7 +111,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
         $voucherCodes = [];
 
         foreach ($orderTransfer->getCalculatedDiscounts() as $discountTransfer) {
-            array_push($voucherCodes, $discountTransfer->getVoucherCode());
+            \array_push($voucherCodes, $discountTransfer->getVoucherCode());
         }
 
         return \implode(",", $voucherCodes);

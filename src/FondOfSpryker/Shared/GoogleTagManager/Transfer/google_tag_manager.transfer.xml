@@ -20,8 +20,8 @@
 
     <transfer name="GooleTagManagerProductDetail">
         <property name="productId" type="int" />
-        <property name="name" type="string" />
-        <property name="sku" type="string" />
+        <property name="productName" type="string" />
+        <property name="productSku" type="string" />
         <property name="productPrice" type="float" />
         <property name="productPriceExcludingTax" type="float" />
         <property name="productTax" type="float" />

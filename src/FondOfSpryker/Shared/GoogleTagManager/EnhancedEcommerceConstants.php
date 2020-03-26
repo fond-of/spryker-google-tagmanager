@@ -27,6 +27,7 @@ interface EnhancedEcommerceConstants
     public const EVENT_PRODUCT_ADD = 'addToCart';
     public const EVENT_PRODUCT_REMOVE = 'removeFromCart';
     public const EVENT_CHECKOUT = 'checkout';
+    public const EVENT_PURCHASE = 'purchase';
     public const EVENT_CHECKOUT_OPTION = 'checkout_option';
 
     public const CHECKOUT_STEP_BILLING_ADDRESS = 1;

@@ -54,14 +54,14 @@ class ProductVariableBuilder
 
         $gooleTagManagerProductDetailTransfer = (new GooleTagManagerProductDetailTransfer())
             ->setProductId($product->getIdProductAbstract())
-            ->setName($this->getProductName($product))
-            ->setSku($product->getSku())
+            ->setProductName($this->getProductName($product))
+            ->setProductSku($product->getSku())
             ->setProductPrice($price)
             ->setProductPriceExcludingTax($priceExcludingTax)
             ->setProductTax($this->getProductTax($product))
             ->setProductTaxRate($product->getTaxRate());
 
-        return $this->executePlugins($product, $gooleTagManagerProductDetailTransfer->toArray());
+        return $this->executePlugins($product, $gooleTagManagerProductDetailTransfer->toArray(true, true));
     }
 
     /**
