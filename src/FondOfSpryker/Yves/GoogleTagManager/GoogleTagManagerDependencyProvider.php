@@ -20,6 +20,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommer
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\BrandProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\Dimension10ProductFieldMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\CouponProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\IdProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\NameProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\PriceProductFieldMapperPlugin;
@@ -376,6 +377,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new Dimension10ProductFieldMapperPlugin(),
             new QuantityProductFieldMapperPlugin(),
             new PriceProductFieldMapperPlugin(),
+            new CouponProductFieldMapperPlugin(),
         ];
     }
 }

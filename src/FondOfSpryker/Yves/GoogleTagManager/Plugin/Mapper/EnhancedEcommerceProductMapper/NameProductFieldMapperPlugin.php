@@ -10,11 +10,16 @@ class NameProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
-     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer $ecommerceProductTransfer
+     * @param EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
+     * @param array $params
      *
      * @return void
      */
-    public function map(ProductViewTransfer $productViewTransfer, EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer): void
+    public function map(
+        ProductViewTransfer $productViewTransfer,
+        EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
+        array $params
+    ): void
     {
         $attributes = $productViewTransfer->getAttributes();
 
