@@ -59,8 +59,7 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
                         ],
                         'products' => $this->renderCartViewProducts(),
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
@@ -89,7 +88,7 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
             $productViewTransfer->setQuantity($item->getQuantity());
 
             $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
+                ->getEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer)->toArray();
         }
 

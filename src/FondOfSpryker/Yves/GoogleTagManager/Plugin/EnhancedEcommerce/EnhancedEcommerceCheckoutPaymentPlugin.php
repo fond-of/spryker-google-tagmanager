@@ -44,12 +44,11 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
                         ],
                     ],
-                ]
-            );
+                ]);
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $enhancedEcommerceTransfer->toArray()
+                $enhancedEcommerceTransfer->toArray(),
             ],
         ]);
     }

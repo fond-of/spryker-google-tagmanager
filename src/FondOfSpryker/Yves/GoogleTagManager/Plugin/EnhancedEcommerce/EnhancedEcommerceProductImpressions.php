@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
-use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -14,15 +13,14 @@ use Twig_Environment;
  */
 class EnhancedEcommerceProductImpressions extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
-
     /**
      * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @return string
-     *
      * @throws
+     *
+     * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
@@ -42,7 +40,7 @@ class EnhancedEcommerceProductImpressions extends AbstractPlugin implements Enha
             $productViewTransfer->setPrice($product['price']);
 
             $enhancedEcommerceProductTransfer = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
+                ->getEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer);
 
             $collection[] = \array_merge($enhancedEcommerceProductTransfer->toArray(), [
@@ -58,7 +56,7 @@ class EnhancedEcommerceProductImpressions extends AbstractPlugin implements Enha
         $enhancedEcommerceTransfer->setEventLabel('');
         $enhancedEcommerceTransfer->setEcommerce([
             'currencyCode' => $store->getCurrencyIsoCode(),
-            'impressions' => $this->stripEmptyValuesFromProductsArray($collection)
+            'impressions' => $this->stripEmptyValuesFromProductsArray($collection),
         ]);
 
         return $twig->render($this->getTemplate(), [

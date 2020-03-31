@@ -32,10 +32,10 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
     }
 
     /**
-     * @param ProductViewTransfer $productViewTransfer
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param array $params
      *
-     * @return EnhancedEcommerceProductTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer
      */
     public function map(ProductViewTransfer $productViewTransfer, array $params = []): EnhancedEcommerceProductTransfer
     {

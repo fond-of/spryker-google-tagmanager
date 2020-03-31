@@ -25,8 +25,7 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
         ProductViewTransfer $productViewTransfer,
         EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
         array $params
-    ): void
-    {
+    ): void {
         if ($this->hasValidSpecialPrice($productViewTransfer)) {
             $specialPrice = $productViewTransfer->getAttributes()['special_price'];
 

@@ -56,9 +56,17 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     /**
      * @return array
      */
-    public function getListenToControllers(): array
+    public function getListenToControllersEnhancedEcommerce(): array
     {
         return $this->get(GoogleTagManagerConstants::EEC_LISTEN_TO_CONTROLLERS, []);
+    }
+
+    /**
+     * @return array
+     */
+    public function getListenToControllersGoogleTagManager(): array
+    {
+        return $this->get(GoogleTagManagerConstants::GTM_LISTEN_TO_CONTROLLERS, []);
     }
 
     /**

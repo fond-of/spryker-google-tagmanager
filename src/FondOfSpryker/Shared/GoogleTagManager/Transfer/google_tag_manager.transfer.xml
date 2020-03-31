@@ -28,6 +28,11 @@
         <property name="productTaxRate" type="float" />
     </transfer>
 
+    <transfer name="GoogleTagManagerNewsletterData">
+        <property name="email" type="string" />
+        <property name="externalIdHash" type="string" />
+    </transfer>
+
     <transfer name="EnhancedEcommerce">
         <property name="event" type="string" />
         <property name="eventCategory" type="string" />

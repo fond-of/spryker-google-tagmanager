@@ -182,6 +182,11 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
                 break;
 
+            case GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE:
+                $this->addNewsletterSubscribeVariables($page);
+
+                break;
+
             default:
                 $this->addQuoteVariables();
 
@@ -260,6 +265,14 @@ class GoogleTagManagerTwigExtension extends TwigExtension
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
             $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_ORDER]->getVariables($orderTransfer)
+        );
+    }
+
+    protected function addNewsletterSubscribeVariables(string $page)
+    {
+        return $this->dataLayerVariables = array_merge(
+            $this->dataLayerVariables,
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE]->getVariables($page)
         );
     }
 

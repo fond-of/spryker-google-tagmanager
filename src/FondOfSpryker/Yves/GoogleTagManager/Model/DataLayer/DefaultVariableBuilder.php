@@ -42,7 +42,7 @@ class DefaultVariableBuilder
     protected function executePlugins(array $variables): array
     {
         foreach ($this->defaultVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle($variables));
+            $variables = \array_merge($variables, $plugin->handle($variables));
         }
 
         return $variables;

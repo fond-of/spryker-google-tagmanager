@@ -40,7 +40,6 @@ class CategoryVariableBuilder
     public function getVariables(array $category, array $products): array
     {
         $categoryProducts = [];
-        $productSkus = [];
 
         $googleTagManagerCategoryTransfer = new GooleTagManagerCategoryTransfer();
         $googleTagManagerCategoryTransfer->setIdCategory($category['id_category']);
@@ -81,8 +80,8 @@ class CategoryVariableBuilder
             return $product['abstract_name'];
         }
 
-        if (isset($product['attributes']['name_untranslated'])) {
-            return $product['attributes']['name_untranslated'];
+        if (isset($product['attributes'][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
+            return $product['attributes'][GoogleTagManagerConstants::NAME_UNTRANSLATED];
         }
 
         return $product['abstract_name'];

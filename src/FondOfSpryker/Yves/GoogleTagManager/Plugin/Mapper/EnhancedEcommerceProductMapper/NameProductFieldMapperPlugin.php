@@ -10,7 +10,7 @@ class NameProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
-     * @param EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
      * @param array $params
      *
      * @return void
@@ -19,8 +19,7 @@ class NameProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
         ProductViewTransfer $productViewTransfer,
         EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
         array $params
-    ): void
-    {
+    ): void {
         $attributes = $productViewTransfer->getAttributes();
 
         if (!\is_array($attributes) || \count($attributes) === 0) {

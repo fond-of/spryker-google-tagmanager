@@ -19,8 +19,7 @@ class QuantityProductFieldMapperPlugin implements ProductFieldMapperPluginInterf
         ProductViewTransfer $productViewTransfer,
         EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
         array $params
-    ): void
-    {
+    ): void {
         if ($productViewTransfer->getQuantity() > 0) {
             $enhancedEcommerceProductTransfer->setQuantity($productViewTransfer->getQuantity());
         }

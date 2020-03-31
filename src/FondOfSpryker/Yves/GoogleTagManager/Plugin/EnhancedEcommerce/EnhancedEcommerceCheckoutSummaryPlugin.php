@@ -65,8 +65,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
                                 ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
                         ],
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer;
     }
@@ -89,8 +88,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
                             ],
                         ],
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer;
     }

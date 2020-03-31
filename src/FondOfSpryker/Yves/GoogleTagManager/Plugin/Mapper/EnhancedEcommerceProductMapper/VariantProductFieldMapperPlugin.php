@@ -20,8 +20,7 @@ class VariantProductFieldMapperPlugin implements ProductFieldMapperPluginInterfa
         ProductViewTransfer $productViewTransfer,
         EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
         array $params
-    ): void
-    {
+    ): void {
         $attributes = $productViewTransfer->getAttributes();
 
         if (!\is_array($attributes) || \count($attributes) === 0) {

@@ -20,8 +20,7 @@ class Dimension10ProductFieldMapperPlugin implements ProductFieldMapperPluginInt
         ProductViewTransfer $productViewTransfer,
         EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
         array $params
-    ): void
-    {
+    ): void {
         $attributes = $productViewTransfer->getAttributes();
 
         if (!\is_array($attributes) || \count($attributes) === 0) {

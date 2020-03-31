@@ -1,0 +1,9 @@
+<?php
+
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables;
+
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface;
+
+interface NewsletterVariablesPluginInterface extends DefaultVariableBuilderPluginInterface
+{
+}
