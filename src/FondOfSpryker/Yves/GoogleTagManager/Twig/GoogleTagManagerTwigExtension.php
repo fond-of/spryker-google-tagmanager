@@ -207,7 +207,9 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_DEFAULT]->getVariable($page)
+            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_DEFAULT]->getVariable($page, [
+                'clientIp' => $this->getClientIpAddress(),
+            ])
         );
     }
 
@@ -282,5 +284,19 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected function getDataLayerTemplateName(): string
     {
         return '@GoogleTagManager/partials/data-layer.twig';
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getClientIpAddress(): ?string
+    {
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']) {
+            $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+
+        return $ipAddress;
     }
 }

@@ -11,6 +11,7 @@ interface GoogleTagManagerConstants
 {
     public const CONTAINER_ID = '';
     public const ENABLED = false;
+    public const INTERNAL_IPS = 'INTERNAL_IPS';
 
     public const ATTRIBUTE_SPECIAL_PRICE = 'ATTRIBUTE_SPECIAL_PRICE';
     public const ATTRIBUTE_SPECIAL_PRICE_FROM = 'ATTRIBUTE_SPECIAL_PRICE_FROM';

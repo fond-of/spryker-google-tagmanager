@@ -36,6 +36,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\ProductSkuCategoryVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CustomerEmailHashVariableBuilderPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\InternalVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
@@ -278,6 +279,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new CustomerEmailHashVariableBuilderPlugin(),
             new StoreNameVariableBuilderPlugin(),
             new CurrencyVariableBuilderPlugin(),
+            new InternalVariableBuilderPlugin(),
         ];
     }
 

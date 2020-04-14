@@ -42,5 +42,13 @@ interface EnhancedEcommerceConstants
     public const PAGE_TYPE_PURCHASE = 'purchase';
     public const PAGE_TYPE_CATEGORY = 'category';
 
+    public const PAYMENT_METHODS = 'PAYMENT_METHODS';
+    public const PAYMENT_METHOD_PREPAYMENT_NAME = 'prepayment';
+    public const PAYMENT_METHOD_PREPAYMENT_SELECTION = 'prepaymentPrepayment';
+    public const PAYMENT_METHOD_PAYPAL_NAME = 'paypal';
+    public const PAYMENT_METHOD_PAYPAL_SELECTION = 'payoneEWallet';
+    public const PAYMENT_METHOD_CREDITCARD_NAME = 'creditcard';
+    public const PAYMENT_METHOD_CREDITCARD_SELECTION = 'payoneCreditCard';
+
     public const EEC_LOCALE = 'EEC_LOCALE';
 }

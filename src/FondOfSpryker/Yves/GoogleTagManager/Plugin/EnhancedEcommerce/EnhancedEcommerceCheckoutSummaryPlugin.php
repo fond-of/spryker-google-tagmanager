@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -27,8 +28,8 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->getCheckoutPaymentEvent()->toArray(),
                 $this->getSummaryEvent()->toArray(),
+                $this->getCheckoutPaymentEvent()->toArray(),
             ],
         ]);
     }
@@ -48,10 +49,6 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
      */
     protected function getCheckoutPaymentEvent(): EnhancedEcommerceTransfer
     {
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
-
         $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
             ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
@@ -61,8 +58,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
                     EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION => [
                         'actionField' => [
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
-                            'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer
-                                ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
+                            'option' => $this->getPaymentMethod(),
                         ],
                     ],
                 ]);
@@ -82,14 +78,34 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                            'actionField' => [
-                                'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
-                            ],
+                        'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
                         ],
                     ],
                 ]);
 
         return $enhancedEcommerceTransfer;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPaymentMethod(): string
+    {
+        $quoteTransfer = $this->getFactory()
+            ->getCartClient()
+            ->getQuote();
+
+        if (!$quoteTransfer->getPayment() instanceof PaymentTransfer) {
+            return '';
+        }
+
+        $paymentMethodMapping = $this->getFactory()->getPaymentMethodMappingConfig();
+
+        if (!isset($paymentMethodMapping[$quoteTransfer->getPayment()->getPaymentSelection()])) {
+            return '';
+        }
+
+        return $paymentMethodMapping[$quoteTransfer->getPayment()->getPaymentSelection()];
     }
 }

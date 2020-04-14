@@ -78,7 +78,8 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createDefaultVariableBuilder(): DefaultVariableBuilder
     {
         return new DefaultVariableBuilder(
-            $this->getDefaultVariableBuilderPlugins()
+            $this->getDefaultVariableBuilderPlugins(),
+            $this->getConfig()->getInternalIps()
         );
     }
 
@@ -344,12 +345,10 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\ProductFieldMapperPluginInterface[]
+     * @return array
      */
-    protected function getProductFieldMapperPlugin(): array
+    public function getPaymentMethodMappingConfig(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_FIELD_MAPPER_PLUGINS);
+        return $this->getConfig()->getPaymentMethodMapping();
     }
 }
