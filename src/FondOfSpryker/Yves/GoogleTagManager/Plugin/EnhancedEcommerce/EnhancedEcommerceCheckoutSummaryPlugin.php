@@ -3,7 +3,6 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
-use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
