@@ -21,8 +21,8 @@ use Twig_SimpleFunction;
 
 class GoogleTagManagerTwigExtension extends TwigExtension
 {
-    const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
-    const FUNCTION_DATA_LAYER = 'dataLayer';
+    protected const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
+    protected const FUNCTION_DATA_LAYER = 'dataLayer';
 
     /**
      * @var \Silex\Application
@@ -43,11 +43,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      * @var \Spryker\Client\Session\SessionClientInterface
      */
     protected $sessionClient;
-
-    /**
-     * @var \Spryker\Yves\Cart\CartFactory
-     */
-    protected $cartFactory;
 
     /**
      * @var array
@@ -247,7 +242,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         $quoteTransfer = $this->cartClient->getQuote();
 
-        if (!$quoteTransfer || count($quoteTransfer->getItems()) == 0) {
+        if (!$quoteTransfer || count($quoteTransfer->getItems()) === 0) {
             return $this->dataLayerVariables;
         }
 

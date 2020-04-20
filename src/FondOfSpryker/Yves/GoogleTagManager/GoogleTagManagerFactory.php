@@ -50,7 +50,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\ProductVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\ProductVariableBuilder
      */
     protected function createProductVariableBuilder(): ProductVariableBuilder
     {
@@ -62,7 +62,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\CategoryVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\CategoryVariableBuilder
      */
     protected function createCategoryVariableBuilder(): CategoryVariableBuilder
     {
@@ -73,7 +73,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\DefaultVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilder
      */
     protected function createDefaultVariableBuilder(): DefaultVariableBuilder
     {
@@ -84,7 +84,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\OrderVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder
      */
     protected function createOrderVariableBuilder(): OrderVariableBuilder
     {
@@ -98,7 +98,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Business\Model\DataLayer\QuoteVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\QuoteVariableBuilder
      */
     protected function createQuoteVariableBuilder(): QuoteVariableBuilder
     {
@@ -216,7 +216,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     /**
      * @throws
      *
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\VariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductVariableBuilderPluginInterface[]
      */
     public function getProductVariableBuilderPlugins(): array
     {
