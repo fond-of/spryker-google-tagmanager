@@ -71,8 +71,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
                     'actionField' => [],
                     'products' => $addedProducts,
                 ],
-            ]
-        );
+            ]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
@@ -120,8 +119,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
                         'actionField' => [],
                         'products' => $removedProducts,
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
@@ -170,7 +168,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             $productViewTransfer->setQuantity($productArray[EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY]);
 
             $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
+                ->getEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer)->toArray();
         }
 

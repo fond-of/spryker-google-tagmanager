@@ -20,12 +20,17 @@
 
     <transfer name="GooleTagManagerProductDetail">
         <property name="productId" type="int" />
-        <property name="name" type="string" />
-        <property name="sku" type="string" />
+        <property name="productName" type="string" />
+        <property name="productSku" type="string" />
         <property name="productPrice" type="float" />
         <property name="productPriceExcludingTax" type="float" />
         <property name="productTax" type="float" />
         <property name="productTaxRate" type="float" />
+    </transfer>
+
+    <transfer name="GoogleTagManagerNewsletterData">
+        <property name="email" type="string" />
+        <property name="externalIdHash" type="string" />
     </transfer>
 
     <transfer name="EnhancedEcommerce">
@@ -44,6 +49,7 @@
         <property name="dimension10" type="string" />
         <property name="quantity" type="string" />
         <property name="price" type="string" />
+        <property name="coupon" type="string" />
     </transfer>
 
     <transfer name="EnhancedEcommerceProductData">

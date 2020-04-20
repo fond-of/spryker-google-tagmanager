@@ -3,7 +3,10 @@
     {% if order is defined %}
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-        event: 'eec.purchase',
+        'event': 'genericEvent',
+        'eventCategory':'ecommerce',
+        'eventAction':'purchase',
+        'eventLabel': '',
         ecommerce: {
             currencyCode: '{{ order.currencyIsoCode }}',
             purchase: {

@@ -40,14 +40,15 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        'actionField' => [],
+                        'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
+                        ],
                     ],
-                ]
-            );
+                ]);
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $enhancedEcommerceTransfer->toArray()
+                $enhancedEcommerceTransfer->toArray(),
             ],
         ]);
     }

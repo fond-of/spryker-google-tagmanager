@@ -54,11 +54,12 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        'actionField' => [],
+                        'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_BILLING_ADDRESS,
+                        ],
                         'products' => $this->renderCartViewProducts(),
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
@@ -78,12 +79,16 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
                 ->getProductStorageClient()
                 ->findProductAbstractStorageData($item->getIdProductAbstract(), $this->getConfig()->getEnhancedEcommerceLocale());
 
+            if ($productDataAbstract === null) {
+                continue;
+            }
+
             $productViewTransfer = (new ProductViewTransfer())->fromArray($productDataAbstract, true);
             $productViewTransfer->setPrice($item->getUnitPrice());
             $productViewTransfer->setQuantity($item->getQuantity());
 
             $products[] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
+                ->getEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer)->toArray();
         }
 

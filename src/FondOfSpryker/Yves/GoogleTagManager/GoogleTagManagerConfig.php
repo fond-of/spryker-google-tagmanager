@@ -56,9 +56,17 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     /**
      * @return array
      */
-    public function getListenToControllers(): array
+    public function getListenToControllersEnhancedEcommerce(): array
     {
         return $this->get(GoogleTagManagerConstants::EEC_LISTEN_TO_CONTROLLERS, []);
+    }
+
+    /**
+     * @return array
+     */
+    public function getListenToControllersGoogleTagManager(): array
+    {
+        return $this->get(GoogleTagManagerConstants::GTM_LISTEN_TO_CONTROLLERS, []);
     }
 
     /**
@@ -67,5 +75,25 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getEnhancedEcommerceLocale(): string
     {
         return $this->get(EnhancedEcommerceConstants::EEC_LOCALE, 'en_US');
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaymentMethodMapping(): array
+    {
+        return $this->get(EnhancedEcommerceConstants::PAYMENT_METHODS, [
+            EnhancedEcommerceConstants::PAYMENT_METHOD_PREPAYMENT_SELECTION => EnhancedEcommerceConstants::PAYMENT_METHOD_PREPAYMENT_NAME,
+            EnhancedEcommerceConstants::PAYMENT_METHOD_PAYPAL_SELECTION => EnhancedEcommerceConstants::PAYMENT_METHOD_PAYPAL_NAME,
+            EnhancedEcommerceConstants::PAYMENT_METHOD_CREDITCARD_SELECTION => EnhancedEcommerceConstants::PAYMENT_METHOD_CREDITCARD_NAME,
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInternalIps(): array
+    {
+        return $this->get(GoogleTagManagerConstants::INTERNAL_IPS, []);
     }
 }

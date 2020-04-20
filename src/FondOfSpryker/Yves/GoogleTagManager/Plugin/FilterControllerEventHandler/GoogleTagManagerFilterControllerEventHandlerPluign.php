@@ -10,11 +10,16 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()()
  */
-class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
+class GoogleTagManagerFilterControllerEventHandlerPluign extends AbstractPlugin implements FilterControllerEventHandlerPluginInterface
 {
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
     protected function checkForValidController(string $className): bool
     {
-        foreach ($this->getConfig()->getListenToControllersEnhancedEcommerce() as $controller) {
+        foreach ($this->getConfig()->getListenToControllersGoogleTagManager() as $controller) {
             if (\strpos($className, $controller) !== false) {
                 return true;
             }
@@ -25,6 +30,8 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
 
     /**
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     *
+     * @throws
      *
      * @return void
      */
@@ -38,12 +45,11 @@ class EnhancedEcommerceFilterControllerEventHandlerPlugin extends AbstractPlugin
             return;
         }
 
-        $cartControllerEventHandler = $this->getFactory()
-            ->getCartControllerEventHandler();
+        $newsletterControllerEventHandler = $this->getFactory()->getNewsletterControllerEventHandler();
 
-        foreach ($cartControllerEventHandler as $controllerEventHandler) {
+        foreach ($newsletterControllerEventHandler as $controllerEventHandler) {
             if ($controllerEventHandler->getMethodName() === $event->getController()[1]) {
-                $controllerEventHandler->handle($event->getRequest(), $this->getConfig()->getEnhancedEcommerceLocale());
+                $controllerEventHandler->handle($event->getRequest(), null);
             }
         }
     }
