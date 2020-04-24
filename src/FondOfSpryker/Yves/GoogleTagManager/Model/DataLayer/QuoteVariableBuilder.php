@@ -21,15 +21,31 @@ class QuoteVariableBuilder
     protected $quoteVariableBuilderPlugins;
 
     /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[]
+     */
+    private $transactionProductPlugins;
+
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\QuoteVariableBuilderPluginInterface[] $quoteVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[] $transactionProductPlugins
+     * @param string $locale
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
-        array $quoteVariableBuilderPlugins = []
+        array $quoteVariableBuilderPlugins,
+        array $transactionProductPlugins,
+        string $locale
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->quoteVariableBuilderPlugins = $quoteVariableBuilderPlugins;
+        $this->transactionProductPlugins = $transactionProductPlugins;
+        $this->locale = $locale;
     }
 
     /**
@@ -115,7 +131,7 @@ class QuoteVariableBuilder
      */
     protected function getProductForTransaction(ItemTransfer $product): array
     {
-        return [
+        $variables = [
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $product->getIdProductAbstract(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $product->getSku(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($product),
@@ -123,8 +139,13 @@ class QuoteVariableBuilder
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($product),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($product->getUnitTaxAmount()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX_RATE => $product->getTaxRate(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCT_QUANTITY => $product->getQuantity(),
         ];
+
+        foreach ($this->transactionProductPlugins as $plugin) {
+            $variables = \array_merge($variables, $plugin->handle($product, ['locale' => $this->locale]));
+        }
+
+        return $variables;
     }
 
     /**

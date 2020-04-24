@@ -104,7 +104,9 @@ class GoogleTagManagerFactory extends AbstractFactory
     {
         return new QuoteVariableBuilder(
             $this->createMoneyPlugin(),
-            $this->getQuoteVariableBuilderPlugins()
+            $this->getQuoteVariableBuilderPlugins(),
+            $this->getTransactionProductVariableBuilderPlugins(),
+            $this->getStore()->getCurrentLocale()
         );
     }
 
@@ -261,6 +263,16 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getQuoteVariableBuilderPlugins(): array
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::QUOTE_VARIABLE_BUILDER_PLUGINS);
+    }
+
+    /**
+     * @throws
+     *
+     * @return array
+     */
+    public function getTransactionProductVariableBuilderPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS);
     }
 
     /**
