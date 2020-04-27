@@ -57,7 +57,5 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
         $enhancedEcommerceProductData->setQuantity($quantity);
 
         $this->sessionHandler->addProduct($enhancedEcommerceProductData);
-
-        return;
     }
 }
