@@ -28,6 +28,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
         return $twig->render($this->getTemplate(), [
             'data' => [
                 $this->getSummaryEvent()->toArray(),
+                $this->stripEmptyArrayIndex($this->getCheckoutPaymentEvent()),
                 $this->getCheckoutPaymentEvent()->toArray(),
             ],
         ]);
@@ -53,7 +54,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION)
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
-            ->setEcommerce([
+            ->setEcCheckoutOption([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION => [
                         'actionField' => [
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
@@ -106,5 +107,25 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
         }
 
         return $paymentMethodMapping[$quoteTransfer->getPayment()->getPaymentSelection()];
+    }
+
+    /**
+     * @param EnhancedEcommerceTransfer $transfer
+     *
+     * @return array
+     */
+    protected function stripEmptyArrayIndex(EnhancedEcommerceTransfer $transfer): array
+    {
+        $result = [];
+
+        foreach ($transfer->toArray() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }

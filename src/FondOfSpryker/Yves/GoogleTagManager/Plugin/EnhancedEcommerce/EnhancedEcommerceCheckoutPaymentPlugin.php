@@ -38,7 +38,7 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT)
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
-            ->setEcommerce([
+            ->setEcCheckoutOption([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
                         'actionField' => [
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,

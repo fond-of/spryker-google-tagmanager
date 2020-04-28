@@ -39,6 +39,7 @@
         <property name="eventAction" type="string" />
         <property name="eventLabel" type="string" />
         <property name="ecommerce" type="array" />
+        <property name="ecCheckoutOption" type="array" />
     </transfer>
 
     <transfer name="EnhancedEcommerceProduct">
