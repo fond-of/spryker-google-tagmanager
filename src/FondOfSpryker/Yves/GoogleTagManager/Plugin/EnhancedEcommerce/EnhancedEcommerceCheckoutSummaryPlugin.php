@@ -110,7 +110,7 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     }
 
     /**
-     * @param EnhancedEcommerceTransfer $transfer
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $transfer
      *
      * @return array
      */

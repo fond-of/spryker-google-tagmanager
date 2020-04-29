@@ -4,6 +4,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\ProductImageStorageTransfer;
 use Generated\Shared\Transfer\ProductImageTransfer;
 
 class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
@@ -23,10 +24,14 @@ class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
             break;
         }
 
-        if (!$image instanceof ProductImageTransfer) {
-            return [];
+        if ($image instanceof ProductImageTransfer) {
+            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
         }
 
-        return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+        if ($image instanceof ProductImageStorageTransfer) {
+            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+        }
+
+        return [];
     }
 }
