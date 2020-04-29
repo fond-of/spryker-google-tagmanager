@@ -7,6 +7,7 @@ use Generated\Shared\Transfer\ItemTransfer;
 
 class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
+    public const SSL_PROTOCOL = 'https://';
     public const URL = 'url';
 
     /**
@@ -34,10 +35,17 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
      */
     protected function getHost(): string
     {
-        $protocol = \strtolower(\substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https' ? 'https' : 'http';
         $hostName = $_SERVER['HTTP_HOST'];
 
-        return $protocol . '://' . $hostName . '/';
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'http') {
+                return static::SSL_PROTOCOL . $hostName;
+            }
+        }
+
+        $protocol = \strtolower(\substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https' ? 'https' : 'http';
+
+        return $protocol . '://' . $hostName;
     }
 
     /**
