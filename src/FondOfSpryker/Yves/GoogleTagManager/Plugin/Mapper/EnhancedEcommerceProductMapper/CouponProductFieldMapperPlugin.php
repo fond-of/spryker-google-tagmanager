@@ -1,12 +1,15 @@
 <?php
 
+
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper;
 
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 
-class IdProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
+class CouponProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
 {
+    public const FIELD_NAME = 'discountCodes';
+
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
@@ -16,8 +19,14 @@ class IdProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
      */
     public function map(ProductViewTransfer $productViewTransfer, EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer, array $params): void
     {
-        $sku = \str_replace('ABSTRACT-', '', strtoupper($productViewTransfer->getSku()));
+        if (!isset($params[static::FIELD_NAME])) {
+            return;
+        }
 
-        $enhancedEcommerceProductTransfer->setId($sku);
+        if (!\is_array($params[static::FIELD_NAME])) {
+            return;
+        }
+
+        $enhancedEcommerceProductTransfer->setCoupon(\rtrim(\implode(',', $params[static::FIELD_NAME]), ','));
     }
 }

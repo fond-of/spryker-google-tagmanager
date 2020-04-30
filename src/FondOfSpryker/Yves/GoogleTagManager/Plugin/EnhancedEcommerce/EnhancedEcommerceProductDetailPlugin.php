@@ -28,7 +28,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
         $productViewTransfer = $params['product'];
 
         $products[] = $this->getFactory()
-            ->createEnhancedEcommerceProductMapperPlugin()
+            ->getEnhancedEcommerceProductMapperPlugin()
             ->map($productViewTransfer)->toArray();
 
         return $twig->render($this->getTemplate(), [
@@ -55,7 +55,7 @@ class EnhancedEcommerceProductDetailPlugin extends AbstractPlugin implements Enh
             ->setEcommerce([
                 'detail' => [
                     'actionField' => [],
-                    'products' => $products
+                    'products' => $products,
                 ],
             ]);
 

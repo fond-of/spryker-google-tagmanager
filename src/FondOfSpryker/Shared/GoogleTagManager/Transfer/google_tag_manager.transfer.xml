@@ -28,12 +28,18 @@
         <property name="productTaxRate" type="float" />
     </transfer>
 
+    <transfer name="GoogleTagManagerNewsletterData">
+        <property name="email" type="string" />
+        <property name="externalIdHash" type="string" />
+    </transfer>
+
     <transfer name="EnhancedEcommerce">
         <property name="event" type="string" />
         <property name="eventCategory" type="string" />
         <property name="eventAction" type="string" />
         <property name="eventLabel" type="string" />
         <property name="ecommerce" type="array" />
+        <property name="ecCheckoutOption" type="array" />
     </transfer>
 
     <transfer name="EnhancedEcommerceProduct">
@@ -44,6 +50,7 @@
         <property name="dimension10" type="string" />
         <property name="quantity" type="string" />
         <property name="price" type="string" />
+        <property name="coupon" type="string" />
     </transfer>
 
     <transfer name="EnhancedEcommerceProductData">

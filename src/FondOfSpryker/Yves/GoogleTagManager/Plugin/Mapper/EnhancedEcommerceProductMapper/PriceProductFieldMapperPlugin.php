@@ -17,11 +17,15 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
+     * @param array $params
      *
      * @return void
      */
-    public function map(ProductViewTransfer $productViewTransfer, EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer): void
-    {
+    public function map(
+        ProductViewTransfer $productViewTransfer,
+        EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
+        array $params
+    ): void {
         if ($this->hasValidSpecialPrice($productViewTransfer)) {
             $specialPrice = $productViewTransfer->getAttributes()['special_price'];
 

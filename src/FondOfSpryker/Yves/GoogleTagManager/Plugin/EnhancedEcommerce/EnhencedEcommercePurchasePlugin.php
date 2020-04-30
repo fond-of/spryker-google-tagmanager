@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\CouponProductFieldMapperPlugin;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
@@ -49,25 +50,24 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
                     'actionField' => [
                         'id' => $orderTransfer->getOrderReference(),
                         'affiliation' => $orderTransfer->getStore(),
-                        'revenue' => \strval($orderTransfer->getTotals()->getGrandTotal()/100),
-                        'tax' => \strval($orderTransfer->getTotals()->getTaxTotal()->getAmount()/100),
-                        'shipping' => \strval($this->getShipping()/100),
+                        'revenue' => (string)$orderTransfer->getTotals()->getGrandTotal() / 100,
+                        'tax' => (string)$orderTransfer->getTotals()->getTaxTotal()->getAmount() / 100,
+                        'shipping' => $this->getShipping() / 100,
                         'coupon' => $this->getDiscountCode($orderTransfer),
                     ],
+                    'products' => \array_values($this->getProducts($orderTransfer)),
                 ],
-                'products' => \array_values($this->getProducts($orderTransfer)),
-            ]
-        );
+            ]);
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $enhancedEcommerceTransfer->toArray()
+                $enhancedEcommerceTransfer->toArray(),
             ],
         ]);
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return array
      */
@@ -76,8 +76,14 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
         $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
+            $discountCodes = [];
+
             if (isset($products[$itemTransfer->getSku()])) {
                 continue;
+            }
+
+            foreach ($itemTransfer->getCalculatedDiscounts() as $discountTransfer) {
+                $discountCodes[] = $discountTransfer->getVoucherCode();
             }
 
             $productDataAbstract = $this->getFactory()
@@ -92,8 +98,9 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             $productViewTransfer->setQuantity($itemTransfer->getQuantity());
 
             $products[$itemTransfer->getSku()] = $this->getFactory()
-                ->createEnhancedEcommerceProductMapperPlugin()
-                ->map($productViewTransfer)->toArray();
+                ->getEnhancedEcommerceProductMapperPlugin()
+                ->map($productViewTransfer, [CouponProductFieldMapperPlugin::FIELD_NAME => $discountCodes])
+                ->toArray();
         }
 
         return $products;
@@ -111,10 +118,10 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
         $voucherCodes = [];
 
         foreach ($orderTransfer->getCalculatedDiscounts() as $discountTransfer) {
-            \array_push($voucherCodes, $discountTransfer->getVoucherCode());
+            $voucherCodes[] = $discountTransfer->getVoucherCode();
         }
 
-        return \implode(",", $voucherCodes);
+        return \implode(',', $voucherCodes);
     }
 
     /**

@@ -10,11 +10,13 @@ interface ProductFieldMapperPluginInterface
     /**
      * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
      * @param \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
+     * @param array $params
      *
      * @return void
      */
     public function map(
         ProductViewTransfer $productViewTransfer,
-        EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer
+        EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer,
+        array $params
     ): void;
 }

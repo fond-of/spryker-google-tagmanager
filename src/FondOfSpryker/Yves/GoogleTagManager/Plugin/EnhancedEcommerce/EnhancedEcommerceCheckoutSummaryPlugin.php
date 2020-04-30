@@ -27,8 +27,9 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->getCheckoutPaymentEvent()->toArray(),
                 $this->getSummaryEvent()->toArray(),
+                $this->stripEmptyArrayIndex($this->getCheckoutPaymentEvent()),
+                $this->getCheckoutPaymentEvent()->toArray(),
             ],
         ]);
     }
@@ -48,25 +49,19 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
      */
     protected function getCheckoutPaymentEvent(): EnhancedEcommerceTransfer
     {
-        $quoteTransfer = $this->getFactory()
-            ->getCartClient()
-            ->getQuote();
-
         $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
             ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION)
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
-            ->setEcommerce([
+            ->setEcCheckoutOption([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT_OPTION => [
                         'actionField' => [
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
-                            'option' => $quoteTransfer->getPayment() instanceof PaymentTransfer
-                                ? $quoteTransfer->getPayment()->getPaymentProvider() : '',
+                            'option' => $this->getPaymentMethod(),
                         ],
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer;
     }
@@ -83,15 +78,54 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY)
             ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                        EnhancedEcommerceConstants::EVENT_CHECKOUT => [
-                            'actionField' => [
-                                'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
-                            ],
+                        'actionField' => [
+                            'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_SUMMARY,
                         ],
                     ],
-                ]
-            );
+                ]);
 
         return $enhancedEcommerceTransfer;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPaymentMethod(): string
+    {
+        $quoteTransfer = $this->getFactory()
+            ->getCartClient()
+            ->getQuote();
+
+        if (!$quoteTransfer->getPayment() instanceof PaymentTransfer) {
+            return '';
+        }
+
+        $paymentMethodMapping = $this->getFactory()->getPaymentMethodMappingConfig();
+
+        if (!isset($paymentMethodMapping[$quoteTransfer->getPayment()->getPaymentSelection()])) {
+            return '';
+        }
+
+        return $paymentMethodMapping[$quoteTransfer->getPayment()->getPaymentSelection()];
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $transfer
+     *
+     * @return array
+     */
+    protected function stripEmptyArrayIndex(EnhancedEcommerceTransfer $transfer): array
+    {
+        $result = [];
+
+        foreach ($transfer->toArray() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }

@@ -32,13 +32,14 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
     }
 
     /**
-     * @param array $product
+     * @param \Generated\Shared\Transfer\ProductViewTransfer $productViewTransfer
+     * @param array $params
      *
      * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer
      */
-    public function map(ProductViewTransfer $productViewTransfer): EnhancedEcommerceProductTransfer
+    public function map(ProductViewTransfer $productViewTransfer, array $params = []): EnhancedEcommerceProductTransfer
     {
-        $this->executePlugins($productViewTransfer);
+        $this->executePlugins($productViewTransfer, $params);
 
         return $this->enhancedEcommerceProductTransfer;
     }
@@ -48,10 +49,10 @@ class EnhancedEcommerceProductMapperPlugin extends AbstractPlugin implements Enh
      *
      * @return void
      */
-    protected function executePlugins(ProductViewTransfer $productViewTransfer): void
+    protected function executePlugins(ProductViewTransfer $productViewTransfer, array $params): void
     {
         foreach ($this->productFieldMapperPlugin as $plugin) {
-            $plugin->map($productViewTransfer, $this->enhancedEcommerceProductTransfer);
+            $plugin->map($productViewTransfer, $this->enhancedEcommerceProductTransfer, $params);
         }
     }
 }

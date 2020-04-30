@@ -35,11 +35,11 @@ class AddProductControllerEventHandler implements ControllerEventHandlerInterfac
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string $locale
+     * @param string|null $locale
      *
      * @return void
      */
-    public function handle(Request $request, string $locale): void
+    public function handle(Request $request, ?string $locale): void
     {
         $sku = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_SKU);
         $quantity = $request->get(EnhancedEcommerceConstants::PRODUCT_FIELD_QUANTITY);

@@ -31,7 +31,7 @@ class GoogleTagManagerTwigServiceProvider extends AbstractPlugin implements Serv
         $app['twig'] = $app->share(
             $app->extend(
                 'twig',
-                function (Environment $twig) use ($googleTagManagerTwigExtension) {
+                function (Environment $twig) use ($googleTagManagerTwigExtension, $app) {
                     $twig->addExtension($googleTagManagerTwigExtension);
 
                     return $twig;

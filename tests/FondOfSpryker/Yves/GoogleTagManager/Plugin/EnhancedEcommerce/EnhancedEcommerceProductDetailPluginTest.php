@@ -89,7 +89,7 @@ class EnhancedEcommerceProductDetailPluginTest extends Unit
             ->willReturn($enhancedEcommerceProductTransfer);
 
         $this->factoryMock->expects($this->atLeastOnce())
-            ->method('createEnhancedEcommerceProductMapperPlugin')
+            ->method('getEnhancedEcommerceProductMapperPlugin')
             ->willReturn($this->productMapperPluginMock);
 
         $methodGetProductFromQuote = $this->getMethod('renderProductDetail');
