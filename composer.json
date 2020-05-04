@@ -27,15 +27,17 @@
     "spryker/catalog": "^5.0.0",
     "spryker/kernel": "^3.0.0",
     "spryker/money": "^2.0.0",
-    "spryker/product": "^6.0.0"
+    "spryker/product": "^6.0.0",
+    "spryker/product-storage": "~1.5.0",
+    "spryker/session": "~3.2.0"
   },
   "require-dev": {
-    "spryker/code-sniffer": "^0.11",
-    "spryker/development": "^3.6",
-    "codeception/codeception": "^2.3",
-    "mikey179/vfsstream": "^1.6",
+    "codeception/codeception": "^2.4",
+    "fond-of-codeception/spryker": "dev-master as 1.0.0",
+    "php-coveralls/php-coveralls": "^2.1",
     "phpro/grumphp": "^0.14",
-    "sebastian/phpcpd": "^4.0"
+    "sebastian/phpcpd": "^4.0",
+    "spryker/code-sniffer": "^0.12"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -47,7 +49,7 @@
   "autoload-dev": {
     "psr-4": {
       "FondOfSpryker\\": "tests/FondOfSpryker/",
-      "Generated\\": "tests/Generated/"
+      "Generated\\": "src/Generated/"
     }
   }
 }

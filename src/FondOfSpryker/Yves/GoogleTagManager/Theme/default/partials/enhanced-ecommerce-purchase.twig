@@ -1,0 +1,29 @@
+<!-- enhanced ecommerce start -->
+<script type="text/javascript">
+    {% if order is defined %}
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        'event': 'genericEvent',
+        'eventCategory':'ecommerce',
+        'eventAction':'purchase',
+        'eventLabel': '',
+        ecommerce: {
+            currencyCode: '{{ order.currencyIsoCode }}',
+            purchase: {
+                actionField: {
+                    id: '{{ order.orderReference }}',
+                    affiliation: '{{ order.store }}',
+                    revenue: '{{ order.totals.grandTotal | moneyRaw }}',
+                    tax: '{{ order.totals.taxTotal.amount | moneyRaw }}',
+                    {% if shipment is defined  %}shipping: '{{ shipment | moneyRaw }}',{% endif %}
+                    {% if voucherCode is defined %}coupon: '{{ voucherCode }}'{% endif %}
+                },
+                {% if products is defined and products | length > 0 and order.items | length > 0 %}
+                    products: {{ products | json_encode | raw }}
+                {% endif %}
+            }
+        }
+    });
+    {% endif %}
+</script>
+<!-- enhanced ecommerce end -->

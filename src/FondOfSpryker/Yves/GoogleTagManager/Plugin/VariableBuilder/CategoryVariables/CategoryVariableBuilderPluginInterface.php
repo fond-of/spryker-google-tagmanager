@@ -2,18 +2,14 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables;
 
+use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+
 interface CategoryVariableBuilderPluginInterface
 {
     /**
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
-     * @param array $category
-     * @param array $products
+     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
      *
      * @return array
      */
-    public function handle(array $category, array $products): array;
+    public function handle(GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer): array;
 }
