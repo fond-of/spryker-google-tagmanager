@@ -3,12 +3,28 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 
 class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
     public const SSL_PROTOCOL = 'https://';
     public const URL = 'url';
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
+     */
+    protected $config;
+
+    /**
+     * UrlPlugin constructor.
+     *
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
+     */
+    public function __construct(GoogleTagManagerConfig $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $product
@@ -37,15 +53,7 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
     {
         $hostName = $_SERVER['HTTP_HOST'];
 
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'http') {
-                return static::SSL_PROTOCOL . $hostName;
-            }
-        }
-
-        $protocol = \strtolower(\substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https' ? 'https' : 'http';
-
-        return $protocol . '://' . $hostName;
+        return $this->config->getProtocol() . '://' . $hostName;
     }
 
     /**

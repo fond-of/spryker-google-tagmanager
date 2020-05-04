@@ -63,4 +63,5 @@ interface GoogleTagManagerConstants
     public const GTM_LISTEN_TO_CONTROLLERS = 'GTM_LISTEN_TO_CONTROLLERS';
 
     public const SESSION_NEWSLETTER_DATA = 'SESSION_NEWSLETTER_DATA';
+    public const GTM_PROTOCOL = 'GTM_PROTOCOL';
 }

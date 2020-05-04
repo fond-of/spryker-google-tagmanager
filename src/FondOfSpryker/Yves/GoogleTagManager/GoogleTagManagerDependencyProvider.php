@@ -360,7 +360,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     {
         return [
             new EanPlugin(),
-            new UrlPlugin(),
+            new UrlPlugin($this->getConfig()),
             new BrandPlugin(),
             new ImageUrlPlugin(),
         ];

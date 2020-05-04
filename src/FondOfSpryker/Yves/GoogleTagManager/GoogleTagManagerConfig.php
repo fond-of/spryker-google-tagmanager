@@ -96,4 +96,12 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     {
         return $this->get(GoogleTagManagerConstants::INTERNAL_IPS, []);
     }
+
+    /**
+     * @return string
+     */
+    public function getProtocol(): string
+    {
+        return $this->get(GoogleTagManagerConstants::GTM_PROTOCOL, 'http');
+    }
 }
