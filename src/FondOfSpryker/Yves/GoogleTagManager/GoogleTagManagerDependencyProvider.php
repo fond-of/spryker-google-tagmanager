@@ -45,6 +45,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\BrandPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\EanPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\ImageUrlPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\NamePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\UrlPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
@@ -363,6 +364,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public function getTransactionProductVariableBuilderPlugins(): array
     {
         return [
+            new NamePlugin(),
             new EanPlugin(),
             new UrlPlugin($this->getConfig()),
             new BrandPlugin(),

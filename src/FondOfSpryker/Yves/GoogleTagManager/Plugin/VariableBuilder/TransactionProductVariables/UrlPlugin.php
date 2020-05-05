@@ -27,11 +27,11 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
         if (!isset($params['locale'])) {
             return [];
@@ -39,11 +39,11 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 
         $locale = $params['locale'];
 
-        if ($this->getUrlKey($product, $locale) === null) {
+        if ($this->getUrlKey($itemTransfer, $locale) === null) {
             return [];
         }
 
-        return [static::URL => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($product, $locale))];
+        return [static::URL => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
     }
 
     /**

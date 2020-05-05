@@ -12,15 +12,15 @@ class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
     public const URL_IMAGE = 'imageUrl';
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
         $image = null;
 
-        foreach ($product->getImages() as $imageTransfer) {
+        foreach ($itemTransfer->getImages() as $imageTransfer) {
             $image = $imageTransfer;
 
             break;

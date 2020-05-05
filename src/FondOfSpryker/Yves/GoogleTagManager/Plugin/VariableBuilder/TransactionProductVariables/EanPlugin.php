@@ -9,17 +9,17 @@ class EanPlugin implements TransactionProductVariableBuilderPluginInterface
     public const EAN = 'ean';
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
         $locale = isset($params['locale']) ? $params['locale'] : '_';
 
-        if (isset($product->getAbstractAttributes()[$locale][static::EAN])) {
+        if (isset($itemTransfer->getAbstractAttributes()[$locale][static::EAN])) {
             return [
-                static::EAN => $product->getAbstractAttributes()[$locale][static::EAN],
+                static::EAN => $itemTransfer->getAbstractAttributes()[$locale][static::EAN],
             ];
         }
 
