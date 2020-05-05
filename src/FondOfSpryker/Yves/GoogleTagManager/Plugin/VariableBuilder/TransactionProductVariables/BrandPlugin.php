@@ -7,7 +7,7 @@ use Generated\Shared\Transfer\ItemTransfer;
 
 class BrandPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const BRAND = 'brand';
+    public const FIELD_NAME = 'brand';
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
@@ -19,10 +19,14 @@ class BrandPlugin implements TransactionProductVariableBuilderPluginInterface
     {
         $locale = isset($params['locale']) ? $params['locale'] : '_';
 
-        if (!isset($itemTransfer->getAbstractAttributes()[$locale]['brand'])) {
-            return [];
+        if (isset($itemTransfer->getAbstractAttributes()['_'][static::FIELD_NAME])) {
+            return [static::FIELD_NAME => $itemTransfer->getAbstractAttributes()['_'][static::FIELD_NAME]];
         }
 
-        return [static::BRAND => $itemTransfer->getAbstractAttributes()[$locale]['brand']];
+        if (isset($itemTransfer->getAbstractAttributes()[$locale][static::FIELD_NAME])) {
+            return [static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][static::FIELD_NAME]];
+        }
+
+        return [];
     }
 }

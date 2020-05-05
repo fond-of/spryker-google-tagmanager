@@ -90,7 +90,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (isset($products[$itemTransfer->getSku()])) {
-                $products[$itemTransfer->getSku()][QuantityPlugin::QUANTITY]++;
+                $products[$itemTransfer->getSku()][QuantityPlugin::FIELD_NAME]++;
 
                 continue;
             }

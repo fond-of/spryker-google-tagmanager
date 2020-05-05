@@ -8,8 +8,7 @@ use Generated\Shared\Transfer\ItemTransfer;
 
 class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const SSL_PROTOCOL = 'https://';
-    public const URL = 'url';
+    public const FIELD_NAME = 'url';
 
     /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
@@ -43,7 +42,7 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
             return [];
         }
 
-        return [static::URL => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
+        return [static::FIELD_NAME => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
     }
 
     /**

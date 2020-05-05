@@ -9,7 +9,7 @@ use Generated\Shared\Transfer\ProductImageTransfer;
 
 class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const URL_IMAGE = 'imageUrl';
+    public const FIELD_NAME = 'imageUrl';
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
@@ -31,11 +31,11 @@ class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
         }
 
         if ($image instanceof ProductImageTransfer) {
-            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+            return [static::FIELD_NAME => $image->getExternalUrlSmall()];
         }
 
         if ($image instanceof ProductImageStorageTransfer) {
-            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+            return [static::FIELD_NAME => $image->getExternalUrlSmall()];
         }
 
         return [];

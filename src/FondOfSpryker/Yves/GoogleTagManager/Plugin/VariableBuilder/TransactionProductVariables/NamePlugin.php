@@ -20,13 +20,15 @@ class NamePlugin implements TransactionProductVariableBuilderPluginInterface
         $locale = isset($params['locale']) ? $params['locale'] : '_';
 
         if (!isset($itemTransfer->getAbstractAttributes()[$locale])) {
-            return $itemTransfer->getName();
+            return [static::FIELD_NAME => $itemTransfer->getName()];
         }
 
         if (!isset($itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
-            return $itemTransfer->getName();
+            return [static::FIELD_NAME => $itemTransfer->getName()];
         }
 
-        return $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED];
+        return [
+            static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED]
+        ];
     }
 }
