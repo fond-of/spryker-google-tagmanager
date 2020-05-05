@@ -90,7 +90,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (isset($products[$itemTransfer->getSku()])) {
-                $products[$itemTransfer->getSku()][QuantityPlugin::QUANTITY]++;
+                $products[$itemTransfer->getSku()][QuantityPlugin::FIELD_NAME]++;
 
                 continue;
             }
@@ -116,7 +116,6 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
         return [
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_ID => $itemTransfer->getIdProductAbstract(),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_SKU => $itemTransfer->getSku(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCT_NAME => $this->getProductName($itemTransfer),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE => $this->moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitPrice()),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_PRICE_EXCLUDING_TAX => $this->getPriceExcludingTax($itemTransfer),
             GoogleTagManagerConstants::TRANSACTION_PRODUCT_TAX => $this->moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitTaxAmount()),
@@ -138,26 +137,6 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
         }
 
         return $product;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     *
-     * @return string
-     */
-    protected function getProductName(ItemTransfer $itemTransfer): string
-    {
-        $locale = isset($itemTransfer->getAbstractAttributes()[$this->locale]) ? $this->locale : '_';
-
-        if (!isset($itemTransfer->getAbstractAttributes()[$locale])) {
-            return $itemTransfer->getName();
-        }
-
-        if (!isset($itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
-            return $itemTransfer->getName();
-        }
-
-        return $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED];
     }
 
     /**
