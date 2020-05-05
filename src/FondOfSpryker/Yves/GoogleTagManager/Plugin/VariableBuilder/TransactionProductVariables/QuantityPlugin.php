@@ -1,26 +1,24 @@
 <?php
 
+
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use Generated\Shared\Transfer\ItemTransfer;
 
-class EanPlugin implements TransactionProductVariableBuilderPluginInterface
+class QuantityPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const EAN = 'ean';
+    public const QUANTITY = 'quantity';
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param array $params
      *
      * @return array
      */
     public function handle(ItemTransfer $product, array $params = []): array
     {
-        $locale = isset($params['locale']) ? $params['locale'] : '_';
-
-        if (isset($product->getAbstractAttributes()[$locale][static::EAN])) {
-            return [
-                static::EAN => $product->getAbstractAttributes()[$locale][static::EAN],
-            ];
+        if ($product->getQuantity() > 0) {
+            return [static::QUANTITY => $product->getQuantity()];
         }
 
         return [];

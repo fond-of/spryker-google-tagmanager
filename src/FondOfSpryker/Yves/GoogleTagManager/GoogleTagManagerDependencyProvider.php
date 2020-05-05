@@ -16,6 +16,7 @@ use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Checkout\PlaceOrd
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Newsletter\NewsletterConfirmationEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Newsletter\NewsletterSubscribeEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientBridge;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
@@ -44,6 +45,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\BrandPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\EanPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\ImageUrlPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\UrlPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\GoogleTagManagerSessionHandler;
@@ -78,6 +80,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const NEWSLETTER_SUBSCRIBE_EVENT_HANDLER = 'NEWSLETTER_SUBSCRIBE_EVENT_HANDLER';
     public const GTM_SESSION_HANDLER = 'GTM_SESSION_HANDLER';
     public const EEC_SESSION_HANDLER = 'EEC_SESSION_HANDLER';
+    public const PRODUCT_IMAGE_STORAGE_CLIENT = 'PRODUCT_IMAGE_STORAGE_CLIENT';
 
     /**
      * @param \Spryker\Yves\Kernel\Container $container
@@ -91,6 +94,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->provideTaxProductConnectorClient($container);
         $this->provideMoneyPlugin($container);
         $this->provideSessionClient($container);
+        $this->addProductImageStorageClient($container);
         $this->addProductVariableBuilderPlugins($container);
         $this->addCategoryVariableBuilderPlugins($container);
         $this->addDefaultVariableBuilderPlugins($container);
@@ -363,6 +367,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new UrlPlugin($this->getConfig()),
             new BrandPlugin(),
             new ImageUrlPlugin(),
+            new QuantityPlugin(),
         ];
     }
 
@@ -562,5 +567,19 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             new RemoveProductControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
             new PlaceOrderControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
         ];
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addProductImageStorageClient(Container $container): Container
+    {
+        $container[static::PRODUCT_IMAGE_STORAGE_CLIENT] = function (Container $container) {
+            return new GoogleTagManagerToProductImageStorageClientBridge($container->getLocator()->productImageStorage()->client());
+        };
+
+        return $container;
     }
 }

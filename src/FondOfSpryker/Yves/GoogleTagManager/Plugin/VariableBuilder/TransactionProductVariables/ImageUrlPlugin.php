@@ -18,10 +18,16 @@ class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
      */
     public function handle(ItemTransfer $product, array $params = []): array
     {
-        foreach ($product->getImages() as $image) {
-            $image = $image;
+        $image = null;
+
+        foreach ($product->getImages() as $imageTransfer) {
+            $image = $imageTransfer;
 
             break;
+        }
+
+        if ($image === null) {
+            return [];
         }
 
         if ($image instanceof ProductImageTransfer) {

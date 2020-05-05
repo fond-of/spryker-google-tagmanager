@@ -17,7 +17,7 @@ class BrandPlugin implements TransactionProductVariableBuilderPluginInterface
      */
     public function handle(ItemTransfer $product, array $params = []): array
     {
-        $locale = '_';
+        $locale = isset($params['locale']) ? $params['locale'] : '_';
 
         if (!isset($product->getAbstractAttributes()[$locale]['brand'])) {
             return [];
