@@ -79,6 +79,8 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             $discountCodes = [];
 
             if (isset($products[$itemTransfer->getSku()])) {
+                $products[$itemTransfer->getSku()]['quantity']++;
+
                 continue;
             }
 

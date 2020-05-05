@@ -38,7 +38,12 @@ class OrderVariableBuilder
     /**
      * @var \Spryker\Shared\Kernel\Store
      */
-    private $store;
+    protected $store;
+
+    /**
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilderInterface
+     */
+    protected $transactionProductsVariableBuilder;
 
     /**
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
@@ -46,19 +51,22 @@ class OrderVariableBuilder
      * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
      * @param \Spryker\Shared\Kernel\Store $store
      * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilderInterface $transactionProductsVariableBuilder
      */
     public function __construct(
         MoneyPluginInterface $moneyPlugin,
         GoogleTagManagerToCartClientInterface $cartClient,
         GoogleTagManagerToProductStorageClientInterface $storageClient,
         Store $store,
-        array $orderVariableBuilderPlugins = []
+        array $orderVariableBuilderPlugins,
+        TransactionProductsVariableBuilderInterface $transactionProductsVariableBuilder
     ) {
         $this->moneyPlugin = $moneyPlugin;
         $this->orderVariableBuilderPlugins = $orderVariableBuilderPlugins;
         $this->cartClient = $cartClient;
         $this->storageClient = $storageClient;
         $this->store = $store;
+        $this->transactionProductsVariableBuilder = $transactionProductsVariableBuilder;
     }
 
     /**
@@ -88,7 +96,7 @@ class OrderVariableBuilder
             GoogleTagManagerConstants::TRANSACTION_SHIPPING => implode('-', $this->getShipmentMethods($orderTransfer)),
             GoogleTagManagerConstants::TRANSACTION_PAYMENT => implode('-', $this->getPaymentMethods($orderTransfer)),
             GoogleTagManagerConstants::TRANSACTION_CURRENCY => $orderTransfer->getCurrencyIsoCode(),
-            GoogleTagManagerConstants::TRANSACTION_PRODUCTS => $this->getTransactionProducts($orderTransfer),
+            GoogleTagManagerConstants::TRANSACTION_PRODUCTS => $this->transactionProductsVariableBuilder->getProductsFromOrder($orderTransfer),
             GoogleTagManagerConstants::TRANSACTION_PRODUCTS_SKUS => $this->getTransactionProductsSkus($orderTransfer),
             GoogleTagManagerConstants::CUSTOMER_EMAIL => $this->getCustomerEmail($orderTransfer->getBillingAddress()),
         ];
