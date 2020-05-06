@@ -38,7 +38,7 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_CHECKOUT)
             ->setEventLabel(EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT)
-            ->setEcCheckoutOption([
+            ->setEcommerce([
                     EnhancedEcommerceConstants::EVENT_CHECKOUT => [
                         'actionField' => [
                             'step' => EnhancedEcommerceConstants::CHECKOUT_STEP_PAYMENT,
@@ -48,8 +48,28 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $enhancedEcommerceTransfer->toArray(),
+                $this->stripEmptyArrayIndex($enhancedEcommerceTransfer),
             ],
         ]);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $transfer
+     *
+     * @return array
+     */
+    protected function stripEmptyArrayIndex(EnhancedEcommerceTransfer $transfer): array
+    {
+        $result = [];
+
+        foreach ($transfer->toArray() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }
