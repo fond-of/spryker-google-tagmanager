@@ -6,19 +6,23 @@ use Generated\Shared\Transfer\ItemTransfer;
 
 class EanPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const EAN = 'ean';
+    public const FIELD_NAME = 'ean';
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
-        if (isset($product->getAbstractAttributes()['_'][static::EAN])) {
-            return [
-                static::EAN => $product->getAbstractAttributes()['_'][static::EAN],
-            ];
+        $locale = isset($params['locale']) ? $params['locale'] : '_';
+
+        if (isset($itemTransfer->getAbstractAttributes()['_'][static::FIELD_NAME])) {
+            return [static::FIELD_NAME => $itemTransfer->getAbstractAttributes()['_'][static::FIELD_NAME]];
+        }
+
+        if (isset($itemTransfer->getAbstractAttributes()[$locale][static::FIELD_NAME])) {
+            return [static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][static::FIELD_NAME]];
         }
 
         return [];

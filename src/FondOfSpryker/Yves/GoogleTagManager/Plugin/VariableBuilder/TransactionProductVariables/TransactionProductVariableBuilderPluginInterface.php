@@ -7,10 +7,10 @@ use Generated\Shared\Transfer\ItemTransfer;
 interface TransactionProductVariableBuilderPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array;
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array;
 }

@@ -9,27 +9,33 @@ use Generated\Shared\Transfer\ProductImageTransfer;
 
 class ImageUrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const URL_IMAGE = 'imageUrl';
+    public const FIELD_NAME = 'imageUrl';
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
-        foreach ($product->getImages() as $image) {
-            $image = $image;
+        $image = null;
+
+        foreach ($itemTransfer->getImages() as $imageTransfer) {
+            $image = $imageTransfer;
 
             break;
         }
 
+        if ($image === null) {
+            return [];
+        }
+
         if ($image instanceof ProductImageTransfer) {
-            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+            return [static::FIELD_NAME => $image->getExternalUrlSmall()];
         }
 
         if ($image instanceof ProductImageStorageTransfer) {
-            return [static::URL_IMAGE => $image->getExternalUrlSmall()];
+            return [static::FIELD_NAME => $image->getExternalUrlSmall()];
         }
 
         return [];

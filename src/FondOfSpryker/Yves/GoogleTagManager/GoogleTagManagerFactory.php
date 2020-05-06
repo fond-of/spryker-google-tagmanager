@@ -10,6 +10,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
@@ -19,6 +20,8 @@ use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\NewsletterVariableBuilde
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\ProductVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductArrayModel;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
@@ -93,7 +96,8 @@ class GoogleTagManagerFactory extends AbstractFactory
             $this->getCartClient(),
             $this->getProductStorageClient(),
             $this->getStore(),
-            $this->getOrderVariableBuilderPlugins()
+            $this->getOrderVariableBuilderPlugins(),
+            $this->createTransactionProductsVariableBuilder()
         );
     }
 
@@ -105,6 +109,19 @@ class GoogleTagManagerFactory extends AbstractFactory
         return new QuoteVariableBuilder(
             $this->createMoneyPlugin(),
             $this->getQuoteVariableBuilderPlugins(),
+            $this->createTransactionProductsVariableBuilder()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilderInterface
+     */
+    protected function createTransactionProductsVariableBuilder(): TransactionProductsVariableBuilderInterface
+    {
+        return new TransactionProductsVariableBuilder(
+            $this->createMoneyPlugin(),
+            $this->getProductStorageClient(),
+            $this->getProductImageStorageClient(),
             $this->getTransactionProductVariableBuilderPlugins(),
             $this->getStore()->getCurrentLocale()
         );
@@ -362,5 +379,15 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getPaymentMethodMappingConfig(): array
     {
         return $this->getConfig()->getPaymentMethodMapping();
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface
+     */
+    public function getProductImageStorageClient(): GoogleTagManagerToProductImageStorageClientInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_IMAGE_STORAGE_CLIENT);
     }
 }
