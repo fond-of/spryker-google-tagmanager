@@ -3,19 +3,34 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
+use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
 use Generated\Shared\Transfer\ItemTransfer;
 
 class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 {
-    public const SSL_PROTOCOL = 'https://';
-    public const URL = 'url';
+    public const FIELD_NAME = 'url';
 
     /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $product
+     * @var \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig
+     */
+    protected $config;
+
+    /**
+     * UrlPlugin constructor.
+     *
+     * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
+     */
+    public function __construct(GoogleTagManagerConfig $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return array
      */
-    public function handle(ItemTransfer $product, array $params = []): array
+    public function handle(ItemTransfer $itemTransfer, array $params = []): array
     {
         if (!isset($params['locale'])) {
             return [];
@@ -23,11 +38,11 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
 
         $locale = $params['locale'];
 
-        if ($this->getUrlKey($product, $locale) === null) {
+        if ($this->getUrlKey($itemTransfer, $locale) === null) {
             return [];
         }
 
-        return [static::URL => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($product, $locale))];
+        return [static::FIELD_NAME => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
     }
 
     /**
@@ -37,15 +52,7 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
     {
         $hostName = $_SERVER['HTTP_HOST'];
 
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'http') {
-                return static::SSL_PROTOCOL . $hostName;
-            }
-        }
-
-        $protocol = \strtolower(\substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https' ? 'https' : 'http';
-
-        return $protocol . '://' . $hostName;
+        return $this->config->getProtocol() . '://' . $hostName;
     }
 
     /**
