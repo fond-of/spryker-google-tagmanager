@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Shared\Shipment\ShipmentConfig;
 use Spryker\Shared\Shipment\ShipmentConstants;
 
 class OrderVariableBuilder
@@ -314,8 +315,8 @@ class OrderVariableBuilder
     {
         $expenses = $this->getExpenses($orderTransfer);
 
-        if (\array_key_exists(static::SHIPMENT_EXPENSE_TYPE, $expenses)) {
-            return $orderTransfer->getTotals()->getGrandTotal() - $expenses[static::SHIPMENT_EXPENSE_TYPE];
+        if (\array_key_exists(ShipmentConfig::SHIPMENT_EXPENSE_TYPE, $expenses)) {
+            return $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConfig::SHIPMENT_EXPENSE_TYPE];
         }
 
         return $orderTransfer->getTotals()->getGrandTotal();
