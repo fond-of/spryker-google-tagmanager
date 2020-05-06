@@ -15,6 +15,8 @@ use Spryker\Shared\Shipment\ShipmentConstants;
 
 class OrderVariableBuilder
 {
+    public const SHIPMENT_EXPENSE_TYPE = 'SHIPMENT_EXPENSE_TYPE';
+
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
@@ -312,8 +314,8 @@ class OrderVariableBuilder
     {
         $expenses = $this->getExpenses($orderTransfer);
 
-        if (\array_key_exists(ShipmentConstants::SHIPMENT_EXPENSE_TYPE, $expenses)) {
-            return $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConstants::SHIPMENT_EXPENSE_TYPE];
+        if (\array_key_exists(static::SHIPMENT_EXPENSE_TYPE, $expenses)) {
+            return $orderTransfer->getTotals()->getGrandTotal() - $expenses[static::SHIPMENT_EXPENSE_TYPE];
         }
 
         return $orderTransfer->getTotals()->getGrandTotal();
