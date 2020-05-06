@@ -27,9 +27,8 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
     {
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->getSummaryEvent()->toArray(),
+                $this->stripEmptyArrayIndex($this->getSummaryEvent()),
                 $this->stripEmptyArrayIndex($this->getCheckoutPaymentEvent()),
-                $this->getCheckoutPaymentEvent()->toArray(),
             ],
         ]);
     }
