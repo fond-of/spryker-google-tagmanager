@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\ProductViewTransfer;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Shared\Shipment\ShipmentConfig;
-use Spryker\Shared\Shipment\ShipmentConstants;
 
 class OrderVariableBuilder
 {
