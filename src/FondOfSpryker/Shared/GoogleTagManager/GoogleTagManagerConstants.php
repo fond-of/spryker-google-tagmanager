@@ -1,10 +1,5 @@
 <?php
 
-/**
- * MIT License
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
- */
-
 namespace FondOfSpryker\Shared\GoogleTagManager;
 
 interface GoogleTagManagerConstants
@@ -63,4 +58,5 @@ interface GoogleTagManagerConstants
     public const GTM_LISTEN_TO_CONTROLLERS = 'GTM_LISTEN_TO_CONTROLLERS';
 
     public const SESSION_NEWSLETTER_DATA = 'SESSION_NEWSLETTER_DATA';
+    public const GTM_PROTOCOL = 'GTM_PROTOCOL';
 }

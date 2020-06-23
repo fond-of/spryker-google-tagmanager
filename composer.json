@@ -21,24 +21,25 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "fond-of-spryker/tax-product-connector": "dev-feature/paypal-refund",
-    "spryker/cart": "^5.2.0",
-    "spryker/catalog": "^5.0.0",
-    "spryker/kernel": "^3.0.0",
-    "spryker/money": "^2.0.0",
-    "spryker/product": "^6.0.0",
-    "spryker/product-storage": "~1.5.0",
-    "spryker/session": "~3.2.0"
+    "fond-of-spryker/product-image-storage": "dev-spryker_upgrade",
+    "spryker/cart": "^7.6.0",
+    "spryker/catalog": "^5.6.0",
+    "spryker/kernel": "^3.42.4",
+    "spryker/money": "^2.8.0",
+    "spryker/product": "^6.17.1",
+    "spryker/product-storage": "^1.18.1",
+    "spryker/session": "^4.6.0"
   },
   "require-dev": {
-    "codeception/codeception": "^2.4",
+    "spryker/code-sniffer": "^0.14.7",
     "fond-of-codeception/spryker": "dev-master as 1.0.0",
+    "codeception/codeception": "^2.5",
     "mikey179/vfsstream": "^1.6",
     "php-coveralls/php-coveralls": "^2.1",
     "phpro/grumphp": "^0.14",
-    "sebastian/phpcpd": "^4.0",
-    "spryker/code-sniffer": "^0.12"
+    "sebastian/phpcpd": "^4.1"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

@@ -18,11 +18,11 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
      */
     public function getContainerID()
     {
-        return $this->get(GoogleTagManagerConstants::CONTAINER_ID);
+        return $this->get(GoogleTagManagerConstants::CONTAINER_ID, '');
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEnabled()
     {
@@ -95,5 +95,13 @@ class GoogleTagManagerConfig extends AbstractBundleConfig
     public function getInternalIps(): array
     {
         return $this->get(GoogleTagManagerConstants::INTERNAL_IPS, []);
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol(): string
+    {
+        return $this->get(GoogleTagManagerConstants::GTM_PROTOCOL, 'http');
     }
 }

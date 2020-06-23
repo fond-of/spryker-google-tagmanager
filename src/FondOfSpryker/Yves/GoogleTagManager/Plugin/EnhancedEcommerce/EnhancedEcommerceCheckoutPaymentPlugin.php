@@ -48,8 +48,28 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $enhancedEcommerceTransfer->toArray(),
+                $this->stripEmptyArrayIndex($enhancedEcommerceTransfer),
             ],
         ]);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $transfer
+     *
+     * @return array
+     */
+    protected function stripEmptyArrayIndex(EnhancedEcommerceTransfer $transfer): array
+    {
+        $result = [];
+
+        foreach ($transfer->toArray() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }
