@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": ">=7.2",
-    "fond-of-spryker/tax-product-connector": "dev-spryker_upgrade",
+    "fond-of-spryker/tax-product-connector": "dev-feature/paypal-refund",
     "fond-of-spryker/product-image-storage": "dev-spryker_upgrade",
     "spryker/cart": "^7.6.0",
     "spryker/catalog": "^5.6.0",
@@ -37,6 +37,7 @@
     "fond-of-codeception/spryker": "dev-master as 1.0.0",
     "codeception/codeception": "^2.5",
     "mikey179/vfsstream": "^1.6",
+    "php-coveralls/php-coveralls": "^2.1",
     "phpro/grumphp": "^0.14",
     "sebastian/phpcpd": "^4.1"
   },

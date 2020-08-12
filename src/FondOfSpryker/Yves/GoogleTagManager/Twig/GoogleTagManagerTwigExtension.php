@@ -39,11 +39,6 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $sessionClient;
 
     /**
-     * @var \Spryker\Yves\Cart\CartFactory
-     */
-    protected $cartFactory;
-
-    /**
      * @var array
      */
     protected $dataLayerVariables = [];
@@ -238,7 +233,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     {
         $quoteTransfer = $this->cartClient->getQuote();
 
-        if (!$quoteTransfer || count($quoteTransfer->getItems()) == 0) {
+        if (!$quoteTransfer || count($quoteTransfer->getItems()) === 0) {
             return $this->dataLayerVariables;
         }
 

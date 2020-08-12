@@ -82,7 +82,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    public function provideDependencies(Container $container)
+    public function provideDependencies(Container $container): Container
     {
         $this->provideCartClient($container);
         $this->provideProductClient($container);
@@ -130,7 +130,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container $container
      */
-    protected function provideProductClient(Container $container)
+    protected function provideProductClient(Container $container): Container
     {
         $container[static::PRODUCT_CLIENT] = function (Container $container) {
             return $container->getLocator()->product()->client();
@@ -144,7 +144,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container $container
      */
-    protected function provideTaxProductConnectorClient(Container $container)
+    protected function provideTaxProductConnectorClient(Container $container): Container
     {
         $container[static::TAX_PRODUCT_CONNECTOR_CLIENT] = function (Container $container) {
             return $container->getLocator()->taxProductConnector()->client();
@@ -158,7 +158,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function provideMoneyPlugin(Container $container)
+    protected function provideMoneyPlugin(Container $container): Container
     {
         $container[static::PLUGIN_MONEY] = function () {
             return new MoneyPlugin();
@@ -188,22 +188,20 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addProductVariableBuilderPlugins(Container $container): Container
     {
-        $container[static::PRODUCT_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getProductVariableBuilderPlugins($container);
+        $container[static::PRODUCT_VARIABLE_BUILDER_PLUGINS] = function () {
+            return $this->getProductVariableBuilderPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductVariableBuilderPluginInterface[]
      */
-    protected function getProductVariableBuilderPlugins(Container $container): array
+    protected function getProductVariableBuilderPlugins(): array
     {
         return [
-            new SalePricePlugin(new MoneyPlugin(), $this->getConfig()),
+            new SalePricePlugin(),
         ];
     }
 
@@ -214,19 +212,17 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addCategoryVariableBuilderPlugins(Container $container): Container
     {
-        $container[static::CATEGORY_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getCategoryVariableBuilderPlugins($container);
+        $container[static::CATEGORY_VARIABLE_BUILDER_PLUGINS] = function () {
+            return $this->getCategoryVariableBuilderPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
      */
-    protected function getCategoryVariableBuilderPlugins(Container $container): array
+    protected function getCategoryVariableBuilderPlugins(): array
     {
         return [
             new ProductSkuCategoryVariableBuilderPlugin(),
@@ -266,19 +262,17 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addDefaultVariableBuilderPlugins(Container $container): Container
     {
-        $container[static::DEFAULT_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getDefaultVariableBuilderPlugins($container);
+        $container[static::DEFAULT_VARIABLE_BUILDER_PLUGINS] = function () {
+            return $this->getDefaultVariableBuilderPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultVariableBuilderPluginInterface[]
      */
-    protected function getDefaultVariableBuilderPlugins(Container $container): array
+    protected function getDefaultVariableBuilderPlugins(): array
     {
         return [
             new CustomerEmailHashVariableBuilderPlugin(),
@@ -295,19 +289,17 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addOrderVariableBuilderPlugins(Container $container): Container
     {
-        $container[static::ORDER_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getOrderVariableBuilderPlugins($container);
+        $container[static::ORDER_VARIABLE_BUILDER_PLUGINS] = function () {
+            return $this->getOrderVariableBuilderPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[]
      */
-    protected function getOrderVariableBuilderPlugins(Container $container): array
+    protected function getOrderVariableBuilderPlugins(): array
     {
         return [
             new OrderDiscountPlugin(),
@@ -321,19 +313,17 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addQuoteVariableBuilderPlugins(Container $container): Container
     {
-        $container[static::QUOTE_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getQuoteVariableBuilderPlugins($container);
+        $container[static::QUOTE_VARIABLE_BUILDER_PLUGINS] = function () {
+            return $this->getQuoteVariableBuilderPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\QuoteVariableBuilderPluginInterface[]
      */
-    protected function getQuoteVariableBuilderPlugins(Container $container): array
+    protected function getQuoteVariableBuilderPlugins(): array
     {
         return [];
     }
@@ -419,7 +409,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addStore(Container $container): Container
     {
-        $container[static::STORE] = function (Container $container) {
+        $container[static::STORE] = function () {
             return $this->getStore();
         };
 
@@ -441,7 +431,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      */
     protected function addProductFieldMapperPlugins(Container $container): Container
     {
-        $container[static::PRODUCT_FIELD_MAPPER_PLUGINS] = function (Container $container) {
+        $container[static::PRODUCT_FIELD_MAPPER_PLUGINS] = function () {
             return $this->getProductFieldMapperPlugins();
         };
 
@@ -553,12 +543,14 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
      * @return \FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\ControllerEventHandlerInterface[]
      */
     protected function getCartControllerEventHandler(Container $container): array
     {
         return [
-            new AddProductControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
+            new AddProductControllerEventHandler($container[static::EEC_SESSION_HANDLER]),
             new ChangeQuantityProductControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
             new RemoveProductControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
             new PlaceOrderControllerEventHandler($container[static::EEC_SESSION_HANDLER], $container[static::CART_CLIENT]),
