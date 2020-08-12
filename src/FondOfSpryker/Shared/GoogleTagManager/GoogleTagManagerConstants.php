@@ -35,6 +35,7 @@ interface GoogleTagManagerConstants
     public const CATEGORY_NAME = 'categoryName';
     public const CATEGORY_SIZE = 'categorySize';
     public const CATEGORY_PRODUCTS = 'categoryProducts';
+    public const CATEGORY_CONTENT_TYPE = 'contentType';
 
     public const PRODUCTS = 'products';
 

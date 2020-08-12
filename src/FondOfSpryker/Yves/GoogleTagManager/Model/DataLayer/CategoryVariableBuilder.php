@@ -34,10 +34,11 @@ class CategoryVariableBuilder
     /**
      * @param array $category
      * @param array $products
+     * @param string $contentType
      *
      * @return array
      */
-    public function getVariables(array $category, array $products): array
+    public function getVariables(array $category, array $products, string $contentType): array
     {
         $categoryProducts = [];
 
@@ -61,6 +62,7 @@ class CategoryVariableBuilder
         $variables = [
             GoogleTagManagerConstants::CATEGORY_ID => $category['id_category'],
             GoogleTagManagerConstants::CATEGORY_NAME => $category['name'],
+            GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE => $contentType,
             GoogleTagManagerConstants::CATEGORY_SIZE => $googleTagManagerCategoryTransfer->getCategoryProducts()->count(),
             GoogleTagManagerConstants::CATEGORY_PRODUCTS => $categoryProducts,
             GoogleTagManagerConstants::PRODUCTS => $googleTagManagerCategoryTransfer->getProducts(),
