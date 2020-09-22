@@ -27,7 +27,6 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
      * @param array|null $params
      *
      * @return string
-     * @throws
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
     {
@@ -36,7 +35,7 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
 
         return $twig->render($this->getTemplate(), [
             'data' => [
-                $this->renderProductImpressions($products, $list)
+                $this->renderProductImpressions($products, $list),
             ],
         ]);
     }
@@ -53,43 +52,71 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
         $productImpressions = [
             'ec_impressions' => [
                 'currencyCode' => $this->getFactory()->getStore()->getCurrencyIsoCode(),
-                'impressions' => []
-            ]
+                'impressions' => [],
+            ],
         ];
 
         foreach ($products as $product) {
-            if ($this->arrayKeyExistsInProduct(static::ATTRIBUTE, $product) === false) {
-                continue;
-            }
-
-            if ($this->arrayKeyExistsInProduct(static::ABSTRACT_SKU, $product) === false) {
-                continue;
-            }
-
-            if ($this->arrayKeyExistsInProduct(static::ATTR_MODEL_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
-                continue;
-            }
-
-            if ($this->arrayKeyExistsInProduct(static::ATTR_STYLE_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
+            if ($this->validateProductArray($product) === false) {
                 continue;
             }
 
             $productCount++;
-
-            $productImpressionTransfer = new EnhancedEcommerceProductImpressionTransfer();
-            $productImpressionTransfer->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED]);
-            $productImpressionTransfer->setId(\str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]));
-            $productImpressionTransfer->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED]);
-            $productImpressionTransfer->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]));
-            $productImpressionTransfer->setList($list);
-            $productImpressionTransfer->setPosition($productCount);
-
             $productImpressions['ec_impressions']['impressions'][] = [
-                $productImpressionTransfer->toArray()
+                $this->createEnhancedEcommerceProductImpressionTransfer($product, $list, $productCount)->toArray(),
             ];
         }
 
         return $productImpressions;
+    }
+
+    /**
+     * @param array $product
+     *
+     * @return bool
+     */
+    protected function validateProductArray(array $product): bool
+    {
+        if ($this->arrayKeyExistsInProduct(static::ATTRIBUTE, $product) === false) {
+            return false;
+        }
+
+        if ($this->arrayKeyExistsInProduct(static::ABSTRACT_SKU, $product) === false) {
+            return false;
+        }
+
+        if ($this->arrayKeyExistsInProduct(static::ATTR_MODEL_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
+            return false;
+        }
+
+        if ($this->arrayKeyExistsInProduct(static::ATTR_STYLE_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $product
+     * @param string $listType
+     * @param int $productCount
+     *
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductImpressionTransfer
+     */
+    protected function createEnhancedEcommerceProductImpressionTransfer(
+        array $product,
+        string $listType,
+        int $productCount
+    ): EnhancedEcommerceProductImpressionTransfer {
+        $productImpressionTransfer = (new EnhancedEcommerceProductImpressionTransfer())
+            ->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED])
+            ->setId(str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]))
+            ->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED])
+            ->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]))
+            ->setList($listType);
+        $productImpressionTransfer->setPosition($productCount);
+
+        return $productImpressionTransfer;
     }
 
     /**
@@ -100,11 +127,12 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
      */
     protected function arrayKeyExistsInProduct(string $key, array $product): bool
     {
-        if (\array_key_exists($key, $product)) {
+        if (array_key_exists($key, $product)) {
             return true;
         }
 
-        $this->getLogger()->alert(sprintf('GoogleTagManager: Could not add product (%s) to product-impressions, index %s not exists',
+        $this->getLogger()->alert(sprintf(
+            'GoogleTagManager: Could not add product (%s) to product-impressions, index %s not exists',
             $product['id_product_abstract'],
             $key
         ));
