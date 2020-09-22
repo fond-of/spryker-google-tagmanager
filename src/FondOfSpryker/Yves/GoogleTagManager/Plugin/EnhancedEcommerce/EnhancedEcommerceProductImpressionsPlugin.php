@@ -56,19 +56,23 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
         $index = 0;
 
         foreach ($products as $product) {
-            $index++;
+            try {
+                $index++;
 
-            $productImpressionTransfer = new EnhancedEcommerceProductImpressionTransfer();
-            $productImpressionTransfer->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED]);
-            $productImpressionTransfer->setId(\str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]));
-            $productImpressionTransfer->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED]);
-            $productImpressionTransfer->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]));
-            $productImpressionTransfer->setList($list);
-            $productImpressionTransfer->setPosition($index);
+                $productImpressionTransfer = new EnhancedEcommerceProductImpressionTransfer();
+                $productImpressionTransfer->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED]);
+                $productImpressionTransfer->setId(\str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]));
+                $productImpressionTransfer->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED]);
+                $productImpressionTransfer->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]));
+                $productImpressionTransfer->setList($list);
+                $productImpressionTransfer->setPosition($index);
 
-            $productImpressions['ec_impressions']['impressions'][] = [
-                $productImpressionTransfer->toArray()
-            ];
+                $productImpressions['ec_impressions']['impressions'][] = [
+                    $productImpressionTransfer->toArray()
+                ];
+            } catch (\Exception $e) {
+                continue;
+            }
         }
 
         return $productImpressions;
