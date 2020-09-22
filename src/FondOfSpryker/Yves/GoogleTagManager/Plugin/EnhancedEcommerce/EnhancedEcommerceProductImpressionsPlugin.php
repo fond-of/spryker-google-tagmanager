@@ -62,7 +62,7 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
             }
 
             $productCount++;
-            $productImpressions['ec_impressions']['impressions'][] = $this->createEnhancedEcommerceProductImpressionTransfer($product, $list, $productCount)->toArray(),
+            $productImpressions['ec_impressions']['impressions'][] = $this->createEnhancedEcommerceProductImpressionTransfer($product, $list, $productCount)->toArray();
         }
 
         return $productImpressions;
