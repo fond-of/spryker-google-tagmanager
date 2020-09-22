@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use Generated\Shared\Transfer\EnhancedEcommerceProductImpressionTransfer;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
@@ -12,6 +13,8 @@ use Twig_Environment;
  */
 class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implements EnhancedEcommercePageTypePluginInterface
 {
+    use LoggerTrait;
+
     public const ATTRIBUTE = 'attributes';
     public const PRICE = 'price';
     public const ABSTRACT_SKU = 'abstract_sku';
@@ -46,6 +49,7 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
      */
     protected function renderProductImpressions(array $products, string $list): array
     {
+        $productCount = 0;
         $productImpressions = [
             'ec_impressions' => [
                 'currencyCode' => $this->getFactory()->getStore()->getCurrencyIsoCode(),
@@ -53,29 +57,59 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
             ]
         ];
 
-        $index = 0;
-
         foreach ($products as $product) {
-            try {
-                $index++;
-
-                $productImpressionTransfer = new EnhancedEcommerceProductImpressionTransfer();
-                $productImpressionTransfer->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED]);
-                $productImpressionTransfer->setId(\str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]));
-                $productImpressionTransfer->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED]);
-                $productImpressionTransfer->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]));
-                $productImpressionTransfer->setList($list);
-                $productImpressionTransfer->setPosition($index);
-
-                $productImpressions['ec_impressions']['impressions'][] = [
-                    $productImpressionTransfer->toArray()
-                ];
-            } catch (\Exception $e) {
+            if ($this->arrayKeyExistsInProduct(static::ATTRIBUTE, $product) === false) {
                 continue;
             }
+
+            if ($this->arrayKeyExistsInProduct(static::ABSTRACT_SKU, $product) === false) {
+                continue;
+            }
+
+            if ($this->arrayKeyExistsInProduct(static::ATTR_MODEL_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
+                continue;
+            }
+
+            if ($this->arrayKeyExistsInProduct(static::ATTR_STYLE_UNTRANSLATED, $product[static::ATTRIBUTE]) === false) {
+                continue;
+            }
+
+            $productCount++;
+
+            $productImpressionTransfer = new EnhancedEcommerceProductImpressionTransfer();
+            $productImpressionTransfer->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED]);
+            $productImpressionTransfer->setId(\str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]));
+            $productImpressionTransfer->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED]);
+            $productImpressionTransfer->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]));
+            $productImpressionTransfer->setList($list);
+            $productImpressionTransfer->setPosition($productCount);
+
+            $productImpressions['ec_impressions']['impressions'][] = [
+                $productImpressionTransfer->toArray()
+            ];
         }
 
         return $productImpressions;
+    }
+
+    /**
+     * @param string $key
+     * @param array $product
+     *
+     * @return bool
+     */
+    protected function arrayKeyExistsInProduct(string $key, array $product): bool
+    {
+        if (\array_key_exists($key, $product)) {
+            return true;
+        }
+
+        $this->getLogger()->alert(sprintf('GoogleTagManager: Could not add product (%s) to product-impressions, index %s not exists',
+            $product['id_product_abstract'],
+            $key
+        ));
+
+        return false;
     }
 
     /**
