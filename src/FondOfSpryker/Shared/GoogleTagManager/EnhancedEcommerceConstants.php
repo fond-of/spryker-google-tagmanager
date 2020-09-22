@@ -41,6 +41,7 @@ interface EnhancedEcommerceConstants
     public const PAGE_TYPE_CHECKOUT_SUMMARY = 'checkoutSummary';
     public const PAGE_TYPE_PURCHASE = 'purchase';
     public const PAGE_TYPE_CATEGORY = 'category';
+    public const PAGE_TYPE_IMPRESSIONS = 'impressions';
 
     public const PAYMENT_METHODS = 'PAYMENT_METHODS';
     public const PAYMENT_METHOD_PREPAYMENT_NAME = 'prepayment';
