@@ -18,6 +18,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommer
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutSummaryPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductDetailPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceProductImpressionsPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhencedEcommercePurchasePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\BrandProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\CouponProductFieldMapperPlugin;
@@ -383,6 +384,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
             EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_PAYMENT => new EnhancedEcommerceCheckoutPaymentPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_CHECKOUT_SUMMARY => new EnhancedEcommerceCheckoutSummaryPlugin(),
             EnhancedEcommerceConstants::PAGE_TYPE_PURCHASE => new EnhencedEcommercePurchasePlugin(),
+            EnhancedEcommerceConstants::PAGE_TYPE_IMPRESSIONS => new EnhancedEcommerceProductImpressionsPlugin(),
         ];
     }
 
