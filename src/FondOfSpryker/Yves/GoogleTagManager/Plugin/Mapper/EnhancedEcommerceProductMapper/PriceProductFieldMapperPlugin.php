@@ -30,7 +30,7 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
             $specialPrice = $productViewTransfer->getAttributes()['special_price'];
 
             $specialPrice = $this->getFactory()
-                ->createMoneyPlugin()
+                ->getMoneyPlugin()
                 ->convertIntegerToDecimal($specialPrice);
 
             $enhancedEcommerceProductTransfer->setPrice((string)$specialPrice);
@@ -43,7 +43,7 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
         }
 
         $price = $this->getFactory()
-            ->createMoneyPlugin()
+            ->getMoneyPlugin()
             ->convertIntegerToDecimal($productViewTransfer->getPrice());
 
         $enhancedEcommerceProductTransfer->setPrice((string)$price);

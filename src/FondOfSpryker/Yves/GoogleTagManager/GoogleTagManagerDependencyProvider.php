@@ -36,7 +36,14 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\SalePricePlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductIdPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductNamePlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductPriceExcludingTaxPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductPricePlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductSalePricePlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductSkuPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductTaxPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductTaxRatePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\BrandPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\EanPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\ImageUrlPlugin;
@@ -88,7 +95,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->provideCartClient($container);
         $this->provideProductClient($container);
         $this->provideTaxProductConnectorClient($container);
-        $this->provideMoneyPlugin($container);
+        $this->addMoneyPlugin($container);
         $this->provideSessionClient($container);
         $this->addProductImageStorageClient($container);
         $this->addProductVariableBuilderPlugins($container);
@@ -159,11 +166,11 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function provideMoneyPlugin(Container $container): Container
+    protected function addMoneyPlugin(Container $container): Container
     {
-        $container[static::PLUGIN_MONEY] = function () {
+        $container->set(static::PLUGIN_MONEY, function () {
             return new MoneyPlugin();
-        };
+        });
 
         return $container;
     }
@@ -202,7 +209,14 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function getProductVariableBuilderPlugins(): array
     {
         return [
-            new SalePricePlugin(),
+            new ProductIdPlugin(),
+            new ProductNamePlugin(),
+            new ProductSkuPlugin(),
+            new ProductPricePlugin(),
+            new ProductPriceExcludingTaxPlugin(),
+            new ProductSalePricePlugin(),
+            new ProductTaxRatePlugin(),
+            new ProductTaxPlugin(),
         ];
     }
 

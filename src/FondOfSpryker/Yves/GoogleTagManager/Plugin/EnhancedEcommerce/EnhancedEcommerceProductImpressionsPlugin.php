@@ -110,7 +110,7 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
             ->setName($product[static::ATTRIBUTE][static::ATTR_MODEL_UNTRANSLATED])
             ->setId(str_replace('Abstract-', '', $product[static::ABSTRACT_SKU]))
             ->setVariant($product[static::ATTRIBUTE][static::ATTR_STYLE_UNTRANSLATED])
-            ->setPrice($this->getFactory()->createMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]))
+            ->setPrice($this->getFactory()->getMoneyPlugin()->convertIntegerToDecimal($product[static::PRICE]))
             ->setList($listType);
         $productImpressionTransfer->setPosition($productCount);
 

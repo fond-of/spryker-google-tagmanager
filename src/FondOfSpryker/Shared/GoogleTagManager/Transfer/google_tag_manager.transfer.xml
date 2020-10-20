@@ -26,6 +26,7 @@
         <property name="productPriceExcludingTax" type="float" />
         <property name="productTax" type="float" />
         <property name="productTaxRate" type="float" />
+        <property name="salePrice" type="float" />
     </transfer>
 
     <transfer name="GoogleTagManagerNewsletterData">

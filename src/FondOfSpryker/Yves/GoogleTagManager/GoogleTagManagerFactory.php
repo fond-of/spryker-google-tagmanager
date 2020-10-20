@@ -58,7 +58,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createProductVariableBuilder(): ProductVariableBuilder
     {
         return new ProductVariableBuilder(
-            $this->createMoneyPlugin(),
+            $this->getMoneyPlugin(),
             $this->getTaxProductConnectorClient(),
             $this->getProductVariableBuilderPlugins()
         );
@@ -70,7 +70,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createCategoryVariableBuilder(): CategoryVariableBuilder
     {
         return new CategoryVariableBuilder(
-            $this->createMoneyPlugin(),
+            $this->getMoneyPlugin(),
             $this->getCategoryVariableBuilderPlugins()
         );
     }
@@ -92,7 +92,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createOrderVariableBuilder(): OrderVariableBuilder
     {
         return new OrderVariableBuilder(
-            $this->createMoneyPlugin(),
+            $this->getMoneyPlugin(),
             $this->getCartClient(),
             $this->getProductStorageClient(),
             $this->getStore(),
@@ -107,7 +107,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createQuoteVariableBuilder(): QuoteVariableBuilder
     {
         return new QuoteVariableBuilder(
-            $this->createMoneyPlugin(),
+            $this->getMoneyPlugin(),
             $this->getQuoteVariableBuilderPlugins(),
             $this->createTransactionProductsVariableBuilder()
         );
@@ -119,7 +119,7 @@ class GoogleTagManagerFactory extends AbstractFactory
     protected function createTransactionProductsVariableBuilder(): TransactionProductsVariableBuilderInterface
     {
         return new TransactionProductsVariableBuilder(
-            $this->createMoneyPlugin(),
+            $this->getMoneyPlugin(),
             $this->getProductStorageClient(),
             $this->getProductImageStorageClient(),
             $this->getTransactionProductVariableBuilderPlugins(),
@@ -207,7 +207,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      *
      * @return \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
      */
-    public function createMoneyPlugin(): MoneyPluginInterface
+    public function getMoneyPlugin(): MoneyPluginInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PLUGIN_MONEY);
     }
