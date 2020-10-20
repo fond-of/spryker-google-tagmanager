@@ -2,13 +2,18 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
+use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+
 interface DefaultVariableBuilderPluginInterface
 {
     /**
-     * @param array $variables
+     * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
      * @param array $params
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
      */
-    public function handle(array $variables, array $params = []): array;
+    public function handle(
+        GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
+        array $params = []
+    ): GooleTagManagerDefaultTransfer;
 }

@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\ProductVariableBuilder;
 use Twig_Environment;
 
@@ -27,7 +27,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
     protected $variableBuildersCollectionMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilder|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\DefaultVariableBuilderPlugin|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $defaultVariableBuilderMock;
 
@@ -64,7 +64,7 @@ class GoogleTagManagerTwigExtensionTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->defaultVariableBuilderMock = $this->getMockBuilder(DefaultVariableBuilder::class)
+        $this->defaultVariableBuilderMock = $this->getMockBuilder(DefaultVariableBuilderPlugin::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

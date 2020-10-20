@@ -1,13 +1,14 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer;
 use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class CategoryVariableBuilder
+class CategoryVariableBuilder extends AbstractPlugin
 {
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
@@ -45,7 +46,7 @@ class CategoryVariableBuilder
         $googleTagManagerCategoryTransfer = new GooleTagManagerCategoryTransfer();
         $googleTagManagerCategoryTransfer->setIdCategory($category['id_category']);
         $googleTagManagerCategoryTransfer->setName($category['name']);
-        $googleTagManagerCategoryTransfer->setSize(\count($products));
+        $googleTagManagerCategoryTransfer->setSize(count($products));
 
         foreach ($products as $product) {
             $gooleTagManagerCategoryProductTransfer = new GooleTagManagerCategoryProductTransfer();
@@ -78,7 +79,7 @@ class CategoryVariableBuilder
      */
     protected function getProductName(array $product): string
     {
-        if (!\array_key_exists('attributes', $product)) {
+        if (!array_key_exists('attributes', $product)) {
             return $product['abstract_name'];
         }
 

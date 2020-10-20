@@ -21,7 +21,7 @@ class CustomerEmailHashVariableBuilderPluginTest extends Unit
     protected $cartClientMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultCurrencyPlugin
      */
     protected $plugin;
 

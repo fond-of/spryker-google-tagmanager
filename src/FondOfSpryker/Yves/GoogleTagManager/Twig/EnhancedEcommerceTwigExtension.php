@@ -52,8 +52,6 @@ class EnhancedEcommerceTwigExtension extends TwigExtension
      * @param \Symfony\Component\HttpFoundation\Request|null $request
      * @param array $params
      *
-     * @throws
-     *
      * @return string
      */
     public function renderEnhancedEcommerce(Twig_Environment $twig, string $page, ?Request $request, array $params = []): string

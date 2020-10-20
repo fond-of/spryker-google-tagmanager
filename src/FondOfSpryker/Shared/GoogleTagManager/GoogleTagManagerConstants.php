@@ -12,9 +12,9 @@ interface GoogleTagManagerConstants
     public const ATTRIBUTE_SPECIAL_PRICE_FROM = 'ATTRIBUTE_SPECIAL_PRICE_FROM';
     public const ATTRIBUTE_SPECIAL_PRICE_TO = 'ATTRIBUTE_SPECIAL_PRICE_TO';
 
-    public const PAGE_TYPE_CATEGORY = "category";
-    public const PAGE_TYPE_ORDER = "order";
-    public const PAGE_TYPE_PRODUCT = "product";
+    public const PAGE_TYPE_CATEGORY = 'category';
+    public const PAGE_TYPE_ORDER = 'order';
+    public const PAGE_TYPE_PRODUCT = 'product';
     public const PAGE_TYPE_DEFAULT = 'default';
     public const PAGE_TYPE_QUOTE = 'quote';
     public const PAGE_TYPE_NEWSLETTER_SUBSCRIBE = 'newsletter_subscribe';

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper;
 
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;

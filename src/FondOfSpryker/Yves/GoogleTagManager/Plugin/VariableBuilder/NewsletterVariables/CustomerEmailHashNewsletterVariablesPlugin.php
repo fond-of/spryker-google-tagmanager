@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterV
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Session\GoogleTagManagerSessionHandlerInterface;
 
-class CustomerEmailHashNewsletterVariablesPlugin implements NewsletterVariablesPluginInterface
+class CustomerEmailHashNewsletterVariablesPlugin
 {
     public const EMAIL = 'email';
     public const EXTERNAL_ID_HASH = 'external_id_hash';

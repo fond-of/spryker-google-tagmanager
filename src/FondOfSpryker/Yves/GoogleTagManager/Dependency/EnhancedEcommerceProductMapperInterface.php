@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency;
 
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;

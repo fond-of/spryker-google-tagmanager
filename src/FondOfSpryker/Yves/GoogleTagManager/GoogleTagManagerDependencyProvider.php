@@ -30,12 +30,14 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\VariantProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\ProductSkuCategoryVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CustomerEmailHashVariableBuilderPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultCurrencyPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\InternalVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductIdPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductNamePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductPriceExcludingTaxPlugin;
@@ -68,8 +70,13 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const TAX_PRODUCT_CONNECTOR_CLIENT = 'TAX_PRODUCT_CONNECTOR_CLIENT';
     public const PLUGIN_MONEY = 'PLUGIN_MONEY';
     public const SESSION_CLIENT = 'SESSION_CLIENT';
-    public const PRODUCT_VARIABLE_BUILDER_PLUGINS = 'PRODUCT_VARIABLE_BUILDER_PLUGINS';
-    public const DEFAULT_VARIABLE_BUILDER_PLUGINS = 'DEFAULT_VARIABLE_BUILDER_PLUGINS';
+
+    public const PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS = 'PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS';
+    public const PRODUCT_VARIABLE_BUILDER_PLUGIN = 'PRODUCT_VARIABLE_BUILDER_PLUGIN';
+
+    public const DEFAULT_VARIABLE_BUILDER_FIELD_PLUGINS = 'DEFAULT_VARIABLE_BUILDER_FIELD_PLUGINS';
+    public const DEFAULT_VARIABLE_BUILDER_PLUGIN = 'DEFAULT_VARIABLE_BUILDER_PLUGIN';
+
     public const CATEGORY_VARIABLE_BUILDER_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_PLUGINS';
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
     public const QUOTE_VARIABLE_BUILDER_PLUGINS = 'QUOTE_VARIABLE_BUILDER_PLUGINS';
@@ -98,9 +105,15 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addMoneyPlugin($container);
         $this->provideSessionClient($container);
         $this->addProductImageStorageClient($container);
-        $this->addProductVariableBuilderPlugins($container);
+
+        $this->addDefaultVariableBuilderPlugin($container);
+        $this->addDefaultVariableBuilderFieldPlugins($container);
+
+        $this->addProductVariableBuilderPlugin($container);
+        $this->addProductVariableBuilderFieldPlugins($container);
+
         $this->addCategoryVariableBuilderPlugins($container);
-        $this->addDefaultVariableBuilderPlugins($container);
+
         $this->addOrderVariableBuilderPlugins($container);
         $this->addQuoteVariableBuilderPlugins($container);
         $this->addTransactionProductVariableBuilderPlugins($container);
@@ -115,6 +128,34 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addNewsletterControllerEventHandler($container);
         $this->addEnhancedEcommerceProductMapperPlugin($container);
         $this->addCartControllerEventHandler($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addProductVariableBuilderPlugin(Container $container): Container
+    {
+        $container->set(static::PRODUCT_VARIABLE_BUILDER_PLUGIN, function () {
+            return new ProductVariableBuilder();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addDefaultVariableBuilderPlugin(Container $container): Container
+    {
+        $container->set(static::DEFAULT_VARIABLE_BUILDER_PLUGIN, function () {
+            return new DefaultVariableBuilderPlugin();
+        });
 
         return $container;
     }
@@ -194,9 +235,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function addProductVariableBuilderPlugins(Container $container): Container
+    protected function addProductVariableBuilderFieldPlugins(Container $container): Container
     {
-        $container[static::PRODUCT_VARIABLE_BUILDER_PLUGINS] = function () {
+        $container[static::PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
             return $this->getProductVariableBuilderPlugins();
         };
 
@@ -275,9 +316,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function addDefaultVariableBuilderPlugins(Container $container): Container
+    protected function addDefaultVariableBuilderFieldPlugins(Container $container): Container
     {
-        $container[static::DEFAULT_VARIABLE_BUILDER_PLUGINS] = function () {
+        $container[static::DEFAULT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
             return $this->getDefaultVariableBuilderPlugins();
         };
 
@@ -292,7 +333,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         return [
             new CustomerEmailHashVariableBuilderPlugin(),
             new StoreNameVariableBuilderPlugin(),
-            new CurrencyVariableBuilderPlugin(),
+            new DefaultCurrencyPlugin(),
             new InternalVariableBuilderPlugin(),
         ];
     }

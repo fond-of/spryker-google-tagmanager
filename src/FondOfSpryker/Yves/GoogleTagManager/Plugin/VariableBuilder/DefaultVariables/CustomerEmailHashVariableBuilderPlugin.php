@@ -1,9 +1,9 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
 use Generated\Shared\Transfer\AddressTransfer;
+use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -13,31 +13,31 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class CustomerEmailHashVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     /**
-     * @param array $variables
+     * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
      * @param array $params
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
      */
-    public function handle(array $variables, array $params = []): array
-    {
+    public function handle(
+        GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
+        array $params = []
+    ): GooleTagManagerDefaultTransfer {
         $quoteTransfer = $this->getFactory()
             ->getCartClient()
             ->getQuote();
 
         if (!$quoteTransfer instanceof QuoteTransfer) {
-            return [];
+            return $gooleTagManagerDefaultTransfer;
         }
 
         if (!$quoteTransfer->getBillingAddress() instanceof AddressTransfer) {
-            return [];
+            return $gooleTagManagerDefaultTransfer;
         }
 
         if (!$quoteTransfer->getBillingAddress()->getEmail()) {
-            return [];
+            return $gooleTagManagerDefaultTransfer;
         }
 
-        return [
-            'externalIdHash' => \sha1($quoteTransfer->getBillingAddress()->getEmail()),
-        ];
+        $gooleTagManagerDefaultTransfer->setExternalIdHash(sha1($quoteTransfer->getBillingAddress()->getEmail()));
     }
 }

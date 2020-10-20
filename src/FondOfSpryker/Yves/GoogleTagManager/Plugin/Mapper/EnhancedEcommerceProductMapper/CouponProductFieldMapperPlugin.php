@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper;
 
 use Generated\Shared\Transfer\EnhancedEcommerceProductTransfer;
@@ -23,10 +22,10 @@ class CouponProductFieldMapperPlugin implements ProductFieldMapperPluginInterfac
             return;
         }
 
-        if (!\is_array($params[static::FIELD_NAME])) {
+        if (!is_array($params[static::FIELD_NAME])) {
             return;
         }
 
-        $enhancedEcommerceProductTransfer->setCoupon(\rtrim(\implode(',', $params[static::FIELD_NAME]), ','));
+        $enhancedEcommerceProductTransfer->setCoupon(rtrim(implode(',', $params[static::FIELD_NAME]), ','));
     }
 }

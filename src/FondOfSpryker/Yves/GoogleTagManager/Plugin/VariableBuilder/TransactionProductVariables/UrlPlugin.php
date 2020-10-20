@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig;
@@ -16,8 +15,6 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
     protected $config;
 
     /**
-     * UrlPlugin constructor.
-     *
      * @param \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig $config
      */
     public function __construct(GoogleTagManagerConfig $config)
@@ -42,7 +39,7 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
             return [];
         }
 
-        return [static::FIELD_NAME => \sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
+        return [static::FIELD_NAME => sprintf('%s/%s/%s', $this->getHost(), $this->getUrlLanguageKey($locale), $this->getUrlKey($itemTransfer, $locale))];
     }
 
     /**
@@ -62,7 +59,7 @@ class UrlPlugin implements TransactionProductVariableBuilderPluginInterface
      */
     protected function getUrlLanguageKey(string $locale): string
     {
-        $locale = \explode('_', $locale);
+        $locale = explode('_', $locale);
 
         return $locale[0];
     }

@@ -3,6 +3,14 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
 
+    <transfer name="GooleTagManagerDefault">
+        <property name="pageType" type="string" />
+        <property name="store" type="string" />
+        <property name="internalTraffic" type="bool" />
+        <property name="currency" type="string" />
+        <property name="externalIdHash" type="string" />
+    </transfer>
+
     <transfer name="GooleTagManagerCategory">
         <property name="idCategory" type="int" />
         <property name="name" type="string" />

@@ -30,8 +30,6 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @throws
-     *
      * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
@@ -55,7 +53,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
                         'shipping' => $this->getShipping() / 100,
                         'coupon' => $this->getDiscountCode($orderTransfer),
                     ],
-                    'products' => \array_values($this->getProducts($orderTransfer)),
+                    'products' => array_values($this->getProducts($orderTransfer)),
                 ],
             ]);
 
@@ -111,8 +109,6 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @throws
-     *
      * @return string
      */
     protected function getDiscountCode(OrderTransfer $orderTransfer): string
@@ -123,7 +119,7 @@ class EnhencedEcommercePurchasePlugin extends AbstractPlugin implements Enhanced
             $voucherCodes[] = $discountTransfer->getVoucherCode();
         }
 
-        return \implode(',', $voucherCodes);
+        return implode(',', $voucherCodes);
     }
 
     /**

@@ -8,11 +8,11 @@ use Generated\Shared\Transfer\ProductAbstractTransfer;
 interface ProductVariableBuilderPluginInterface
 {
     /**
-     * @param GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
-     * @param ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
      */
     public function handle(
         GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,

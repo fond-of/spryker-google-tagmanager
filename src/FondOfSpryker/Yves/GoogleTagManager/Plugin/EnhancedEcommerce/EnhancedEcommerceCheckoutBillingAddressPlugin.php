@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
@@ -28,8 +27,6 @@ class EnhancedEcommerceCheckoutBillingAddressPlugin extends AbstractPlugin imple
      * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
-     *
-     * @throws
      *
      * @return string
      */

@@ -8,7 +8,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class StoreNameVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
+class DefaultCurrencyPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
@@ -20,6 +20,6 @@ class StoreNameVariableBuilderPlugin extends AbstractPlugin implements DefaultVa
         GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
         array $params = []
     ): GooleTagManagerDefaultTransfer {
-        return $gooleTagManagerDefaultTransfer->setStore($this->getFactory()->getStore()->getStoreName());
+        return $gooleTagManagerDefaultTransfer->setCurrency($this->getFactory()->getStore()->getCurrencyIsoCode());
     }
 }

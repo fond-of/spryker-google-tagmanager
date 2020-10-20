@@ -3,40 +3,22 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Twig;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Config\Config;
 use Spryker\Shared\Tax\TaxConstants;
-use Spryker\Shared\Twig\TwigExtension;
+use SprykerShop\Yves\ShopApplication\Plugin\AbstractTwigExtensionPlugin;
 use Twig\Environment;
 use Twig_SimpleFunction;
 
-class GoogleTagManagerTwigExtension extends TwigExtension
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
+ */
+class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
 {
     public const FUNCTION_GOOGLE_TAG_MANAGER = 'googleTagManager';
     public const FUNCTION_DATA_LAYER = 'dataLayer';
-
-    /**
-     * @var \Silex\Application
-     */
-    protected $app;
-
-    /**
-     * @var string
-     */
-    protected $containerID;
-
-    /**
-     * @var \Spryker\Client\Cart\CartClientInterface
-     */
-    protected $cartClient;
-
-    /**
-     * @var \Spryker\Client\Session\SessionClientInterface
-     */
-    protected $sessionClient;
 
     /**
      * @var array
@@ -44,40 +26,9 @@ class GoogleTagManagerTwigExtension extends TwigExtension
     protected $dataLayerVariables = [];
 
     /**
-     * @var bool
-     */
-    protected $isEnabled;
-
-    /**
-     * @var array
-     */
-    protected $variableBuilders;
-
-    /**
-     * @param string $containerID
-     * @param bool $isEnabled
-     * @param array $variableBuilders
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface $sessionClient
-     */
-    public function __construct(
-        string $containerID,
-        bool $isEnabled,
-        array $variableBuilders,
-        GoogleTagManagerToCartClientInterface $cartClient,
-        GoogleTagManagerToSessionClientInterface $sessionClient
-    ) {
-        $this->sessionClient = $sessionClient;
-        $this->containerID = $containerID;
-        $this->cartClient = $cartClient;
-        $this->isEnabled = $isEnabled;
-        $this->variableBuilders = $variableBuilders;
-    }
-
-    /**
      * @return array
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             $this->createGoogleTagManagerFunction(),
@@ -123,12 +74,14 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     public function renderGoogleTagManager(Environment $twig, $templateName): string
     {
-        if (!$this->isEnabled || !$this->containerID) {
+        $config = $this->getConfig();
+
+        if (!$config->isEnabled() || !$config->getContainerID()) {
             return '';
         }
 
         return $twig->render($templateName, [
-            'containerID' => $this->containerID,
+            'containerID' => $config->getContainerID(),
         ]);
     }
 
@@ -141,7 +94,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     public function renderDataLayer(Environment $twig, $page, $params): string
     {
-        if (!$this->isEnabled || !$this->containerID) {
+        if (!$this->getConfig()->isEnabled() || !$this->getConfig()->getContainerID()) {
             return '';
         }
 
@@ -155,9 +108,10 @@ class GoogleTagManagerTwigExtension extends TwigExtension
 
                 $this->addProductVariables($productAbstractTransfer);
                 $this->addQuoteVariables();
+
                 break;
 
-            case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
+            /*case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
                 $this->addCategoryVariables($params['category'], $params['products'], $params[GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE]);
                 $this->addQuoteVariables();
                 break;
@@ -170,7 +124,7 @@ class GoogleTagManagerTwigExtension extends TwigExtension
             case GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE:
                 $this->addNewsletterSubscribeVariables($page);
 
-                break;
+                break;*/
 
             default:
                 $this->addQuoteVariables();
@@ -190,9 +144,12 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     protected function addDefaultVariables($page): array
     {
+        $defaultVariableBuilder = $this->getFactory()
+            ->getDefaultVariableBuilderPlugin();
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_DEFAULT]->getVariable($page, [
+            $defaultVariableBuilder->getVariable($page, [
                 'clientIp' => $this->getClientIpAddress(),
             ])
         );
@@ -205,24 +162,29 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     protected function addProductVariables(ProductAbstractTransfer $product): array
     {
+        $productVariableBuilder = $this->getFactory()
+            ->getProductVariableBuilder();
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_PRODUCT]->getVariables($product)
+            $productVariableBuilder->getVariables($product)
         );
     }
 
     /**
      * @param array $category
      * @param array $products
-     * @param $contentType
+     * @param string $contentType
      *
      * @return array
      */
-    protected function addCategoryVariables($category, $products, $contentType): array
+    protected function addCategoryVariables($category, $products, string $contentType): array
     {
+        $categoryVariableBuilder = $this->getFactory()->createCategoryVariableBuilder();
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_CATEGORY]->getVariables($category, $products, $contentType)
+            $categoryVariableBuilder->getVariables($category, $products, $contentType)
         );
     }
 
@@ -231,15 +193,20 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      */
     protected function addQuoteVariables(): array
     {
-        $quoteTransfer = $this->cartClient->getQuote();
+        $quoteVariableBuilder = $this->getFactory()
+            ->createQuoteVariableBuilder();
 
-        if (!$quoteTransfer || count($quoteTransfer->getItems()) === 0) {
+        $quoteTransfer = $this->getFactory()
+            ->getCartClient()
+            ->getQuote();
+
+        if (\count($quoteTransfer->getItems()) === 0) {
             return $this->dataLayerVariables;
         }
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_QUOTE]->getVariables($quoteTransfer, $this->sessionClient->getId())
+            $quoteVariableBuilder->getVariables($quoteTransfer, $this->getFactory()->getSessionClient()->getId())
         );
     }
 
@@ -248,19 +215,28 @@ class GoogleTagManagerTwigExtension extends TwigExtension
      *
      * @return array
      */
-    protected function addOrderVariables(OrderTransfer $orderTransfer)
+    protected function addOrderVariables(OrderTransfer $orderTransfer): array
     {
+        $orderVariableBuilder = $this->getFactory()->createOrderVariableBuilder();
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_ORDER]->getVariables($orderTransfer)
+            $orderVariableBuilder->getVariables($orderTransfer)
         );
     }
 
-    protected function addNewsletterSubscribeVariables(string $page)
+    /**
+     * @param string $page
+     *
+     * @return array
+     */
+    protected function addNewsletterSubscribeVariables(string $page): array
     {
+        $newsletterVariableBuilder = $this->getFactory()->getNewsletterVariableBuilder();
+
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $this->variableBuilders[GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE]->getVariables($page)
+            $newsletterVariableBuilder->getVariables($page)
         );
     }
 

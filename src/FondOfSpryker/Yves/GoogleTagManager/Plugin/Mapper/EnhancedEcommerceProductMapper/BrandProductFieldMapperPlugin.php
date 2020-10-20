@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
@@ -20,7 +19,7 @@ class BrandProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
     {
         $attributes = $productViewTransfer->getAttributes();
 
-        if (!\is_array($attributes) || \count($attributes) === 0) {
+        if (!is_array($attributes) || count($attributes) === 0) {
             return;
         }
 

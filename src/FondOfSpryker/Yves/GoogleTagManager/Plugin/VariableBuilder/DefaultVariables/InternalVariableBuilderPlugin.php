@@ -2,28 +2,36 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
-class InternalVariableBuilderPlugin implements DefaultVariableBuilderPluginInterface
+use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Spryker\Yves\Kernel\AbstractPlugin;
+
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
+ */
+class InternalVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     public const FIELD_CLIENT_IP = 'clientIp';
-    public const FIELD_INTERNAL_IPS = 'internalIps';
-    public const FIELD_INTERNAL_TRAFFIC = 'internalTraffic';
 
     /**
-     * @param array $variables
+     * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
      * @param array $params
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
      */
-    public function handle(array $variables, array $params = []): array
-    {
-        if (!isset($params[static::FIELD_CLIENT_IP], $params[static::FIELD_INTERNAL_IPS])) {
-            return [];
+    public function handle(
+        GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
+        array $params = []
+    ): GooleTagManagerDefaultTransfer {
+        $internalIps = $this->getConfig()->getInternalIps();
+
+        if (!$params[static::FIELD_CLIENT_IP]) {
+            return $gooleTagManagerDefaultTransfer;
         }
 
-        if (!\in_array($params[static::FIELD_CLIENT_IP], $params[static::FIELD_INTERNAL_IPS])) {
-            return [];
+        if (!in_array($params[static::FIELD_CLIENT_IP], $internalIps, true)) {
+            return $gooleTagManagerDefaultTransfer;
         }
 
-        return [static::FIELD_INTERNAL_TRAFFIC => true];
+        return $gooleTagManagerDefaultTransfer->setInternalTraffic(true);
     }
 }

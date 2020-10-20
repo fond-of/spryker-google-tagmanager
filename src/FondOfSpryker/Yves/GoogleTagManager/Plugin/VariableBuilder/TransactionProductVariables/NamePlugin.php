@@ -28,7 +28,7 @@ class NamePlugin implements TransactionProductVariableBuilderPluginInterface
         }
 
         return [
-            static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED]
+            static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED],
         ];
     }
 }

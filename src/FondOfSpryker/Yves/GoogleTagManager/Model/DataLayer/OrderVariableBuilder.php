@@ -115,7 +115,7 @@ class OrderVariableBuilder
     protected function executePlugins(OrderTransfer $orderTransfer, array $variables): array
     {
         foreach ($this->orderVariableBuilderPlugins as $plugin) {
-            $variables = \array_merge($variables, $plugin->handle($orderTransfer, $variables));
+            $variables = array_merge($variables, $plugin->handle($orderTransfer, $variables));
         }
 
         return $variables;
@@ -133,7 +133,7 @@ class OrderVariableBuilder
         $returnCollection = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
-            if (\array_key_exists($itemTransfer->getSku(), $collection)) {
+            if (array_key_exists($itemTransfer->getSku(), $collection)) {
                 $quantity = $collection[$itemTransfer->getSku()]->getQuantity() + 1;
                 $collection[$itemTransfer->getSku()]->setQuantity($quantity);
 
@@ -160,7 +160,7 @@ class OrderVariableBuilder
         $collection = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
-            if (!\in_array($itemTransfer->getSku(), $collection)) {
+            if (!in_array($itemTransfer->getSku(), $collection)) {
                 $collection[] = $itemTransfer->getSku();
             }
         }
@@ -214,7 +214,7 @@ class OrderVariableBuilder
      */
     protected function getProductName(ProductViewTransfer $product): string
     {
-        if (!\array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
+        if (!array_key_exists(GoogleTagManagerConstants::NAME_UNTRANSLATED, $product->getAttributes())) {
             return $product->getName();
         }
 
@@ -281,7 +281,7 @@ class OrderVariableBuilder
         $expenses = [];
 
         foreach ($orderTransfer->getExpenses() as $expense) {
-            $expenses[$expense->getType()] = (!\array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
+            $expenses[$expense->getType()] = (!array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
         }
 
         return $expenses;
@@ -314,7 +314,7 @@ class OrderVariableBuilder
     {
         $expenses = $this->getExpenses($orderTransfer);
 
-        if (\array_key_exists(ShipmentConfig::SHIPMENT_EXPENSE_TYPE, $expenses)) {
+        if (array_key_exists(ShipmentConfig::SHIPMENT_EXPENSE_TYPE, $expenses)) {
             return $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConfig::SHIPMENT_EXPENSE_TYPE];
         }
 

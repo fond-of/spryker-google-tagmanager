@@ -18,8 +18,6 @@ class EnhancedEcommerceProductImpressions extends AbstractPlugin implements Enha
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @throws
-     *
      * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
@@ -43,7 +41,7 @@ class EnhancedEcommerceProductImpressions extends AbstractPlugin implements Enha
                 ->getEnhancedEcommerceProductMapperPlugin()
                 ->map($productViewTransfer);
 
-            $collection[] = \array_merge($enhancedEcommerceProductTransfer->toArray(), [
+            $collection[] = array_merge($enhancedEcommerceProductTransfer->toArray(), [
                 'list' => $category['category_key'],
                 'position' => $counter++,
             ]);

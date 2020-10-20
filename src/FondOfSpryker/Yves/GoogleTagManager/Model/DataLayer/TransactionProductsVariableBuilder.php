@@ -71,12 +71,12 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             $product = $this->getDefaultVariables($itemTransfer);
-            $product = \array_merge($product, $this->executePlugins($itemTransfer, ['locale' => $this->locale]));
+            $product = array_merge($product, $this->executePlugins($itemTransfer, ['locale' => $this->locale]));
 
             $products[$itemTransfer->getSku()] = $product;
         }
 
-        return \array_values($products);
+        return array_values($products);
     }
 
     /**
@@ -99,11 +99,11 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
             $this->addImagesToItemTransfer($itemTransfer);
 
             $product = $this->getDefaultVariables($itemTransfer);
-            $product = \array_merge($product, $this->executePlugins($itemTransfer, ['locale' => $this->locale]));
+            $product = array_merge($product, $this->executePlugins($itemTransfer, ['locale' => $this->locale]));
             $products[$itemTransfer->getSku()] = $product;
         }
 
-        return \array_values($products);
+        return array_values($products);
     }
 
     /**
@@ -133,7 +133,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
         $product = [];
 
         foreach ($this->plugins as $plugin) {
-            $product = \array_merge($product, $plugin->handle($itemTransfer, ['locale' => $this->locale]));
+            $product = array_merge($product, $plugin->handle($itemTransfer, ['locale' => $this->locale]));
         }
 
         return $product;
@@ -163,7 +163,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
      */
     protected function addAbstractAttributesToItemTransfer(ItemTransfer $itemTransfer): ItemTransfer
     {
-        if (\count($itemTransfer->getAbstractAttributes()) === 0) {
+        if (count($itemTransfer->getAbstractAttributes()) === 0) {
             $productDataAbstract = $this->storageClient->findProductAbstractStorageData(
                 $itemTransfer->getIdProductAbstract(),
                 $this->locale
@@ -195,7 +195,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
             foreach ($productAbstractImageStorageTransfer->getImageSets() as $imageSetStorageTransfer) {
                 foreach ($imageSetStorageTransfer->getImages() as $productImageStorageTransfer) {
-                    $productImageTransfer = (new ProductImageTransfer)->fromArray($productImageStorageTransfer->toArray());
+                    $productImageTransfer = (new ProductImageTransfer())->fromArray($productImageStorageTransfer->toArray());
 
                     $itemTransfer->addImage($productImageTransfer);
                 }

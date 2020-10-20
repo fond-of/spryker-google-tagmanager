@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
+use Exception;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
@@ -15,18 +16,17 @@ class ProductTaxPlugin extends AbstractPlugin implements ProductVariableBuilderP
     use LoggerTrait;
 
     /**
-     * @param GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
-     * @param ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
      */
     public function handle(
         GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
         ProductAbstractTransfer $product,
         array $params = []
-    ): GooleTagManagerProductDetailTransfer
-    {
+    ): GooleTagManagerProductDetailTransfer {
         try {
             $productAbstract = $this->getFactory()
                 ->getTaxProductConnectorClient()
@@ -37,14 +37,15 @@ class ProductTaxPlugin extends AbstractPlugin implements ProductVariableBuilderP
                     $productAbstract->getTaxAmount()
                 );
 
-                return $gooleTagManagerProductDetailTransfer->setProductTax($tax);
+                $gooleTagManagerProductDetailTransfer->setProductTax($tax);
             }
-
-            return $gooleTagManagerProductDetailTransfer->setProductTax(0);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: something went wrong in %s', __CLASS__
+                'GoogleTagManager: something went wrong in %s',
+                self::class
             ), ['product' => json_encode($product)]);
         }
+
+        return $gooleTagManagerProductDetailTransfer;
     }
 }

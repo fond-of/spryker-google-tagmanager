@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use Symfony\Component\HttpFoundation\Request;

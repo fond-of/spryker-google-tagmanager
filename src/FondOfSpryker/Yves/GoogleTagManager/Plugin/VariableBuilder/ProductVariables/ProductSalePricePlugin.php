@@ -27,22 +27,21 @@ class ProductSalePricePlugin extends AbstractPlugin implements ProductVariableBu
     public function __construct()
     {
         $this->moneyPlugin = $this->getFactory()->getMoneyPlugin();
-        $this->config = $this->getFactory()->getGoogleTagManagerConfig();
+        $this->config = $this->getConfig();
     }
 
     /**
-     * @param GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
-     * @param ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
      */
     public function handle(
         GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
         ProductAbstractTransfer $product,
         array $params = []
-    ): GooleTagManagerProductDetailTransfer
-    {
+    ): GooleTagManagerProductDetailTransfer {
         $specialPrice = $this->getProductSpecialPrice($product);
 
         return $gooleTagManagerProductDetailTransfer->setSalePrice($specialPrice);

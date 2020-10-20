@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
+use Exception;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
@@ -15,32 +16,35 @@ class ProductPriceExcludingTaxPlugin extends AbstractPlugin implements ProductVa
     use LoggerTrait;
 
     /**
-     * @param GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
-     * @param ProductAbstractTransfer $product
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
      */
     public function handle(
         GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
         ProductAbstractTransfer $product,
         array $params = []
-    ): GooleTagManagerProductDetailTransfer
-    {
+    ): GooleTagManagerProductDetailTransfer {
         try {
-            $price = $this->getFactory()
+            $product = $this->getFactory()
                 ->getTaxProductConnectorClient()
                 ->getNetPriceForProduct($product);
 
             $priceExcludingTax = $this->getFactory()
                 ->getMoneyPlugin()
-                ->convertIntegerToDecimal($price);
+                ->convertIntegerToDecimal($product->getNetPrice());
 
-            return $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
-        } catch (\Exception $e) {
+            $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
+        } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s', $product::PRICE, __CLASS__
+                'GoogleTagManager: attribute %s not found in %s',
+                $product::PRICE,
+                self::class
             ), ['product' => json_encode($product)]);
         }
+
+        return $gooleTagManagerProductDetailTransfer;
     }
 }

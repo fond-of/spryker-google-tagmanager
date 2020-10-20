@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce;
 
 interface ProductModelBuilderInterface
