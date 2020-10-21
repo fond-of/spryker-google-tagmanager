@@ -22,7 +22,7 @@ class NameProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
     ): void {
         $attributes = $productViewTransfer->getAttributes();
 
-        if (!\is_array($attributes) || \count($attributes) === 0) {
+        if (!is_array($attributes) || count($attributes) === 0) {
             $enhancedEcommerceProductTransfer->setName($productViewTransfer->getName());
 
             return;

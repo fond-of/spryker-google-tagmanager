@@ -17,7 +17,7 @@ class ProductSkuCategoryVariableBuilderPlugin implements CategoryVariableBuilder
         $skus = [];
 
         foreach ($gooleTagManagerCategoryTransfer->getCategoryProducts() as $product) {
-            $sku = \str_replace('ABSTRACT-', '', strtoupper($product->getSku()));
+            $sku = str_replace('ABSTRACT-', '', strtoupper($product->getSku()));
             $product->setSku($sku);
 
             $skus[] = $sku;

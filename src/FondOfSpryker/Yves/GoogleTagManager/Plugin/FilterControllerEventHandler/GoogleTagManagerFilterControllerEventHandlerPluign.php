@@ -20,7 +20,7 @@ class GoogleTagManagerFilterControllerEventHandlerPluign extends AbstractPlugin 
     protected function checkForValidController(string $className): bool
     {
         foreach ($this->getConfig()->getListenToControllersGoogleTagManager() as $controller) {
-            if (\strpos($className, $controller) !== false) {
+            if (strpos($className, $controller) !== false) {
                 return true;
             }
         }
@@ -31,17 +31,15 @@ class GoogleTagManagerFilterControllerEventHandlerPluign extends AbstractPlugin 
     /**
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
      *
-     * @throws
-     *
      * @return void
      */
     public function handle(FilterControllerEvent $event): void
     {
-        if (!\is_array($event->getController())) {
+        if (!is_array($event->getController())) {
             return;
         }
 
-        if ($this->checkForValidController(\get_class($event->getController()[0])) === false) {
+        if ($this->checkForValidController(get_class($event->getController()[0])) === false) {
             return;
         }
 

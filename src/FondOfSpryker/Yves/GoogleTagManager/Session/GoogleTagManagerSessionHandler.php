@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
@@ -39,7 +38,7 @@ class GoogleTagManagerSessionHandler implements GoogleTagManagerSessionHandlerIn
     {
         $newsletterDataArray = $this->sessionClient->get(GoogleTagManagerConstants::SESSION_NEWSLETTER_DATA);
 
-        if (\is_array($newsletterDataArray)) {
+        if (is_array($newsletterDataArray)) {
             return $newsletterDataArray;
         }
 

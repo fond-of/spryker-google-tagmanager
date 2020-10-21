@@ -19,8 +19,6 @@ class EnhancedEcommerceCheckoutSummaryPlugin extends AbstractPlugin implements E
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @throws
-     *
      * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string

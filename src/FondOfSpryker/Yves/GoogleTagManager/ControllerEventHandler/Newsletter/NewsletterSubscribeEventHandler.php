@@ -44,7 +44,7 @@ class NewsletterSubscribeEventHandler implements ControllerEventHandlerInterface
         $email = $newsletterSubscriptionData[static::NEWSLETTER_SUBSCRIPTION_FORM_EMAIL];
 
         $googleTagManagerNewsletterDataTransfer = new GoogleTagManagerNewsletterDataTransfer();
-        $googleTagManagerNewsletterDataTransfer->setExternalIdHash(\sha1($email));
+        $googleTagManagerNewsletterDataTransfer->setExternalIdHash(sha1($email));
 
         $this->sessionHandler->setNewsletterData($googleTagManagerNewsletterDataTransfer);
     }

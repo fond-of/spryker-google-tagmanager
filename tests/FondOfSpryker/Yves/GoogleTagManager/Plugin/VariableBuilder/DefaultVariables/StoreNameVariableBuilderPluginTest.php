@@ -20,7 +20,7 @@ class StoreNameVariableBuilderPluginTest extends Unit
     protected $storeMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\StoreNameVariableBuilderPlugin
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldStoreNamePlugin
      */
     protected $plugin;
 
@@ -34,7 +34,7 @@ class StoreNameVariableBuilderPluginTest extends Unit
         $this->factoryMock = $this->createMock(GoogleTagManagerFactory::class);
         $this->storeMock = $this->createMock(Store::class);
 
-        $this->plugin = new StoreNameVariableBuilderPlugin();
+        $this->plugin = new DefaultFieldStoreNamePlugin();
         $this->plugin->setFactory($this->factoryMock);
     }
 

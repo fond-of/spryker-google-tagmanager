@@ -21,7 +21,7 @@ class CustomerEmailHashVariableBuilderPluginTest extends Unit
     protected $cartClientMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldCurrencyPlugin
      */
     protected $plugin;
 
@@ -45,7 +45,7 @@ class CustomerEmailHashVariableBuilderPluginTest extends Unit
         $this->quoteTransferMock = $this->createMock(QuoteTransfer::class);
         $this->billingAddressTransfer = $this->createMock(AddressTransfer::class);
 
-        $this->plugin = new CustomerEmailHashVariableBuilderPlugin();
+        $this->plugin = new DefaultFieldCustomerEmailHashPlugin();
         $this->plugin->setFactory($this->factoryMock);
     }
 

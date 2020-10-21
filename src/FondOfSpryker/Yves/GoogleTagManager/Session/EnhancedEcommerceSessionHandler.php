@@ -47,7 +47,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
      */
     public function getChangeProductQuantityEventArray(bool $removeFromSessionAfterOutput = false): array
     {
-        if (!\is_array($this->sessionClient->get(EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY))) {
+        if (!is_array($this->sessionClient->get(EnhancedEcommerceConstants::SESSION_REMOVED_CHANGED_QUANTITY))) {
             return [];
         }
 
@@ -67,7 +67,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
-        if (!\is_array($addedProducts)) {
+        if (!is_array($addedProducts)) {
             return [];
         }
 
@@ -87,7 +87,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $removedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_REMOVED_PRODUCTS);
 
-        if (!\is_array($removedProducts)) {
+        if (!is_array($removedProducts)) {
             return [];
         }
 
@@ -107,15 +107,15 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
-        if (!\is_array($addedProducts)) {
+        if (!is_array($addedProducts)) {
             return null;
         }
 
-        if (!\array_key_exists($sku, $addedProducts)) {
+        if (!array_key_exists($sku, $addedProducts)) {
             return null;
         }
 
-        return $addedProducts[$sku] = (new EnhancedEcommerceProductDataTransfer)->fromArray($addedProducts[$sku]);
+        return $addedProducts[$sku] = (new EnhancedEcommerceProductDataTransfer())->fromArray($addedProducts[$sku]);
     }
 
     /**
@@ -159,8 +159,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     }
 
     /**
-     * @param string $sku
-     * @param int $quanity
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer
      *
      * @return void
      */
@@ -168,11 +167,11 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $addedProducts = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_ADDED_PRODUCTS);
 
-        if (!\is_array($addedProducts) || \count($addedProducts) === 0) {
+        if (!is_array($addedProducts) || count($addedProducts) === 0) {
             return;
         }
 
-        if (!\array_key_exists($ecommerceProductDataTransfer->getSku(), $addedProducts)) {
+        if (!array_key_exists($ecommerceProductDataTransfer->getSku(), $addedProducts)) {
             return;
         }
 
@@ -198,7 +197,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     {
         $purchaseArray = $this->sessionClient->get(EnhancedEcommerceConstants::SESSION_PURCHASE);
 
-        if (!\is_array($purchaseArray)) {
+        if (!is_array($purchaseArray)) {
             return [];
         }
 

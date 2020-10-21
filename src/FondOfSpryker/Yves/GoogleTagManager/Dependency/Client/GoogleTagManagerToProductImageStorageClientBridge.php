@@ -13,8 +13,6 @@ class GoogleTagManagerToProductImageStorageClientBridge implements GoogleTagMana
     protected $productImageStorageClient;
 
     /**
-     * CartPageToProductImageStorageBridge constructor.
-     *
      * @param \FondOfSpryker\Client\ProductImageStorage\ProductImageStorageClientInterface $productImageStorageClient
      */
     public function __construct(ProductImageStorageClientInterface $productImageStorageClient)
@@ -22,6 +20,9 @@ class GoogleTagManagerToProductImageStorageClientBridge implements GoogleTagMana
         $this->productImageStorageClient = $productImageStorageClient;
     }
 
+    /**
+     * @return \Spryker\Client\ProductImageStorage\Storage\ProductAbstractImageStorageReaderInterface
+     */
     public function getProductAbstractImageStorageReader(): ProductAbstractImageStorageReaderInterface
     {
         return $this->productImageStorageClient->getProductAbstractImageStorageReader();

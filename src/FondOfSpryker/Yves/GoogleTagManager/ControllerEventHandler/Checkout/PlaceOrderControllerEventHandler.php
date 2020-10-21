@@ -51,7 +51,7 @@ class PlaceOrderControllerEventHandler implements ControllerEventHandlerInterfac
     {
         $purchase = $this->sessionHandler->getPurchase();
 
-        $this->sessionHandler->setPurchase(\array_merge(
+        $this->sessionHandler->setPurchase(array_merge(
             $purchase,
             ['shipment' => $this->getShippingCost()]
         ));

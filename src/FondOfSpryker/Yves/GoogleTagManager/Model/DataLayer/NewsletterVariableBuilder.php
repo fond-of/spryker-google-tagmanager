@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
@@ -13,7 +12,7 @@ class NewsletterVariableBuilder
     protected $newsletterVariableBuilderPlugins;
 
     /**
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterface[] $defaultVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterfaceField[] $defaultVariableBuilderPlugins
      */
     public function __construct(array $newsletterVariableBuilderPlugins)
     {
@@ -43,7 +42,7 @@ class NewsletterVariableBuilder
     protected function executePlugins(array $variables): array
     {
         foreach ($this->newsletterVariableBuilderPlugins as $plugin) {
-            $variables = \array_merge($variables, $plugin->handle($variables));
+            $variables = array_merge($variables, $plugin->handle($variables));
         }
 
         return $variables;

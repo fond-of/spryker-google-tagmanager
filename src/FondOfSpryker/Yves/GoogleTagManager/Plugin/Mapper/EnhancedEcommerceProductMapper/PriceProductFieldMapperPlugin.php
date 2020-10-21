@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper;
 
 use DateTime;
@@ -30,7 +29,7 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
             $specialPrice = $productViewTransfer->getAttributes()['special_price'];
 
             $specialPrice = $this->getFactory()
-                ->createMoneyPlugin()
+                ->getMoneyPlugin()
                 ->convertIntegerToDecimal($specialPrice);
 
             $enhancedEcommerceProductTransfer->setPrice((string)$specialPrice);
@@ -43,7 +42,7 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
         }
 
         $price = $this->getFactory()
-            ->createMoneyPlugin()
+            ->getMoneyPlugin()
             ->convertIntegerToDecimal($productViewTransfer->getPrice());
 
         $enhancedEcommerceProductTransfer->setPrice((string)$price);
@@ -51,9 +50,10 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
 
     protected function hasValidSpecialPrice(ProductViewTransfer $productViewTransfer): bool
     {
-        if (!isset($productViewTransfer->getAttributes()['special_price']) ||
+        if (
+            !isset($productViewTransfer->getAttributes()['special_price']) ||
             !isset($productViewTransfer->getAttributes()['special_price_from']) ||
-            !\array_key_exists('special_price_to', $productViewTransfer->getAttributes())
+            !array_key_exists('special_price_to', $productViewTransfer->getAttributes())
         ) {
             return false;
         }
@@ -74,7 +74,8 @@ class PriceProductFieldMapperPlugin extends AbstractPlugin implements ProductFie
 
         $current = new DateTime();
 
-        if ($specialPriceFromDate <= $current &&
+        if (
+            $specialPriceFromDate <= $current &&
             ($productViewTransfer->getAttributes()['special_price_to'] === null || $specialPriceToDate >= $current)
         ) {
             return true;

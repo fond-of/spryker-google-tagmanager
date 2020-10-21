@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\Client;
 
 use Spryker\Client\Session\SessionClientInterface;

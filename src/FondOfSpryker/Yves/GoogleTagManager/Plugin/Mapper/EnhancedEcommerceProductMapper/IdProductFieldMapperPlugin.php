@@ -16,7 +16,7 @@ class IdProductFieldMapperPlugin implements ProductFieldMapperPluginInterface
      */
     public function map(ProductViewTransfer $productViewTransfer, EnhancedEcommerceProductTransfer $enhancedEcommerceProductTransfer, array $params): void
     {
-        $sku = \str_replace('ABSTRACT-', '', strtoupper($productViewTransfer->getSku()));
+        $sku = str_replace('ABSTRACT-', '', strtoupper($productViewTransfer->getSku()));
 
         $enhancedEcommerceProductTransfer->setId($sku);
     }

@@ -19,7 +19,7 @@ class CurrencyVariableBuilderPluginTest extends Unit
     protected $storeMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\CurrencyVariableBuilderPlugin
+     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldCurrencyPlugin
      */
     protected $plugin;
 
@@ -33,7 +33,7 @@ class CurrencyVariableBuilderPluginTest extends Unit
         $this->factoryMock = $this->createMock(GoogleTagManagerFactory::class);
         $this->storeMock = $this->createMock(Store::class);
 
-        $this->plugin = new CurrencyVariableBuilderPlugin();
+        $this->plugin = new DefaultFieldCurrencyPlugin();
         $this->plugin->setFactory($this->factoryMock);
     }
 

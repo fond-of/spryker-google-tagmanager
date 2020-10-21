@@ -2,13 +2,16 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
+use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
-class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+class ProductFieldSalePricePlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
     public const FIELD_NAME = 'sale_price';
 
@@ -24,32 +27,25 @@ class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPl
 
     public function __construct()
     {
-        $this->moneyPlugin = $this->getFactory()->createMoneyPlugin();
-        $this->config = $this->getFactory()->getGoogleTagManagerConfig();
+        $this->moneyPlugin = $this->getFactory()->getMoneyPlugin();
+        $this->config = $this->getConfig();
     }
 
     /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return static::FIELD_NAME;
-    }
-
-    /**
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
+     * @param array $params
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
      */
-    public function handle(ProductAbstractTransfer $product): array
-    {
+    public function handle(
+        GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
+        ProductAbstractTransfer $product,
+        array $params = []
+    ): GooleTagManagerProductDetailTransfer {
         $specialPrice = $this->getProductSpecialPrice($product);
 
-        if ($specialPrice === null) {
-            return [];
-        }
-
-        return [static::FIELD_NAME => $specialPrice];
+        return $gooleTagManagerProductDetailTransfer->setSalePrice($specialPrice);
     }
 
     /**
@@ -59,16 +55,16 @@ class SalePricePlugin extends AbstractPlugin implements ProductVariableBuilderPl
      */
     protected function getProductSpecialPrice(ProductAbstractTransfer $product): ?float
     {
-        $this->getFactory()->createMoneyPlugin();
-
-        $time = time();
-
         if (!array_key_exists($this->config->getSpecialPriceAttribute(), $product->getAttributes())) {
             return null;
         }
 
-        $specialPriceAttr = (int)$product->getAttributes()[$this->config->getSpecialPriceAttribute()];
-        $specialPrice = $this->moneyPlugin->convertIntegerToDecimal($specialPriceAttr);
+        $time = time();
+        $specialPriceAttr = (int)$product->getAttributes()[$this->getConfig()->getSpecialPriceAttribute()];
+        $specialPrice = $this->getFactory()
+            ->getMoneyPlugin()
+            ->convertIntegerToDecimal($specialPriceAttr);
+
         $specialPriceFrom = $product->getAttributes()[$this->config->getSpecialPriceFromAttribute()];
         $specialPriceTo = $product->getAttributes()[$this->config->getSpecialPriceToAttribute()];
 

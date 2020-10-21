@@ -28,8 +28,6 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
      *
-     * @throws
-     *
      * @return string
      */
     public function handle(Twig_Environment $twig, Request $request, ?array $params = []): string
@@ -51,7 +49,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->createEnhancedEcommerceSessionHandler()
             ->getAddedProducts(true);
 
-        if (\count($addedProductsData) === 0) {
+        if (count($addedProductsData) === 0) {
             return [];
         }
 
@@ -65,7 +63,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_ADD)
-            ->setEventLabel(\implode(',', $skuList))
+            ->setEventLabel(implode(',', $skuList))
             ->setEcommerce([
                 'add' => [
                     'actionField' => [],
@@ -90,7 +88,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
                 continue;
             }
 
-            \array_push($skuList, $product['id']);
+            array_push($skuList, $product['id']);
         }
 
         return $skuList;
@@ -103,7 +101,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
     {
         $removedProducts = $this->getRemovedProducts();
 
-        if (\count($removedProducts) === 0) {
+        if (count($removedProducts) === 0) {
             return [];
         }
 
@@ -113,7 +111,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->setEvent(EnhancedEcommerceConstants::EVENT_GENERIC)
             ->setEventCategory(EnhancedEcommerceConstants::EVENT_CATEGORY)
             ->setEventAction(EnhancedEcommerceConstants::EVENT_PRODUCT_REMOVE)
-            ->setEventLabel(\implode(',', $skuList))
+            ->setEventLabel(implode(',', $skuList))
             ->setEcommerce([
                     'remove' => [
                         'actionField' => [],
@@ -133,7 +131,7 @@ class EnhancedEcommerceCartPlugin extends AbstractPlugin implements EnhancedEcom
             ->createEnhancedEcommerceSessionHandler()
             ->getRemovedProducts(true);
 
-        if (\count($removedProducts) === 0) {
+        if (count($removedProducts) === 0) {
             return [];
         }
 

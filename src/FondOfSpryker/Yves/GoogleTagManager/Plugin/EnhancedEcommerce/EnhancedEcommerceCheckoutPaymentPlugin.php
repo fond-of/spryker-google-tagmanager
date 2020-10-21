@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce;
 
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
@@ -26,8 +25,6 @@ class EnhancedEcommerceCheckoutPaymentPlugin extends AbstractPlugin implements E
      * @param \Twig_Environment $twig
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array|null $params
-     *
-     * @throws
      *
      * @return string
      */
