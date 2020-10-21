@@ -194,7 +194,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
     protected function addQuoteVariables(): array
     {
         $quoteVariableBuilder = $this->getFactory()
-            ->createQuoteVariableBuilder();
+            ->getQuoteVariableBuilder();
 
         $quoteTransfer = $this->getFactory()
             ->getCartClient()
@@ -206,7 +206,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $quoteVariableBuilder->getVariables($quoteTransfer, $this->getFactory()->getSessionClient()->getId())
+            $quoteVariableBuilder->getVariables($quoteTransfer)
         );
     }
 

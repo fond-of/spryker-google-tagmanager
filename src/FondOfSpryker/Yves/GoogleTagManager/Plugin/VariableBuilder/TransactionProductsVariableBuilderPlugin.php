@@ -1,64 +1,56 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsDataLayerVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
+use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductImageTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class TransactionProductsVariableBuilder implements TransactionProductsVariableBuilderInterface
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class TransactionProductsVariableBuilderPlugin extends AbstractPlugin implements TransactionProductsDataLayerVariableBuilderPluginInterface
 {
-    /**
-     * @var array|\FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[]
-     */
-    protected $plugins;
+    public const VARIABLE_BUILDER_NAME = 'transactionProducts';
 
     /**
-     * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     * @return string
      */
-    protected $moneyPlugin;
-
-    /**
-     * @var string
-     */
-    protected $locale;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
-     */
-    protected $storageClient;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface
-     */
-    protected $productImageStorageClient;
-
-    /**
-     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface $productImageStorageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[] $plugins
-     * @param string $locale
-     */
-    public function __construct(
-        MoneyPluginInterface $moneyPlugin,
-        GoogleTagManagerToProductStorageClientInterface $storageClient,
-        GoogleTagManagerToProductImageStorageClientInterface $productImageStorageClient,
-        array $plugins,
-        string $locale
-    ) {
-        $this->moneyPlugin = $moneyPlugin;
-        $this->storageClient = $storageClient;
-        $this->productImageStorageClient = $productImageStorageClient;
-        $this->plugins = $plugins;
-        $this->locale = $locale;
+    public function getName(): string
+    {
+        return static::VARIABLE_BUILDER_NAME;
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return array
+     */
+    public function getVariables(QuoteTransfer $quoteTransfer): array
+    {
+        $gooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
+
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            foreach($this->getFactory()->getTransactionProductVariableBuilderFieldPlugins() as $plugin) {
+                $gooleTagManagerTransactionProductTransfer = $plugin->handle($gooleTagManagerTransactionProductTransfer, $itemTransfer);
+            }
+        }
+    }
+
+    /**
+     * @return GooleTagManagerTransactionProductTransfer
+     */
+    protected function createGooleTagManagerTransactionProductTransfer(): GooleTagManagerTransactionProductTransfer
+    {
+        return new GooleTagManagerTransactionProductTransfer();
+    }
+
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer[] $products
@@ -204,4 +196,6 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
         return $itemTransfer;
     }
+
+
 }

@@ -30,7 +30,7 @@ class ProductFieldSkuPlugin extends AbstractPlugin implements ProductFieldVariab
         } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
                 'GoogleTagManager: attribute %s not found in %s',
-                'sku',
+                $product::SKU,
                 self::class
             ), ['product' => json_encode($product)]);
         }

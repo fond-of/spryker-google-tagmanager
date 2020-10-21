@@ -60,11 +60,7 @@ class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductData
         $gooleTagManagerProductDetailArray = $gooleTagManagerProductDetailTransfer->toArray(true, true);
 
         foreach ($gooleTagManagerProductDetailArray as $field => $value) {
-            if ($value === null) {
-                unset($gooleTagManagerProductDetailArray[$field]);
-            }
-
-            if ($value === '') {
+            if ($value === null || $value === '') {
                 unset($gooleTagManagerProductDetailArray[$field]);
             }
         }

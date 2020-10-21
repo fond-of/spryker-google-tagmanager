@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
 interface QuoteDataLayerVariableBuilderInterface
@@ -14,9 +13,8 @@ interface QuoteDataLayerVariableBuilderInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param string $sessionId
      *
      * @return array
      */
-    public function getVariables(QuoteTransfer $quoteTransfer, string $sessionId): array;
+    public function getVariables(QuoteTransfer $quoteTransfer): array;
 }

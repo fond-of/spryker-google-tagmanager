@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
+use DefaultVariableBuilderPlugin;
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
@@ -30,23 +31,10 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\VariantProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\ProductSkuCategoryVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldCustomerEmailHashPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldCurrencyPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldInternalVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldStoreNamePlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldIdPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldNamePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldPriceExcludingTaxPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldPricePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldSalePricePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldSkuPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldTaxPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldTaxRatePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariableBuilder;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariableBuilderPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductsVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\BrandPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\EanPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\ImageUrlPlugin;
@@ -81,10 +69,14 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const QUOTE_VARIABLE_BUILDER_FIELD_PLUGINS = 'QUOTE_VARIABLE_BUILDER_FIELD_PLUGINS';
     public const QUOTE_VARIABLE_BUILDER_PLUGIN = 'QUOTE_VARIABLE_BUILDER_PLUGIN';
 
+    public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS';
+    public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS';
+
     public const CATEGORY_VARIABLE_BUILDER_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_PLUGINS';
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
 
-    public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS';
+
+
     public const NEWSLETTER_VARIABLE_BUILDER_PLUGINS = 'NEWSLETTER_VARIABLE_BUILDER_PLUGINS';
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
@@ -115,6 +107,10 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addQuoteVariableBuilderPlugin($container);
         $this->addQuoteVariableBuilderFieldPlugins($container);
 
+        // Transaction products
+        $this->addTransactionProductVariableBuilderPlugin($container);
+        $this->addTransactionProductVariableBuilderFieldPlugins($container);
+
         $this->provideCartClient($container);
         $this->provideProductClient($container);
         $this->provideTaxProductConnectorClient($container);
@@ -123,7 +119,6 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addProductImageStorageClient($container);
         $this->addCategoryVariableBuilderPlugins($container);
         $this->addOrderVariableBuilderPlugins($container);
-        $this->addTransactionProductVariableBuilderPlugins($container);
         $this->addEnhancedEcommercePlugins($container);
         $this->addProductStorageClient($container);
         $this->addStore($container);
@@ -140,15 +135,26 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
 
     /**
      * @param Container $container
-     *
      * @return Container
      *
      * @throws \Spryker\Service\Container\Exception\FrozenServiceException
      */
+    protected function addTransactionProductVariableBuilderPlugin(Container $container): Container
+    {
+        $container->set(static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS, function () {
+            return new TransactionProductsVariableBuilderPlugin();
+        });
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
     protected function addQuoteVariableBuilderPlugin(Container $container): Container
     {
         $container->set(static::QUOTE_VARIABLE_BUILDER_PLUGIN, function () {
-            return new QuoteVariableBuilder();
+            return new QuoteVariableBuilderPlugin();
         });
 
         return $container;
@@ -411,9 +417,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function addTransactionProductVariableBuilderPlugins(Container $container): Container
+    protected function addTransactionProductVariableBuilderFieldPlugins(Container $container): Container
     {
-        $container[static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS] = function () {
+        $container[static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
             return $this->getTransactionProductVariableBuilderPlugins();
         };
 

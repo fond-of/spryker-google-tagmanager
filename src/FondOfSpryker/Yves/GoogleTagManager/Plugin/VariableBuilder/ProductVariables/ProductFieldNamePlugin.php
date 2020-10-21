@@ -30,7 +30,7 @@ class ProductFieldNamePlugin extends AbstractPlugin implements ProductFieldVaria
         try {
             $gooleTagManagerProductDetailTransfer->setProductName($product->getName());
 
-            if (isset($product->getAttributes()[static::NAME_UNTRANSLATED]) && !empty($product->getAttributes()[static::NAME_UNTRANSLATED])) {
+            if ($this->hasNameUntranslated($product) === true) {
                 $gooleTagManagerProductDetailTransfer->setProductName($product->getAttributes()[static::NAME_UNTRANSLATED]);
             }
         } catch (Exception $e) {
@@ -42,5 +42,25 @@ class ProductFieldNamePlugin extends AbstractPlugin implements ProductFieldVaria
         }
 
         return $gooleTagManagerProductDetailTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
+     *
+     * @return bool
+     */
+    protected function hasNameUntranslated(ProductAbstractTransfer $productAbstractTransfer): bool
+    {
+        $attributes = $productAbstractTransfer->getAttributes();
+
+        if (!isset($attributes[static::NAME_UNTRANSLATED])) {
+            return false;
+        }
+
+        if (empty($attributes[static::NAME_UNTRANSLATED])) {
+            return false;
+        }
+
+        return true;
     }
 }
