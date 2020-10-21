@@ -2,8 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteDataLayerVariableBuilderInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteVariableBuilderInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -11,7 +10,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteDataLayerVariableBuilderInterface
+class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteVariableBuilderInterface
 {
     public const VARIABLE_BUILDER_NAME = 'quote';
 
@@ -36,11 +35,30 @@ class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteDataLaye
             $gooleTagManagerQuoteTransfer = $plugin->handle($gooleTagManagerQuoteTransfer, $quoteTransfer);
         }
 
-        $variables = [
-            GoogleTagManagerConstants::TRANSACTION_PRODUCTS => $this->transactionProductsVariableBuilder->getProductsFromQuote($quoteTransfer),
-        ];
+        $gooleTagManagerQuoteTransfer = $this->addTransactionProducts($gooleTagManagerQuoteTransfer, $quoteTransfer);
 
-        return $gooleTagManagerQuoteTransfer->toArray(true, true);
+        return $this->stripEmptyArrayIndex($gooleTagManagerQuoteTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     */
+    protected function addTransactionProducts(
+        GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer,
+        QuoteTransfer $quoteTransfer
+    ): GooleTagManagerQuoteTransfer {
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $gooleTagManagerTransactionProductTransfer = $this->getFactory()
+                ->getTransactionProductVariableBuilderPlugin()
+                ->getProduct($itemTransfer);
+
+            $gooleTagManagerQuoteTransfer->addTransactionProducts($gooleTagManagerTransactionProductTransfer);
+        }
+
+        return $gooleTagManagerQuoteTransfer;
     }
 
     /**
@@ -49,5 +67,23 @@ class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteDataLaye
     protected function createGoogleTagManagerQuoteTransfer(): GooleTagManagerQuoteTransfer
     {
         return new GooleTagManagerQuoteTransfer();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerQuoteTransfer
+     *
+     * @return array
+     */
+    protected function stripEmptyArrayIndex(GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer): array
+    {
+        $gooleTagManagerQuoteArray = $gooleTagManagerQuoteTransfer->toArray(true, true);
+
+        foreach ($gooleTagManagerQuoteArray as $field => $value) {
+            if ($value === null || $value === '') {
+                unset($gooleTagManagerQuoteArray[$field]);
+            }
+        }
+
+        return $gooleTagManagerQuoteArray;
     }
 }

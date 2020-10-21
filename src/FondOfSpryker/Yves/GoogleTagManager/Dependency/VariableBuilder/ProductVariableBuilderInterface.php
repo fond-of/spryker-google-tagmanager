@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 
-interface ProductDataLayerVariableBuilderInterface
+interface ProductVariableBuilderInterface
 {
     /**
      * @return string

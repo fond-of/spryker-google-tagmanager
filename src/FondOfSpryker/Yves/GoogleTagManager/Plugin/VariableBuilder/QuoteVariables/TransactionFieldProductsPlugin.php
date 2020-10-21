@@ -1,8 +1,8 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Shared\Log\LoggerTrait;
@@ -11,7 +11,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class TransactionFieldProductsPlugin extends AbstractPlugin implements QuoteFieldVariableBuilderPluginInterface
+class TransactionFieldProductsPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
 {
     use LoggerTrait;
 

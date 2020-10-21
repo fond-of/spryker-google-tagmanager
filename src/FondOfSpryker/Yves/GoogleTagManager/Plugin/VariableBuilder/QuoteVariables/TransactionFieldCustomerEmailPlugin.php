@@ -1,14 +1,14 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
 
 use Exception;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 
-class TransactionFieldCustomerEmailPlugin implements QuoteFieldVariableBuilderPluginInterface
+class TransactionFieldCustomerEmailPlugin implements QuoteFieldPluginInterface
 {
     use LoggerTrait;
 

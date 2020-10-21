@@ -5,14 +5,14 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 
-interface TransactionProductFieldLayerVariableBuilderPluginInterface
+interface TransactionProductFieldPluginInterface
 {
     /**
-     * @param GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
-     * @param ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
      */
     public function handle(
         GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,

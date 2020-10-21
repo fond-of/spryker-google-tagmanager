@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager;
 
-use DefaultVariableBuilderPlugin;
 use FondOfSpryker\Shared\GoogleTagManager\EnhancedEcommerceConstants;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\AddProductControllerEventHandler;
 use FondOfSpryker\Yves\GoogleTagManager\ControllerEventHandler\Cart\ChangeQuantityProductControllerEventHandler;
@@ -31,16 +30,12 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\VariantProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\ProductSkuCategoryVariableBuilderPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderDiscountPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductsVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\BrandPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\EanPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\ImageUrlPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\NamePlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\UrlPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\GoogleTagManagerSessionHandler;
 use Spryker\Shared\Kernel\Store;
@@ -70,12 +65,10 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const QUOTE_VARIABLE_BUILDER_PLUGIN = 'QUOTE_VARIABLE_BUILDER_PLUGIN';
 
     public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS';
-    public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS';
+    public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGIN = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGIN';
 
     public const CATEGORY_VARIABLE_BUILDER_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_PLUGINS';
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
-
-
 
     public const NEWSLETTER_VARIABLE_BUILDER_PLUGINS = 'NEWSLETTER_VARIABLE_BUILDER_PLUGINS';
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
@@ -134,16 +127,17 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param Container $container
-     * @return Container
+     * @param \Spryker\Yves\Kernel\Container $container
      *
-     * @throws \Spryker\Service\Container\Exception\FrozenServiceException
+     * @return \Spryker\Yves\Kernel\Container
      */
     protected function addTransactionProductVariableBuilderPlugin(Container $container): Container
     {
-        $container->set(static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGINS, function () {
-            return new TransactionProductsVariableBuilderPlugin();
+        $container->set(static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGIN, function () {
+            return new TransactionProductVariableBuilderPlugin();
         });
+
+        return $container;
     }
 
     /**
@@ -266,27 +260,18 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function addProductVariableBuilderFieldPlugins(Container $container): Container
     {
         $container[static::PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
-            return $this->getProductVariableBuilderPlugins();
+            return $this->getProductVariableBuilderFieldPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\ProductFieldVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface[]
      */
-    protected function getProductVariableBuilderPlugins(): array
+    protected function getProductVariableBuilderFieldPlugins(): array
     {
-        return [
-            new ProductFieldIdPlugin(),
-            new ProductFieldNamePlugin(),
-            new ProductFieldSkuPlugin(),
-            new ProductFieldPricePlugin(),
-            new ProductFieldPriceExcludingTaxPlugin(),
-            new ProductFieldSalePricePlugin(),
-            new ProductFieldTaxRatePlugin(),
-            new ProductFieldTaxPlugin(),
-        ];
+        return [];
     }
 
     /**
@@ -347,23 +332,18 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function addDefaultVariableBuilderFieldPlugins(Container $container): Container
     {
         $container[static::DEFAULT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
-            return $this->getDefaultVariableBuilderPlugins();
+            return $this->getDefaultVariableBuilderFieldPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables\DefaultFieldVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultFieldPluginInterface[]
      */
-    protected function getDefaultVariableBuilderPlugins(): array
+    protected function getDefaultVariableBuilderFieldPlugins(): array
     {
-        return [
-            new DefaultFieldCustomerEmailHashPlugin(),
-            new DefaultFieldStoreNamePlugin(),
-            new DefaultFieldCurrencyPlugin(),
-            new DefaultFieldInternalVariableBuilderPlugin(),
-        ];
+        return [];
     }
 
     /**
@@ -405,7 +385,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables\QuoteVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface[]
      */
     protected function getQuoteVariableBuilderPlugins(): array
     {
@@ -420,25 +400,18 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     protected function addTransactionProductVariableBuilderFieldPlugins(Container $container): Container
     {
         $container[static::TRANSACTION_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS] = function () {
-            return $this->getTransactionProductVariableBuilderPlugins();
+            return $this->getTransactionProductVariableBuilderFieldPlugins();
         };
 
         return $container;
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface[]
      */
-    public function getTransactionProductVariableBuilderPlugins(): array
+    public function getTransactionProductVariableBuilderFieldPlugins(): array
     {
-        return [
-            new NamePlugin(),
-            new EanPlugin(),
-            new UrlPlugin($this->getConfig()),
-            new BrandPlugin(),
-            new ImageUrlPlugin(),
-            new QuantityPlugin(),
-        ];
+        return [];
     }
 
     /**

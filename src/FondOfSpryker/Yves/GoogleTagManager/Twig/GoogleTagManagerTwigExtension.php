@@ -194,7 +194,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
     protected function addQuoteVariables(): array
     {
         $quoteVariableBuilder = $this->getFactory()
-            ->getQuoteVariableBuilder();
+            ->getQuoteVariableBuilderPlugin();
 
         $quoteTransfer = $this->getFactory()
             ->getCartClient()

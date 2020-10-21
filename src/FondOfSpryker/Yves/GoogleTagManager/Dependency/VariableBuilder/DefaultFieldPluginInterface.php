@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 
-interface DefaultFieldVariableBuilderPluginInterface
+interface DefaultFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer

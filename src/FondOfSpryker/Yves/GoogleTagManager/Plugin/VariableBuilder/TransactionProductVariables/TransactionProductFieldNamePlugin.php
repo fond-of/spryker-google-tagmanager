@@ -3,9 +3,11 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
 use Generated\Shared\Transfer\ItemTransfer;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class NamePlugin implements TransactionProductVariableBuilderPluginInterface
+class TransactionProductFieldNamePlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
     public const FIELD_NAME = 'name';
 

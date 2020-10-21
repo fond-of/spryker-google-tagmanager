@@ -22,7 +22,7 @@
         <property name="transactionShipping" type="string" />
         <property name="transactionPayment" type="string" />
         <property name="transactionCurrency" type="string" />
-        <property name="transactionProducts" type="GooleTagManagerProductDetail[]" />
+        <property name="transactionProducts" type="GooleTagManagerTransactionProduct[]" />
         <property name="transactionProductsSkus" type="string[]" />
         <property name="customerEmail" type="string" />
     </transfer>
@@ -47,6 +47,7 @@
         <property name="tax" type="float" />
         <property name="taxRate" type="float" />
         <property name="quantity" type="int" />
+        <property name="brand" type="string" />
     </transfer>
 
     <transfer name="GoogleTagManagerNewsletterData">

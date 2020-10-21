@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface QuoteFieldVariableBuilderPluginInterface
+interface QuoteFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer

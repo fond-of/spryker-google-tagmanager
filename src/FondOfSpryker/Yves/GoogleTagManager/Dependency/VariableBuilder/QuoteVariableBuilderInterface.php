@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface QuoteDataLayerVariableBuilderInterface
+interface QuoteVariableBuilderInterface
 {
     /**
      * @return string

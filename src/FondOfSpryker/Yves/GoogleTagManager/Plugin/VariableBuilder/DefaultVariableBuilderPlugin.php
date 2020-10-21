@@ -2,14 +2,14 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultDataLayerVariableBuilderInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultDataLayerVariableBuilderInterface
+class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
     public const VARIABLE_BUILDER_NAME = 'default';
 
