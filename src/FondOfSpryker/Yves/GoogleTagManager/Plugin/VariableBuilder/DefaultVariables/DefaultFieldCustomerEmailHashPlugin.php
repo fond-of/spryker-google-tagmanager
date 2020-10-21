@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -10,7 +11,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class CustomerEmailHashVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
+class DefaultFieldCustomerEmailHashPlugin extends AbstractPlugin implements DefaultFieldVariableBuilderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer

@@ -8,7 +8,7 @@ use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class CategoryVariableBuilder extends AbstractPlugin
+class CategoryVariableBuilderPlugin extends AbstractPlugin
 {
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface

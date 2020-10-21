@@ -3,12 +3,16 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class ProductIdPlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class ProductFieldPricePlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
     use LoggerTrait;
 
@@ -25,11 +29,15 @@ class ProductIdPlugin extends AbstractPlugin implements ProductVariableBuilderPl
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
         try {
-            $gooleTagManagerProductDetailTransfer->setProductId($product->getIdProductAbstract());
+            $price = $this->getFactory()
+                ->getMoneyPlugin()
+                ->convertIntegerToDecimal($product->getPrice());
+
+            $gooleTagManagerProductDetailTransfer->setProductPrice($price);
         } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
                 'GoogleTagManager: attribute %s not found in %s',
-                $product::ID_PRODUCT_ABSTRACT,
+                $product::PRICE,
                 self::class
             ), ['product' => json_encode($product)]);
         }

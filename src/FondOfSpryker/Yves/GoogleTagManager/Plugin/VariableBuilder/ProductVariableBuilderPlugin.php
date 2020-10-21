@@ -10,7 +10,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class ProductVariableBuilder extends AbstractPlugin implements ProductDataLayerVariableBuilderInterface
+class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductDataLayerVariableBuilderInterface
 {
     public const VARIABLE_BUILDER_NAME = 'product';
 

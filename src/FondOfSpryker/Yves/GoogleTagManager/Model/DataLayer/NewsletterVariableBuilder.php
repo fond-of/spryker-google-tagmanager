@@ -12,7 +12,7 @@ class NewsletterVariableBuilder
     protected $newsletterVariableBuilderPlugins;
 
     /**
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterface[] $defaultVariableBuilderPlugins
+     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterfaceField[] $defaultVariableBuilderPlugins
      */
     public function __construct(array $newsletterVariableBuilderPlugins)
     {

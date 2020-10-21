@@ -3,15 +3,14 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class ProductNamePlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+class ProductFieldIdPlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
-    public const NAME_UNTRANSLATED = 'name_untranslated';
-
     use LoggerTrait;
 
     /**
@@ -27,15 +26,11 @@ class ProductNamePlugin extends AbstractPlugin implements ProductVariableBuilder
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
         try {
-            $gooleTagManagerProductDetailTransfer->setProductName($product->getName());
-
-            if (isset($product->getAttributes()[static::NAME_UNTRANSLATED]) && !empty($product->getAttributes()[static::NAME_UNTRANSLATED])) {
-                $gooleTagManagerProductDetailTransfer->setProductName($product->getAttributes()[static::NAME_UNTRANSLATED]);
-            }
+            $gooleTagManagerProductDetailTransfer->setProductId($product->getIdProductAbstract());
         } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
                 'GoogleTagManager: attribute %s not found in %s',
-                $gooleTagManagerProductDetailTransfer::PRODUCT_NAME,
+                $product::ID_PRODUCT_ABSTRACT,
                 self::class
             ), ['product' => json_encode($product)]);
         }

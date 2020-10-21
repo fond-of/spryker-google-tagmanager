@@ -1,10 +1,10 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 
-interface DefaultVariableBuilderPluginInterface
+interface DefaultFieldVariableBuilderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer

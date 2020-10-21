@@ -11,19 +11,19 @@
         <property name="externalIdHash" type="string" />
     </transfer>
 
-    <transfer name="GooleTagManagerCategory">
-        <property name="idCategory" type="int" />
-        <property name="name" type="string" />
-        <property name="size" type="int" />
-        <property name="categoryProducts" type="GooleTagManagerCategoryProduct[]" />
-        <property name="products" type="array"/>
-    </transfer>
-
-    <transfer name="GooleTagManagerCategoryProduct">
-        <property name="idProductAbstract" type="int" />
-        <property name="name" type="string" />
-        <property name="sku" type="string" />
-        <property name="price" type="float" />
+    <transfer name="GooleTagManagerQuote">
+        <property name="transactionEntity" type="string" />
+        <property name="transactionId" type="string" />
+        <property name="transactionAffiliation" type="string" />
+        <property name="transactionTotal" type="string" />
+        <property name="transactionTotalWithoutShippingAmount" type="string" />
+        <property name="transactionSubtotal" type="string" />
+        <property name="transactionTax" type="string" />
+        <property name="transactionShipping" type="string" />
+        <property name="transactionPayment" type="string" />
+        <property name="transactionCurrency" type="string" />
+        <property name="transactionProducts" type="string" />
+        <property name="transactionProductsSkus" type="string" />
     </transfer>
 
     <transfer name="GooleTagManagerProductDetail">
@@ -41,6 +41,22 @@
         <property name="email" type="string" />
         <property name="externalIdHash" type="string" />
     </transfer>
+
+    <transfer name="GooleTagManagerCategory">
+        <property name="idCategory" type="int" />
+        <property name="name" type="string" />
+        <property name="size" type="int" />
+        <property name="categoryProducts" type="GooleTagManagerCategoryProduct[]" />
+        <property name="products" type="array"/>
+    </transfer>
+
+    <transfer name="GooleTagManagerCategoryProduct">
+        <property name="idProductAbstract" type="int" />
+        <property name="name" type="string" />
+        <property name="sku" type="string" />
+        <property name="price" type="float" />
+    </transfer>
+
 
     <transfer name="EnhancedEcommerce">
         <property name="event" type="string" />

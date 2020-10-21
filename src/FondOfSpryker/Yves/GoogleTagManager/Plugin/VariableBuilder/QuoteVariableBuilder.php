@@ -1,13 +1,20 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteDataLayerVariableBuilderInterface;
 use Generated\Shared\Transfer\AddressTransfer;
+use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class QuoteVariableBuilder
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class QuoteVariableBuilder extends AbstractPlugin implements QuoteDataLayerVariableBuilderInterface
 {
     /**
      * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
@@ -44,6 +51,16 @@ class QuoteVariableBuilder
         $this->transactionProductsVariableBuilder = $transactionProductsVariableBuilder;
     }
 
+    public const VARIABLE_BUILDER_NAME = 'quote';
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return static::VARIABLE_BUILDER_NAME;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param string $sessionId
@@ -52,6 +69,26 @@ class QuoteVariableBuilder
      */
     public function getVariables(QuoteTransfer $quoteTransfer, string $sessionId): array
     {
+        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
+
+        $googleTagManagerQuoteTransfer = $this->createGoogleTagManagerQuoteTransfer();
+        $googleTagManagerQuoteTransfer->set(\strtoupper($this->getName()));
+        $googleTagManagerQuoteTransfer->setTransactionId($this->getFactory()->getSessionClient()->getId());
+        $googleTagManagerQuoteTransfer->setTransactionAffiliation($quoteTransfer->getStore()->getName());
+
+        $googleTagManagerQuoteTransfer->setTransactionTotal(
+            $moneyPlugin->convertIntegerToDecimal(
+                $quoteTransfer->getTotals()->getGrandTotal()
+            )
+        );
+
+        $googleTagManagerQuoteTransfer->setTransactionTotalWithoutShippingAmount(
+            $moneyPlugin->convertIntegerToDecimal(
+                $this->getTotalWithoutShippingAmount($quoteTransfer)
+            )
+        );
+
+
         $variables = [
             GoogleTagManagerConstants::TRANSACTION_ENTITY => GoogleTagManagerConstants::TRANSACTION_ENTITY_QUOTE,
             GoogleTagManagerConstants::TRANSACTION_ID => $sessionId,
@@ -71,6 +108,14 @@ class QuoteVariableBuilder
         ];
 
         return $this->executePlugins($quoteTransfer, $variables);
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     */
+    protected function createGoogleTagManagerQuoteTransfer(): GooleTagManagerQuoteTransfer
+    {
+        return new GooleTagManagerQuoteTransfer();
     }
 
     /**

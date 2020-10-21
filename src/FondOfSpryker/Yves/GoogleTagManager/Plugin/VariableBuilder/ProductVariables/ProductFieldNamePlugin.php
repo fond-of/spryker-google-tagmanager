@@ -3,16 +3,16 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
-class ProductPricePlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+class ProductFieldNamePlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
+    public const NAME_UNTRANSLATED = 'name_untranslated';
+
     use LoggerTrait;
 
     /**
@@ -28,15 +28,15 @@ class ProductPricePlugin extends AbstractPlugin implements ProductVariableBuilde
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
         try {
-            $price = $this->getFactory()
-                ->getMoneyPlugin()
-                ->convertIntegerToDecimal($product->getPrice());
+            $gooleTagManagerProductDetailTransfer->setProductName($product->getName());
 
-            $gooleTagManagerProductDetailTransfer->setProductPrice($price);
+            if (isset($product->getAttributes()[static::NAME_UNTRANSLATED]) && !empty($product->getAttributes()[static::NAME_UNTRANSLATED])) {
+                $gooleTagManagerProductDetailTransfer->setProductName($product->getAttributes()[static::NAME_UNTRANSLATED]);
+            }
         } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
                 'GoogleTagManager: attribute %s not found in %s',
-                $product::PRICE,
+                $gooleTagManagerProductDetailTransfer::PRODUCT_NAME,
                 self::class
             ), ['product' => json_encode($product)]);
         }

@@ -200,7 +200,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
             ->getCartClient()
             ->getQuote();
 
-        if (\count($quoteTransfer->getItems()) === 0) {
+        if (count($quoteTransfer->getItems()) === 0) {
             return $this->dataLayerVariables;
         }
 

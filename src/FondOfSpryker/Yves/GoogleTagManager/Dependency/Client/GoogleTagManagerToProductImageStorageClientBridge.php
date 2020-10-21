@@ -21,7 +21,7 @@ class GoogleTagManagerToProductImageStorageClientBridge implements GoogleTagMana
     }
 
     /**
-     * @return ProductAbstractImageStorageReaderInterface
+     * @return \Spryker\Client\ProductImageStorage\Storage\ProductAbstractImageStorageReaderInterface
      */
     public function getProductAbstractImageStorageReader(): ProductAbstractImageStorageReaderInterface
     {

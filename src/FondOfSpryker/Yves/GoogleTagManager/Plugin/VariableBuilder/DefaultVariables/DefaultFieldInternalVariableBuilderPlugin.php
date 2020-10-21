@@ -2,13 +2,14 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
-class InternalVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
+class DefaultFieldInternalVariableBuilderPlugin extends AbstractPlugin implements DefaultFieldVariableBuilderPluginInterface
 {
     public const FIELD_CLIENT_IP = 'clientIp';
 

@@ -3,15 +3,13 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-/**
- * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
- */
-class ProductPriceExcludingTaxPlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+class ProductFieldSkuPlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
     use LoggerTrait;
 
@@ -28,19 +26,11 @@ class ProductPriceExcludingTaxPlugin extends AbstractPlugin implements ProductVa
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
         try {
-            $product = $this->getFactory()
-                ->getTaxProductConnectorClient()
-                ->getNetPriceForProduct($product);
-
-            $priceExcludingTax = $this->getFactory()
-                ->getMoneyPlugin()
-                ->convertIntegerToDecimal($product->getNetPrice());
-
-            $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
+            $gooleTagManagerProductDetailTransfer->setProductSku($product->getSku());
         } catch (Exception $e) {
             $this->getLogger()->notice(sprintf(
                 'GoogleTagManager: attribute %s not found in %s',
-                $product::PRICE,
+                'sku',
                 self::class
             ), ['product' => json_encode($product)]);
         }

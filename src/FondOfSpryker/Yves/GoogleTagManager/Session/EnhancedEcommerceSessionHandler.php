@@ -159,7 +159,7 @@ class EnhancedEcommerceSessionHandler implements EnhancedEcommerceSessionHandler
     }
 
     /**
-     * @param EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceProductDataTransfer $ecommerceProductDataTransfer
      *
      * @return void
      */

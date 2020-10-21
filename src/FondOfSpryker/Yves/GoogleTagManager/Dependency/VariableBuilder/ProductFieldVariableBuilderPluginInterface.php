@@ -1,11 +1,11 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 
-interface ProductVariableBuilderPluginInterface
+interface ProductFieldVariableBuilderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer

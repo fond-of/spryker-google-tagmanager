@@ -3,12 +3,13 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class ProductTaxRatePlugin extends AbstractPlugin implements ProductVariableBuilderPluginInterface
+class ProductFieldTaxRatePlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
 {
     use LoggerTrait;
 
