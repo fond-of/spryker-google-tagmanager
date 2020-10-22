@@ -2,15 +2,19 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultDataLayerVariableBuilderInterface;
+use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultDataLayerVariableBuilderInterface
+class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultVariableBuilderPluginInterface
 {
+    use LoggerTrait;
+
     public const VARIABLE_BUILDER_NAME = 'default';
 
     /**
@@ -34,7 +38,15 @@ class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultData
         $defaultVariableBuilderPlugins = $this->getFactory()->getDefaultVariableBuilderFieldPlugins();
 
         foreach ($defaultVariableBuilderPlugins as $plugin) {
-            $plugin->handle($gooleTagManagerDefaultTransfer, $params);
+            try {
+                $plugin->handle($gooleTagManagerDefaultTransfer, $params);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ));
+            }
         }
 
         return $this->stripEmptyArrayIndex($gooleTagManagerDefaultTransfer);

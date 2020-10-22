@@ -2,17 +2,13 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
-use Exception;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class ProductFieldIdPlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
+class ProductFieldIdPlugin extends AbstractPlugin implements ProductFieldPluginInterface
 {
-    use LoggerTrait;
-
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
@@ -25,16 +21,6 @@ class ProductFieldIdPlugin extends AbstractPlugin implements ProductFieldVariabl
         ProductAbstractTransfer $product,
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
-        try {
-            $gooleTagManagerProductDetailTransfer->setProductId($product->getIdProductAbstract());
-        } catch (Exception $e) {
-            $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s',
-                $product::ID_PRODUCT_ABSTRACT,
-                self::class
-            ), ['product' => json_encode($product)]);
-        }
-
-        return $gooleTagManagerProductDetailTransfer;
+        return $gooleTagManagerProductDetailTransfer->setProductId($product->getIdProductAbstract());
     }
 }

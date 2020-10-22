@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -11,7 +11,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerConfig getConfig()
  */
-class ProductFieldSalePricePlugin extends AbstractPlugin implements ProductFieldVariableBuilderPluginInterface
+class ProductFieldSalePricePlugin extends AbstractPlugin implements ProductFieldPluginInterface
 {
     public const FIELD_NAME = 'sale_price';
 

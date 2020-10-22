@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 
-interface ProductFieldVariableBuilderPluginInterface
+interface ProductFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer

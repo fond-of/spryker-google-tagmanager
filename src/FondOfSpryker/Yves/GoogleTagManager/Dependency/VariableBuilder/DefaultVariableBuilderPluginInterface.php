@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-interface DefaultDataLayerVariableBuilderInterface
+interface DefaultVariableBuilderPluginInterface
 {
     /**
      * @return string

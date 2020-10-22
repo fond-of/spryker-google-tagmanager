@@ -1,63 +1,66 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
+use Exception;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductFieldQuantityPlugin;
+use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductImageTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class TransactionProductsVariableBuilder implements TransactionProductsVariableBuilderInterface
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements TransactionProductsVariableBuilderPluginInterface
 {
-    /**
-     * @var array|\FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[]
-     */
-    protected $plugins;
+    public const VARIABLE_BUILDER_NAME = 'transactionProducts';
 
     /**
-     * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     * @return string
      */
-    protected $moneyPlugin;
+    public function getName(): string
+    {
+        return static::VARIABLE_BUILDER_NAME;
+    }
 
     /**
-     * @var string
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     *
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
      */
-    protected $locale;
+    public function getProduct(ItemTransfer $itemTransfer): GooleTagManagerTransactionProductTransfer
+    {
+        $gooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
+
+        foreach ($this->getFactory()->getTransactionProductVariableBuilderFieldPlugins() as $plugin) {
+            try {
+                $gooleTagManagerTransactionProductTransfer = $plugin->handle(
+                    $gooleTagManagerTransactionProductTransfer,
+                    $itemTransfer
+                );
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ), [$e->getMessage()]);
+            }
+        }
+
+        return $gooleTagManagerTransactionProductTransfer;
+    }
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
      */
-    protected $storageClient;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface
-     */
-    protected $productImageStorageClient;
-
-    /**
-     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientInterface $productImageStorageClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductVariableBuilderPluginInterface[] $plugins
-     * @param string $locale
-     */
-    public function __construct(
-        MoneyPluginInterface $moneyPlugin,
-        GoogleTagManagerToProductStorageClientInterface $storageClient,
-        GoogleTagManagerToProductImageStorageClientInterface $productImageStorageClient,
-        array $plugins,
-        string $locale
-    ) {
-        $this->moneyPlugin = $moneyPlugin;
-        $this->storageClient = $storageClient;
-        $this->productImageStorageClient = $productImageStorageClient;
-        $this->plugins = $plugins;
-        $this->locale = $locale;
+    protected function createGooleTagManagerTransactionProductTransfer(): GooleTagManagerTransactionProductTransfer
+    {
+        return new GooleTagManagerTransactionProductTransfer();
     }
 
     /**
@@ -90,7 +93,7 @@ class TransactionProductsVariableBuilder implements TransactionProductsVariableB
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (isset($products[$itemTransfer->getSku()])) {
-                $products[$itemTransfer->getSku()][QuantityPlugin::FIELD_NAME]++;
+                $products[$itemTransfer->getSku()][TransactionProductFieldQuantityPlugin::FIELD_NAME]++;
 
                 continue;
             }

@@ -1,10 +1,10 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface QuoteVariableBuilderPluginInterface
+interface QuoteVariableBuilderInterface
 {
     /**
      * @return string
@@ -13,9 +13,8 @@ interface QuoteVariableBuilderPluginInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param array $variables
      *
      * @return array
      */
-    public function handle(QuoteTransfer $quoteTransfer, array $variables): array;
+    public function getVariables(QuoteTransfer $quoteTransfer): array;
 }

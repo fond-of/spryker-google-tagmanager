@@ -2,16 +2,20 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductDataLayerVariableBuilderInterface;
+use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductVariableBuilderInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductDataLayerVariableBuilderInterface
+class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductVariableBuilderInterface
 {
+    use LoggerTrait;
+
     public const VARIABLE_BUILDER_NAME = 'product';
 
     /**
@@ -33,10 +37,15 @@ class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductData
         $productVariableBuilderPlugins = $this->getFactory()->getProductVariableBuilderPlugins();
 
         foreach ($productVariableBuilderPlugins as $plugin) {
-            $gooleTagManagerProductDetailTransfer = $plugin->handle(
-                $gooleTagManagerProductDetailTransfer,
-                $product
-            );
+            try {
+                $gooleTagManagerProductDetailTransfer = $plugin->handle($gooleTagManagerProductDetailTransfer, $product);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ), [$e->getMessage()]);
+            }
         }
 
         return $this->stripEmptyArrayIndex($gooleTagManagerProductDetailTransfer);
@@ -60,11 +69,7 @@ class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductData
         $gooleTagManagerProductDetailArray = $gooleTagManagerProductDetailTransfer->toArray(true, true);
 
         foreach ($gooleTagManagerProductDetailArray as $field => $value) {
-            if ($value === null) {
-                unset($gooleTagManagerProductDetailArray[$field]);
-            }
-
-            if ($value === '') {
+            if ($value === null || $value === '') {
                 unset($gooleTagManagerProductDetailArray[$field]);
             }
         }
