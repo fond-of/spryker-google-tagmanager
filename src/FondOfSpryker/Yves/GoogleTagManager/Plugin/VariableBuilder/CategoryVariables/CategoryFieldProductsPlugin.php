@@ -6,7 +6,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryField
 use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class CategoryFieldNamePlugin extends AbstractPlugin implements CategoryFieldPluginInterface
+class CategoryFieldProductsPlugin extends AbstractPlugin implements CategoryFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
@@ -22,8 +22,8 @@ class CategoryFieldNamePlugin extends AbstractPlugin implements CategoryFieldPlu
         array $products = [],
         array $params = []
     ): GooleTagManagerCategoryTransfer {
-        if (isset($category['name'])) {
-            $gooleTagManagerCategoryTransfer->setName($category['name']);
+        foreach ($gooleTagManagerCategoryTransfer->getCategoryProducts() as $gooleTagManagerCategoryProductTransfer) {
+            $gooleTagManagerCategoryTransfer->addProducts($gooleTagManagerCategoryProductTransfer->getSku());
         }
 
         return $gooleTagManagerCategoryTransfer;

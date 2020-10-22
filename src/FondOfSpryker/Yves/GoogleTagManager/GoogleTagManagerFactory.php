@@ -7,6 +7,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProd
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductVariableBuilderInterface;
@@ -60,6 +61,14 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getDefaultVariableBuilderPlugin(): DefaultVariableBuilderPluginInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::DEFAULT_VARIABLE_BUILDER_PLUGIN);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductFieldPluginInterface[]
+     */
+    public function getCategoryProductVariableBuilderFieldPlugins(): array
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS);
     }
 
     /**
@@ -187,6 +196,14 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getCategoryVariableBuilderFieldPlugins(): array
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_VARIABLE_BUILDER_FIELD_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductVariableBuilderPluginInterface
+     */
+    public function getCategoryProductVariableBuilderPlugin(): CategoryProductVariableBuilderPluginInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_PRODUCT_VARIABLE_BUILDER_PLUGIN);
     }
 
     /**

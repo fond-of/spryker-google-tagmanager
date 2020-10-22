@@ -12,8 +12,8 @@ class CategoryFieldCategorySizePlugin extends AbstractPlugin implements Category
      * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
      * @param array $category
      * @param array $products
-     *
      * @param array $params
+     *
      * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
      */
     public function handle(
@@ -21,8 +21,7 @@ class CategoryFieldCategorySizePlugin extends AbstractPlugin implements Category
         array $category,
         array $products = [],
         array $params = []
-    ): GooleTagManagerCategoryTransfer
-    {
+    ): GooleTagManagerCategoryTransfer {
         $gooleTagManagerCategoryTransfer->setCategorySize(count($products));
 
         return $gooleTagManagerCategoryTransfer;

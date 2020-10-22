@@ -12,8 +12,8 @@ class CategoryFieldContentTypePlugin extends AbstractPlugin implements CategoryF
      * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
      * @param array $category
      * @param array $products
-     *
      * @param array $params
+     *
      * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
      */
     public function handle(
@@ -21,10 +21,9 @@ class CategoryFieldContentTypePlugin extends AbstractPlugin implements CategoryF
         array $category,
         array $products = [],
         array $params = []
-    ): GooleTagManagerCategoryTransfer
-    {
+    ): GooleTagManagerCategoryTransfer {
         if (isset($params['contentType'])) {
-            $gooleTagManagerCategoryTransfer->setContentType('category');
+            $gooleTagManagerCategoryTransfer->setContentType($params['contentType']);
         }
 
         return $gooleTagManagerCategoryTransfer;

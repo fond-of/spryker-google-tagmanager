@@ -12,8 +12,8 @@ class CategoryFieldIdCategoryPlugin extends AbstractPlugin implements CategoryFi
      * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
      * @param array $category
      * @param array $products
-     *
      * @param array $params
+     *
      * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
      */
     public function handle(
@@ -21,8 +21,7 @@ class CategoryFieldIdCategoryPlugin extends AbstractPlugin implements CategoryFi
         array $category,
         array $products = [],
         array $params = []
-    ): GooleTagManagerCategoryTransfer
-    {
+    ): GooleTagManagerCategoryTransfer {
         if (isset($category['id_category'])) {
             $gooleTagManagerCategoryTransfer->setIdCategory($category['id_category']);
         }

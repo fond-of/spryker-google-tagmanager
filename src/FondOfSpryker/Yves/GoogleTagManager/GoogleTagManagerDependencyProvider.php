@@ -29,6 +29,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\QuantityProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapper\VariantProductFieldMapperPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMapperPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryProductVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
@@ -68,6 +69,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGIN = 'TRANSACTION_PRODUCT_VARIABLE_BUILDER_PLUGIN';
 
     public const CATEGORY_VARIABLE_BUILDER_FIELD_PLUGINS = 'CATEGORY_VARIABLE_BUILDER_FIELD_PLUGINS';
+    public const CATEGORY_PRODUCT_VARIABLE_BUILDER_PLUGIN = 'CATEGORY_PRODUCT_VARIABLE_BUILDER_PLUGIN';
+    public const CATEGORY_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS = 'CATEGORY_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS';
     public const CATEGORY_VARIABLE_BUILDER_PLUGIN = 'CATEGORY_VARIABLE_BUILDER_PLUGIN';
 
     public const ORDER_VARIABLE_BUILDER_PLUGINS = 'ORDER_VARIABLE_BUILDER_PLUGINS';
@@ -109,6 +112,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         // Categories
         $this->addCategoryVariableBuilderPlugin($container);
         $this->addCategoryVariableBuilderFieldPlugins($container);
+        $this->addCategoryProductVariableBuilderPlugin($container);
+        $this->addCategoryProductVariableBuilderFieldPlugins($container);
 
         $this->provideCartClient($container);
         $this->provideProductClient($container);
@@ -132,10 +137,51 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
     protected function addCategoryVariableBuilderPlugin(Container $container): Container
     {
         $container->set(static::CATEGORY_VARIABLE_BUILDER_PLUGIN, function () {
             return new CategoryVariableBuilderPlugin();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addCategoryProductVariableBuilderFieldPlugins(Container $container): Container
+    {
+        $container->set(static::CATEGORY_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS, function () {
+            return $this->getCategoryProductVariableBuilderFieldPlugins();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductFieldPluginInterface[]
+     */
+    protected function getCategoryProductVariableBuilderFieldPlugins(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addCategoryProductVariableBuilderPlugin(Container $container): Container
+    {
+        $container->set(static::CATEGORY_PRODUCT_VARIABLE_BUILDER_PLUGIN, function () {
+            return new CategoryProductVariableBuilderPlugin();
         });
 
         return $container;
