@@ -60,8 +60,9 @@
 
     <transfer name="GooleTagManagerCategory">
         <property name="idCategory" type="int" />
+        <property name="contentType" type="string" />
         <property name="name" type="string" />
-        <property name="size" type="int" />
+        <property name="categorySize" type="int" />
         <property name="categoryProducts" type="GooleTagManagerCategoryProduct[]" />
         <property name="products" type="array"/>
     </transfer>

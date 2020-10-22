@@ -110,13 +110,17 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
                 $this->addQuoteVariables();
 
                 break;
-
-            /*case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
-                $this->addCategoryVariables($params['category'], $params['products'], $params[GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE]);
+            case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
+                $this->addCategoryVariables(
+                    $params['category'],
+                    $params['products'],
+                    $params[GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE]
+                );
                 $this->addQuoteVariables();
+
                 break;
 
-            case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
+            /*case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
                 $this->addOrderVariables($params['order']);
 
                 break;
@@ -180,11 +184,13 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
      */
     protected function addCategoryVariables($category, $products, string $contentType): array
     {
-        $categoryVariableBuilder = $this->getFactory()->createCategoryVariableBuilder();
+        $categoryVariableBuilder = $this->getFactory()->getCategoryVariableBuilderPlugin();
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,
-            $categoryVariableBuilder->getVariables($category, $products, $contentType)
+            $categoryVariableBuilder->getVariables($category, $products, [
+                'contentType' => $contentType,
+            ])
         );
     }
 
