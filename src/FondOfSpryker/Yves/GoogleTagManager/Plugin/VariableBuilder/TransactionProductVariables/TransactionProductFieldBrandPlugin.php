@@ -12,8 +12,9 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class TransactionProductFieldBrandPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
+    use TransactionProductLocalizedAttributeTrait;
+
     public const ATTR_BRAND = 'brand';
-    public const DEFAULT_LOCALE = '_';
 
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
@@ -27,28 +28,12 @@ class TransactionProductFieldBrandPlugin extends AbstractPlugin implements Trans
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        return $gooleTagManagerTransactionProductTransfer->setBrand($this->getAttrBrand($itemTransfer));
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     *
-     * @return string
-     */
-    protected function getAttrBrand(ItemTransfer $itemTransfer): string
-    {
-        if (isset($itemTransfer->getAbstractAttributes()[static::DEFAULT_LOCALE][static::ATTR_BRAND])) {
-            return $itemTransfer->getAbstractAttributes()[static::DEFAULT_LOCALE][static::ATTR_BRAND];
-        }
-
         $locale = $this->getFactory()
             ->getStore()
             ->getCurrentLocale();
 
-        if (isset($itemTransfer->getAbstractAttributes()[$locale][static::ATTR_BRAND])) {
-            return $itemTransfer->getAbstractAttributes()[$locale][static::ATTR_BRAND];
-        }
+        $brand = $this->getAttr($itemTransfer, $locale, static::ATTR_BRAND);
 
-        return '';
+        return $gooleTagManagerTransactionProductTransfer->setBrand($brand);
     }
 }

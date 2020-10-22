@@ -10,8 +10,10 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class TransactionProductFieldTaxPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
+class TransactionProductFieldQuantityPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
+    public const FIELD_NAME = 'quantity';
+
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
@@ -24,12 +26,6 @@ class TransactionProductFieldTaxPlugin extends AbstractPlugin implements Transac
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
-
-        $gooleTagManagerTransactionProductTransfer->setTax(
-            $moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitTaxAmount())
-        );
-
-        return $gooleTagManagerTransactionProductTransfer;
+        return $gooleTagManagerTransactionProductTransfer->setQuantity($itemTransfer->getQuantity());
     }
 }

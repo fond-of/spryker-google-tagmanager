@@ -10,8 +10,12 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class TransactionProductFieldTaxPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
+class TransactionProductFieldEanPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
+    use TransactionProductLocalizedAttributeTrait;
+
+    public const ATTR_EAN = 'ean';
+
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
@@ -24,12 +28,12 @@ class TransactionProductFieldTaxPlugin extends AbstractPlugin implements Transac
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
+        $locale = $this->getFactory()
+            ->getStore()
+            ->getCurrentLocale();
 
-        $gooleTagManagerTransactionProductTransfer->setTax(
-            $moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitTaxAmount())
-        );
+        $ean = $this->getAttr($itemTransfer, $locale, static::ATTR_EAN);
 
-        return $gooleTagManagerTransactionProductTransfer;
+        return $gooleTagManagerTransactionProductTransfer->setEan($ean);
     }
 }

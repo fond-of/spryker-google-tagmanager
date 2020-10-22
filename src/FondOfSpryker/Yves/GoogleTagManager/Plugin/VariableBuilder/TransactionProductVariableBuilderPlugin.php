@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 use Exception;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsVariableBuilderPluginInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
+use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\TransactionProductFieldQuantityPlugin;
 use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
@@ -93,7 +93,7 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             if (isset($products[$itemTransfer->getSku()])) {
-                $products[$itemTransfer->getSku()][QuantityPlugin::FIELD_NAME]++;
+                $products[$itemTransfer->getSku()][TransactionProductFieldQuantityPlugin::FIELD_NAME]++;
 
                 continue;
             }

@@ -24,12 +24,6 @@ class TransactionProductFieldTaxRatePlugin extends AbstractPlugin implements Tra
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
-
-        $gooleTagManagerTransactionProductTransfer->setTaxRate(
-            $moneyPlugin->convertIntegerToDecimal($itemTransfer->getTaxRate())
-        );
-
-        return $gooleTagManagerTransactionProductTransfer;
+        return $gooleTagManagerTransactionProductTransfer->setTaxRate($itemTransfer->getTaxRate());
     }
 }

@@ -2,35 +2,42 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
+use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
 class TransactionProductFieldNamePlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
-    public const FIELD_NAME = 'name';
+    use TransactionProductLocalizedAttributeTrait;
+
+    public const ATTR_NAME_UNTRANSLATED = 'name_untranslated';
 
     /**
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
      */
-    public function handle(ItemTransfer $itemTransfer, array $params = []): array
-    {
-        $locale = isset($params['locale']) ? $params['locale'] : '_';
+    public function handle(
+        GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,
+        ItemTransfer $itemTransfer,
+        array $params = []
+    ): GooleTagManagerTransactionProductTransfer {
+        $locale = $this->getFactory()
+            ->getStore()
+            ->getCurrentLocale();
 
-        if (!isset($itemTransfer->getAbstractAttributes()[$locale])) {
-            return [static::FIELD_NAME => $itemTransfer->getName()];
+        $nameUntranslated = $this->getAttr($itemTransfer, $locale, static::ATTR_NAME_UNTRANSLATED);
+
+        if ($nameUntranslated) {
+            return $gooleTagManagerTransactionProductTransfer->setName($nameUntranslated);
         }
 
-        if (!isset($itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
-            return [static::FIELD_NAME => $itemTransfer->getName()];
-        }
-
-        return [
-            static::FIELD_NAME => $itemTransfer->getAbstractAttributes()[$locale][GoogleTagManagerConstants::NAME_UNTRANSLATED],
-        ];
+        return $gooleTagManagerTransactionProductTransfer->setName($itemTransfer->getName());
     }
 }
