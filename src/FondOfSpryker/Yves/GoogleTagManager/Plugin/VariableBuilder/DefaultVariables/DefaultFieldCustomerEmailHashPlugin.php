@@ -39,6 +39,6 @@ class DefaultFieldCustomerEmailHashPlugin extends AbstractPlugin implements Defa
             return $gooleTagManagerDefaultTransfer;
         }
 
-        $gooleTagManagerDefaultTransfer->setExternalIdHash(sha1($quoteTransfer->getBillingAddress()->getEmail()));
+        return $gooleTagManagerDefaultTransfer->setExternalIdHash(sha1($quoteTransfer->getBillingAddress()->getEmail()));
     }
 }

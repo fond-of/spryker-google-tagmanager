@@ -2,11 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
-use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -14,8 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class TransactionProductFieldTaxPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
-    use LoggerTrait;
-
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
@@ -28,19 +24,11 @@ class TransactionProductFieldTaxPlugin extends AbstractPlugin implements Transac
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        try {
-            $moneyPlugin = $this->getFactory()->getMoneyPlugin();
+        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
 
-            $gooleTagManagerTransactionProductTransfer->setTax(
-                $moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitNetPrice())
-            );
-        } catch (Exception $e) {
-            $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s',
-                $itemTransfer::UNIT_NET_PRICE,
-                self::class
-            ), ['quote' => json_encode($itemTransfer)]);
-        }
+        $gooleTagManagerTransactionProductTransfer->setTax(
+            $moneyPlugin->convertIntegerToDecimal($itemTransfer->getUnitNetPrice())
+        );
 
         return $gooleTagManagerTransactionProductTransfer;
     }

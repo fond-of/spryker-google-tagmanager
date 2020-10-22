@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
+use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteVariableBuilderInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -32,7 +33,15 @@ class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteVariable
         $gooleTagManagerQuoteTransfer = $this->createGoogleTagManagerQuoteTransfer();
 
         foreach ($this->getFactory()->getQuoteVariableBuilderFieldPlugins() as $plugin) {
-            $gooleTagManagerQuoteTransfer = $plugin->handle($gooleTagManagerQuoteTransfer, $quoteTransfer);
+            try {
+                $gooleTagManagerQuoteTransfer = $plugin->handle($gooleTagManagerQuoteTransfer, $quoteTransfer);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ), [$e->getMessage()]);
+            }
         }
 
         $gooleTagManagerQuoteTransfer = $this->addTransactionProducts($gooleTagManagerQuoteTransfer, $quoteTransfer);

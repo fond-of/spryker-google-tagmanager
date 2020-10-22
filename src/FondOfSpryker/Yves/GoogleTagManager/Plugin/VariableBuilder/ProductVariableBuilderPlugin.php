@@ -2,9 +2,11 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
+use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductVariableBuilderInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -12,6 +14,8 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductVariableBuilderInterface
 {
+    use LoggerTrait;
+
     public const VARIABLE_BUILDER_NAME = 'product';
 
     /**
@@ -33,10 +37,15 @@ class ProductVariableBuilderPlugin extends AbstractPlugin implements ProductVari
         $productVariableBuilderPlugins = $this->getFactory()->getProductVariableBuilderPlugins();
 
         foreach ($productVariableBuilderPlugins as $plugin) {
-            $gooleTagManagerProductDetailTransfer = $plugin->handle(
-                $gooleTagManagerProductDetailTransfer,
-                $product
-            );
+            try {
+                $gooleTagManagerProductDetailTransfer = $plugin->handle($gooleTagManagerProductDetailTransfer, $product);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ), [$e->getMessage()]);
+            }
         }
 
         return $this->stripEmptyArrayIndex($gooleTagManagerProductDetailTransfer);

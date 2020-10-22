@@ -24,8 +24,6 @@ class TransactionFieldIdPlugin extends AbstractPlugin implements QuoteFieldPlugi
         QuoteTransfer $quoteTransfer,
         array $params = []
     ): GooleTagManagerQuoteTransfer {
-        $gooleTagManagerQuoteTransfer->setTransactionId($this->getFactory()->getSessionClient()->getId());
-
-        return $gooleTagManagerQuoteTransfer;
+        return $gooleTagManagerQuoteTransfer->setTransactionId($this->getFactory()->getSessionClient()->getId());
     }
 }

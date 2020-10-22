@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
+use Exception;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables\QuantityPlugin;
@@ -37,10 +38,18 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
         $gooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
 
         foreach ($this->getFactory()->getTransactionProductVariableBuilderFieldPlugins() as $plugin) {
-            $gooleTagManagerTransactionProductTransfer = $plugin->handle(
-                $gooleTagManagerTransactionProductTransfer,
-                $itemTransfer
-            );
+            try {
+                $gooleTagManagerTransactionProductTransfer = $plugin->handle(
+                    $gooleTagManagerTransactionProductTransfer,
+                    $itemTransfer
+                );
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ), [$e->getMessage()]);
+            }
         }
 
         return $gooleTagManagerTransactionProductTransfer;

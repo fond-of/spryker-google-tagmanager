@@ -20,8 +20,6 @@ class TransactionFieldEntityPlugin implements QuoteFieldPluginInterface
         QuoteTransfer $quoteTransfer,
         array $params = []
     ): GooleTagManagerQuoteTransfer {
-        $gooleTagManagerQuoteTransfer->setTransactionEntity('QUOTE');
-
-        return $gooleTagManagerQuoteTransfer;
+        return $gooleTagManagerQuoteTransfer->setTransactionEntity('QUOTE');
     }
 }

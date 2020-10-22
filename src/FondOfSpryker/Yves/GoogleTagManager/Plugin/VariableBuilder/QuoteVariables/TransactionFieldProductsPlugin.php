@@ -5,7 +5,6 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariab
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -13,8 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class TransactionFieldProductsPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
 {
-    use LoggerTrait;
-
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

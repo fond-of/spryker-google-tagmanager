@@ -2,11 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
 
-use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -14,8 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class TransactionFieldProductsSkuPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
 {
-    use LoggerTrait;
-
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -28,16 +24,8 @@ class TransactionFieldProductsSkuPlugin extends AbstractPlugin implements QuoteF
         QuoteTransfer $quoteTransfer,
         array $params = []
     ): GooleTagManagerQuoteTransfer {
-        try {
-            foreach ($quoteTransfer->getItems() as $itemTransfer) {
-                $gooleTagManagerQuoteTransfer->addTransactionProductsSkus($itemTransfer->getSku());
-            }
-        } catch (Exception $e) {
-            $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s',
-                $quoteTransfer::ITEMS,
-                self::class
-            ), ['quote' => json_encode($quoteTransfer)]);
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $gooleTagManagerQuoteTransfer->addTransactionProductsSkus($itemTransfer->getSku());
         }
 
         return $gooleTagManagerQuoteTransfer;

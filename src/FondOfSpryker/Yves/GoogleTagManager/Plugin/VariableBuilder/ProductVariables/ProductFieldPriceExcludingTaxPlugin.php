@@ -2,11 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
-use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -14,8 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class ProductFieldPriceExcludingTaxPlugin extends AbstractPlugin implements ProductFieldPluginInterface
 {
-    use LoggerTrait;
-
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
@@ -28,23 +24,15 @@ class ProductFieldPriceExcludingTaxPlugin extends AbstractPlugin implements Prod
         ProductAbstractTransfer $product,
         array $params = []
     ): GooleTagManagerProductDetailTransfer {
-        try {
-            $product = $this->getFactory()
-                ->getTaxProductConnectorClient()
-                ->getNetPriceForProduct($product);
+        $product = $this->getFactory()
+            ->getTaxProductConnectorClient()
+            ->getNetPriceForProduct($product);
 
-            $priceExcludingTax = $this->getFactory()
-                ->getMoneyPlugin()
-                ->convertIntegerToDecimal($product->getNetPrice());
+        $priceExcludingTax = $this->getFactory()
+            ->getMoneyPlugin()
+            ->convertIntegerToDecimal($product->getNetPrice());
 
-            $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
-        } catch (Exception $e) {
-            $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s',
-                $product::PRICE,
-                self::class
-            ), ['product' => json_encode($product)]);
-        }
+        $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
 
         return $gooleTagManagerProductDetailTransfer;
     }

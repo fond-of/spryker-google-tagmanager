@@ -2,11 +2,9 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
-use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
-use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -14,8 +12,6 @@ use Spryker\Yves\Kernel\AbstractPlugin;
  */
 class TransactionProductFieldBrandPlugin extends AbstractPlugin implements TransactionProductFieldPluginInterface
 {
-    use LoggerTrait;
-
     public const ATTR_BRAND = 'brand';
     public const DEFAULT_LOCALE = '_';
 
@@ -31,17 +27,7 @@ class TransactionProductFieldBrandPlugin extends AbstractPlugin implements Trans
         ItemTransfer $itemTransfer,
         array $params = []
     ): GooleTagManagerTransactionProductTransfer {
-        try {
-            $gooleTagManagerTransactionProductTransfer->setBrand($this->getAttrBrand($itemTransfer));
-        } catch (Exception $e) {
-            $this->getLogger()->notice(sprintf(
-                'GoogleTagManager: attribute %s not found in %s',
-                $itemTransfer::ABSTRACT_ATTRIBUTES,
-                self::class
-            ), ['quote' => json_encode($itemTransfer)]);
-        }
-
-        return $gooleTagManagerTransactionProductTransfer;
+        return $gooleTagManagerTransactionProductTransfer->setBrand($this->getAttrBrand($itemTransfer));
     }
 
     /**
