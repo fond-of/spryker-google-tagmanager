@@ -1,20 +1,25 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
+use Exception;
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\AddressTransfer;
+use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\ProductViewTransfer;
-use Spryker\Shared\Kernel\Store;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
-use Spryker\Shared\Shipment\ShipmentConfig;
+use Spryker\Shared\Log\LoggerTrait;
+use Spryker\Yves\Kernel\AbstractPlugin;
 
-class OrderVariableBuilder
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class OrderVariableBuilderPlugin extends AbstractPlugin implements OrderVariableBuilderPluginInterface
 {
+    use LoggerTrait;
+
     public const SHIPMENT_EXPENSE_TYPE = 'SHIPMENT_EXPENSE_TYPE';
 
     /**
@@ -48,77 +53,67 @@ class OrderVariableBuilder
     protected $transactionProductsVariableBuilder;
 
     /**
-     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCartClientInterface $cartClient
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface $storageClient
-     * @param \Spryker\Shared\Kernel\Store $store
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[] $orderVariableBuilderPlugins
-     * @param \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\TransactionProductsVariableBuilderInterface $transactionProductsVariableBuilder
-     */
-    public function __construct(
-        MoneyPluginInterface $moneyPlugin,
-        GoogleTagManagerToCartClientInterface $cartClient,
-        GoogleTagManagerToProductStorageClientInterface $storageClient,
-        Store $store,
-        array $orderVariableBuilderPlugins,
-        TransactionProductsVariableBuilderInterface $transactionProductsVariableBuilder
-    ) {
-        $this->moneyPlugin = $moneyPlugin;
-        $this->orderVariableBuilderPlugins = $orderVariableBuilderPlugins;
-        $this->cartClient = $cartClient;
-        $this->storageClient = $storageClient;
-        $this->store = $store;
-        $this->transactionProductsVariableBuilder = $transactionProductsVariableBuilder;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return array
      */
     public function getVariables(OrderTransfer $orderTransfer): array
     {
-        $variables = [
-            GoogleTagManagerConstants::TRANSACTION_ENTITY => strtoupper(GoogleTagManagerConstants::PAGE_TYPE_ORDER),
-            GoogleTagManagerConstants::TRANSACTION_ID => $orderTransfer->getOrderReference(),
-            GoogleTagManagerConstants::TRANSACTION_DATE => $orderTransfer->getCreatedAt(),
-            GoogleTagManagerConstants::TRANSACTION_AFFILIATION => $orderTransfer->getStore(),
-            GoogleTagManagerConstants::TRANSACTION_TOTAL => $this->moneyPlugin->convertIntegerToDecimal(
-                $orderTransfer->getTotals()->getGrandTotal()
-            ),
-            GoogleTagManagerConstants::TRANSACTION_WITHOUT_SHIPPING_AMOUNT => $this->moneyPlugin->convertIntegerToDecimal(
-                $this->getTransactionTotalWithoutShippingAmount($orderTransfer)
-            ),
-            GoogleTagManagerConstants::TRANSACTION_SUBTOTAL => $this->moneyPlugin->convertIntegerToDecimal(
-                $orderTransfer->getTotals()->getSubtotal()
-            ),
-            GoogleTagManagerConstants::TRANSACTION_TAX => $this->moneyPlugin->convertIntegerToDecimal(
-                $orderTransfer->getTotals()->getTaxTotal()->getAmount()
-            ),
-            GoogleTagManagerConstants::TRANSACTION_SHIPPING => implode('-', $this->getShipmentMethods($orderTransfer)),
-            GoogleTagManagerConstants::TRANSACTION_PAYMENT => implode('-', $this->getPaymentMethods($orderTransfer)),
-            GoogleTagManagerConstants::TRANSACTION_CURRENCY => $orderTransfer->getCurrencyIsoCode(),
+        $gooleTagManagerTransactionTransfer = $this->createGooleTagManagerTransactionTransfer();
+
+        foreach ($this->getFactory()->getOrderVariableBuilderFieldPlugins() as $plugin) {
+            try {
+                $gooleTagManagerTransactionTransfer = $plugin->handle($gooleTagManagerTransactionTransfer, $orderTransfer);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ));
+            }
+        }
+
+        /*$variables = [
             GoogleTagManagerConstants::TRANSACTION_PRODUCTS => $this->transactionProductsVariableBuilder->getProductsFromOrder($orderTransfer),
             GoogleTagManagerConstants::TRANSACTION_PRODUCTS_SKUS => $this->getTransactionProductsSkus($orderTransfer),
             GoogleTagManagerConstants::CUSTOMER_EMAIL => $this->getCustomerEmail($orderTransfer->getBillingAddress()),
-        ];
+        ];*/
 
-        return $this->executePlugins($orderTransfer, $variables);
+        $gooleTagManagerTransactionTransfer = $this->addTransactionProducts(
+            $gooleTagManagerTransactionTransfer,
+            $orderTransfer
+        );
+
+        return $this->stripEmptyArrayIndex($gooleTagManagerTransactionTransfer);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $variables
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
-    protected function executePlugins(OrderTransfer $orderTransfer, array $variables): array
-    {
-        foreach ($this->orderVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle($orderTransfer, $variables));
+    protected function addTransactionProducts(
+        GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
+        OrderTransfer $orderTransfer
+    ): GooleTagManagerTransactionTransfer {
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            $gooleTagManagerTransactionTransferProductTransfer = $this->getFactory()
+                ->getTransactionProductVariableBuilderPlugin()
+                ->getProduct($itemTransfer);
+
+            $gooleTagManagerTransactionTransfer->addTransactionProducts($gooleTagManagerTransactionTransferProductTransfer);
         }
 
-        return $variables;
+        return $gooleTagManagerTransactionTransfer;
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
+     */
+    protected function createGooleTagManagerTransactionTransfer(): GooleTagManagerTransactionTransfer
+    {
+        return new GooleTagManagerTransactionTransfer();
     }
 
     /**
@@ -240,54 +235,6 @@ class OrderVariableBuilder
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return array
-     */
-    protected function getShipmentMethods(OrderTransfer $orderTransfer): array
-    {
-        $shipmentMethods = [];
-
-        foreach ($orderTransfer->getShipmentMethods() as $shipment) {
-            $shipmentMethods[] = $shipment->getName();
-        }
-
-        return $shipmentMethods;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return array
-     */
-    protected function getPaymentMethods(OrderTransfer $orderTransfer): array
-    {
-        $paymentMethods = [];
-
-        foreach ($orderTransfer->getPayments() as $payment) {
-            $paymentMethods[] = $payment->getPaymentMethod();
-        }
-
-        return $paymentMethods;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return array
-     */
-    protected function getExpenses(OrderTransfer $orderTransfer): array
-    {
-        $expenses = [];
-
-        foreach ($orderTransfer->getExpenses() as $expense) {
-            $expenses[$expense->getType()] = (!array_key_exists($expense->getType(), $expenses)) ? $expense->getUnitPrice() : $expenses[$expense->getType()] + $expense->getUnitPrice();
-        }
-
-        return $expenses;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\AddressTransfer|null $addressTransfer
      *
      * @return string
@@ -306,18 +253,20 @@ class OrderVariableBuilder
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerTransactionTransfer
      *
-     * @return int|null
+     * @return array
      */
-    protected function getTransactionTotalWithoutShippingAmount(OrderTransfer $orderTransfer): ?int
+    protected function stripEmptyArrayIndex(GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer): array
     {
-        $expenses = $this->getExpenses($orderTransfer);
+        $gooleTagManagerQuoteArray = $gooleTagManagerTransactionTransfer->toArray(true, true);
 
-        if (array_key_exists(ShipmentConfig::SHIPMENT_EXPENSE_TYPE, $expenses)) {
-            return $orderTransfer->getTotals()->getGrandTotal() - $expenses[ShipmentConfig::SHIPMENT_EXPENSE_TYPE];
+        foreach ($gooleTagManagerQuoteArray as $field => $value) {
+            if ($value === null || $value === '') {
+                unset($gooleTagManagerQuoteArray[$field]);
+            }
         }
 
-        return $orderTransfer->getTotals()->getGrandTotal();
+        return $gooleTagManagerQuoteArray;
     }
 }

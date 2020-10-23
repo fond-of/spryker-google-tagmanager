@@ -1,33 +1,33 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
-use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class TransactionFieldTotalWithoutShippingAmountPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
+class OrderFieldTransactionTotalWithoutShippingAmountPlugin extends AbstractPlugin implements OrderFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $params
      *
      * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
     public function handle(
         GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
-        QuoteTransfer $quoteTransfer,
+        OrderTransfer $orderTransfer,
         array $params = []
     ): GooleTagManagerTransactionTransfer {
-        $moneyPlugin = $this->getFactory()->getMoneyPlugin();
-
         $gooleTagManagerTransactionTransfer->setTransactionTotalWithoutShippingAmount(
-            $moneyPlugin->convertIntegerToDecimal($this->calculateTotalWithoutShipment($quoteTransfer))
+            $this->getFactory()->getMoneyPlugin()->convertIntegerToDecimal(
+                $this->getTotalWithoutShipment($orderTransfer)
+            )
         );
 
         return $gooleTagManagerTransactionTransfer;
@@ -38,16 +38,16 @@ class TransactionFieldTotalWithoutShippingAmountPlugin extends AbstractPlugin im
      *
      * @return int
      */
-    protected function calculateTotalWithoutShipment(QuoteTransfer $quoteTransfer): int
+    protected function getTotalWithoutShipment(OrderTransfer $orderTransfer): int
     {
-        if ($quoteTransfer->getTotals() === null) {
+        if ($orderTransfer->getTotals() === null) {
             return 0;
         }
 
-        if ($quoteTransfer->getTotals()->getSubtotal() === null) {
+        if ($orderTransfer->getTotals()->getSubtotal() === null) {
             return 0;
         }
 
-        return $quoteTransfer->getTotals()->getSubtotal();
+        return $orderTransfer->getTotals()->getSubtotal();
     }
 }

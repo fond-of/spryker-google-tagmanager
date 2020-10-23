@@ -104,7 +104,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
             case GoogleTagManagerConstants::PAGE_TYPE_PRODUCT:
                 $productAbstractTransfer = (new ProductAbstractTransfer())
                     ->setTaxRate(Config::get(TaxConstants::DEFAULT_TAX_RATE))
-                    ->fromArray($params['product']->toArray(), true);
+                    ->fromArray($params[GoogleTagManagerConstants::PRODUCT]->toArray(), true);
 
                 $this->addProductVariables($productAbstractTransfer);
                 $this->addQuoteVariables();
@@ -112,20 +112,19 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
                 break;
             case GoogleTagManagerConstants::PAGE_TYPE_CATEGORY:
                 $this->addCategoryVariables(
-                    $params['category'],
-                    $params['products'],
+                    $params[GoogleTagManagerConstants::CATEGORY],
+                    $params[GoogleTagManagerConstants::PRODUCTS],
                     $params[GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE]
                 );
                 $this->addQuoteVariables();
 
                 break;
-
-            /*case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
+            case GoogleTagManagerConstants::PAGE_TYPE_ORDER:
                 $this->addOrderVariables($params['order']);
 
                 break;
 
-            case GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE:
+            /*case GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE:
                 $this->addNewsletterSubscribeVariables($page);
 
                 break;*/
@@ -223,7 +222,7 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
      */
     protected function addOrderVariables(OrderTransfer $orderTransfer): array
     {
-        $orderVariableBuilder = $this->getFactory()->createOrderVariableBuilder();
+        $orderVariableBuilder = $this->getFactory()->getOrderVariableBuilderPlugin();
 
         return $this->dataLayerVariables = array_merge(
             $this->dataLayerVariables,

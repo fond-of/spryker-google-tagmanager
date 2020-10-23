@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteVariableBuilderInterface;
-use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
+use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -30,11 +30,11 @@ class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteVariable
      */
     public function getVariables(QuoteTransfer $quoteTransfer): array
     {
-        $gooleTagManagerQuoteTransfer = $this->createGoogleTagManagerQuoteTransfer();
+        $gooleTagManagerTransactionTransfer = $this->createGoogleTagManagerQuoteTransfer();
 
         foreach ($this->getFactory()->getQuoteVariableBuilderFieldPlugins() as $plugin) {
             try {
-                $gooleTagManagerQuoteTransfer = $plugin->handle($gooleTagManagerQuoteTransfer, $quoteTransfer);
+                $gooleTagManagerTransactionTransfer = $plugin->handle($gooleTagManagerTransactionTransfer, $quoteTransfer);
             } catch (Exception $e) {
                 $this->getLogger()->notice(sprintf(
                     'GoogleTagManager: error in %s, plugin %s',
@@ -44,48 +44,48 @@ class QuoteVariableBuilderPlugin extends AbstractPlugin implements QuoteVariable
             }
         }
 
-        $gooleTagManagerQuoteTransfer = $this->addTransactionProducts($gooleTagManagerQuoteTransfer, $quoteTransfer);
+        $gooleTagManagerTransactionTransfer = $this->addTransactionProducts($gooleTagManagerTransactionTransfer, $quoteTransfer);
 
-        return $this->stripEmptyArrayIndex($gooleTagManagerQuoteTransfer);
+        return $this->stripEmptyArrayIndex($gooleTagManagerTransactionTransfer);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
     protected function addTransactionProducts(
-        GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer,
+        GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
         QuoteTransfer $quoteTransfer
-    ): GooleTagManagerQuoteTransfer {
+    ): GooleTagManagerTransactionTransfer {
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $gooleTagManagerTransactionProductTransfer = $this->getFactory()
+            $gooleTagManagerTransactionTransferProductTransfer = $this->getFactory()
                 ->getTransactionProductVariableBuilderPlugin()
                 ->getProduct($itemTransfer);
 
-            $gooleTagManagerQuoteTransfer->addTransactionProducts($gooleTagManagerTransactionProductTransfer);
+            $gooleTagManagerTransactionTransfer->addTransactionProducts($gooleTagManagerTransactionTransferProductTransfer);
         }
 
-        return $gooleTagManagerQuoteTransfer;
+        return $gooleTagManagerTransactionTransfer;
     }
 
     /**
-     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
-    protected function createGoogleTagManagerQuoteTransfer(): GooleTagManagerQuoteTransfer
+    protected function createGoogleTagManagerQuoteTransfer(): GooleTagManagerTransactionTransfer
     {
-        return new GooleTagManagerQuoteTransfer();
+        return new GooleTagManagerTransactionTransfer();
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerQuoteTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerTransactionTransfer
      *
      * @return array
      */
-    protected function stripEmptyArrayIndex(GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer): array
+    protected function stripEmptyArrayIndex(GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer): array
     {
-        $gooleTagManagerQuoteArray = $gooleTagManagerQuoteTransfer->toArray(true, true);
+        $gooleTagManagerQuoteArray = $gooleTagManagerTransactionTransfer->toArray(true, true);
 
         foreach ($gooleTagManagerQuoteArray as $field => $value) {
             if ($value === null || $value === '') {

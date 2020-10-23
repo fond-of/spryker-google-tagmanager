@@ -1,32 +1,34 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables;
 
-use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
-use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
  */
-class TransactionFieldProductsSkuPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
+class OrderFieldTransactionTotalPlugin extends AbstractPlugin implements OrderFieldPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $params
      *
      * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
     public function handle(
         GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
-        QuoteTransfer $quoteTransfer,
+        OrderTransfer $orderTransfer,
         array $params = []
     ): GooleTagManagerTransactionTransfer {
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $gooleTagManagerTransactionTransfer->addTransactionProductsSkus($itemTransfer->getSku());
-        }
+        $gooleTagManagerTransactionTransfer->setTransactionTotal(
+            $this->getFactory()->getMoneyPlugin()->convertIntegerToDecimal(
+                $orderTransfer->getTotals()->getGrandTotal()
+            )
+        );
 
         return $gooleTagManagerTransactionTransfer;
     }

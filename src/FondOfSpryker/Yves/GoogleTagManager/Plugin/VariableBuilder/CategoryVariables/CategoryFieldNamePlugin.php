@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables;
 
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -23,7 +24,7 @@ class CategoryFieldNamePlugin extends AbstractPlugin implements CategoryFieldPlu
         array $params = []
     ): GooleTagManagerCategoryTransfer {
         if (isset($category['name'])) {
-            $gooleTagManagerCategoryTransfer->setName($category['name']);
+            $gooleTagManagerCategoryTransfer->setName($category[GoogleTagManagerConstants::CATEGORY_ARRAY_NAME]);
         }
 
         return $gooleTagManagerCategoryTransfer;

@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables;
 
+use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryFieldPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
@@ -22,8 +23,10 @@ class CategoryFieldContentTypePlugin extends AbstractPlugin implements CategoryF
         array $products = [],
         array $params = []
     ): GooleTagManagerCategoryTransfer {
-        if (isset($params['contentType'])) {
-            $gooleTagManagerCategoryTransfer->setContentType($params['contentType']);
+        if (isset($params[GoogleTagManagerConstants::CATEGORY_ARRAY_CONTENT_TYPE])) {
+            $gooleTagManagerCategoryTransfer->setContentType(
+                $params[GoogleTagManagerConstants::CATEGORY_ARRAY_CONTENT_TYPE]
+            );
         }
 
         return $gooleTagManagerCategoryTransfer;

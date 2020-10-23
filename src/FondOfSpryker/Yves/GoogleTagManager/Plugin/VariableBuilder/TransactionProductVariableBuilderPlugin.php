@@ -30,12 +30,12 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
      */
     public function getProduct(ItemTransfer $itemTransfer): GooleTagManagerTransactionProductTransfer
     {
-        $gooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
+        $GooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
 
         foreach ($this->getFactory()->getTransactionProductVariableBuilderFieldPlugins() as $plugin) {
             try {
-                $gooleTagManagerTransactionProductTransfer = $plugin->handle(
-                    $gooleTagManagerTransactionProductTransfer,
+                $GooleTagManagerTransactionProductTransfer = $plugin->handle(
+                    $GooleTagManagerTransactionProductTransfer,
                     $itemTransfer
                 );
             } catch (Exception $e) {
@@ -47,7 +47,7 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
             }
         }
 
-        return $gooleTagManagerTransactionProductTransfer;
+        return $GooleTagManagerTransactionProductTransfer;
     }
 
     /**

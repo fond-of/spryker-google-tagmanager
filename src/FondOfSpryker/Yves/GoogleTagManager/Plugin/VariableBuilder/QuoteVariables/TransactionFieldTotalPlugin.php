@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
+use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -13,23 +13,23 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class TransactionFieldTotalPlugin extends AbstractPlugin implements QuoteFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
      */
     public function handle(
-        GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer,
+        GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
         QuoteTransfer $quoteTransfer,
         array $params = []
-    ): GooleTagManagerQuoteTransfer {
+    ): GooleTagManagerTransactionTransfer {
         $moneyPlugin = $this->getFactory()->getMoneyPlugin();
 
-        $gooleTagManagerQuoteTransfer->setTransactionTotal(
+        $gooleTagManagerTransactionTransfer->setTransactionTotal(
             $moneyPlugin->convertIntegerToDecimal($quoteTransfer->getTotals()->getGrandTotal())
         );
 
-        return $gooleTagManagerQuoteTransfer;
+        return $gooleTagManagerTransactionTransfer;
     }
 }
