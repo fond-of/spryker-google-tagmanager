@@ -13,6 +13,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToCart
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductImageStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientBridge;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientBridge;
+use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\NewsletterVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCartPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutBillingAddressPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\EnhancedEcommerce\EnhancedEcommerceCheckoutPaymentPlugin;
@@ -32,7 +33,6 @@ use FondOfSpryker\Yves\GoogleTagManager\Plugin\Mapper\EnhancedEcommerceProductMa
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryProductVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariableBuilderPlugin;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\CustomerEmailHashNewsletterVariablesPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\QuoteVariableBuilderPlugin;
@@ -77,6 +77,8 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
     public const ORDER_VARIABLE_BUILDER_PLUGIN = 'ORDER_VARIABLE_BUILDER_PLUGIN';
 
     public const NEWSLETTER_VARIABLE_BUILDER_PLUGINS = 'NEWSLETTER_VARIABLE_BUILDER_PLUGINS';
+    public const NEWSLETTER_VARIABLE_BUILDER_FIELD_PLUGINS = 'NEWSLETTER_VARIABLE_BUILDER_FIELD_PLUGINS';
+
     public const CART_CONTROLLER_EVENT_HANDLER = 'CART_CONTROLLER_EVENT_HANDLER';
     public const ENHANCED_ECOMMERCE_PAGE_PLUGINS = 'ENHANCED_ECOMMERCE_PAGE_PLUGINS';
     public const STORE = 'STORE';
@@ -119,6 +121,10 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         // order
         $this->addOrderVariableBuilderPlugin($container);
 
+        // newsletter
+        $this->addNewsletterVariableBuilderlugin($container);
+        $this->addNewsletterVariableBuilderFieldPlugins($container);
+
         $this->provideCartClient($container);
         $this->provideProductClient($container);
         $this->provideTaxProductConnectorClient($container);
@@ -133,7 +139,7 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
         $this->addProductFieldMapperPlugins($container);
         $this->addGoogleTagManagerSessionHandler($container);
         $this->addEnhancedEcommerceSessionHandler($container);
-        $this->addNewsletterVariableBuilderPlugins($container);
+
         $this->addNewsletterControllerEventHandler($container);
         $this->addEnhancedEcommerceProductMapperPlugin($container);
         $this->addCartControllerEventHandler($container);
@@ -380,10 +386,24 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Yves\Kernel\Container
      */
-    protected function addNewsletterVariableBuilderPlugins(Container $container): Container
+    protected function addNewsletterVariableBuilderlugin(Container $container): Container
     {
-        $container[static::NEWSLETTER_VARIABLE_BUILDER_PLUGINS] = function (Container $container) {
-            return $this->getNewsletterVariableBuilderPlugins($container);
+        $container->set(static::NEWSLETTER_VARIABLE_BUILDER_PLUGINS, function () {
+            return new NewsletterVariableBuilder();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addNewsletterVariableBuilderFieldPlugins(Container $container): Container
+    {
+        $container[static::NEWSLETTER_VARIABLE_BUILDER_FIELD_PLUGINS] = function (Container $container) {
+            return $this->getNewsletterVariableBuilderFieldPlugins($container);
         };
 
         return $container;
@@ -394,11 +414,9 @@ class GoogleTagManagerDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterfaceField[]
      */
-    protected function getNewsletterVariableBuilderPlugins(Container $container): array
+    protected function getNewsletterVariableBuilderFieldPlugins(Container $container): array
     {
-        return [
-            new CustomerEmailHashNewsletterVariablesPlugin($container[static::GTM_SESSION_HANDLER]),
-        ];
+        return [];
     }
 
     /**

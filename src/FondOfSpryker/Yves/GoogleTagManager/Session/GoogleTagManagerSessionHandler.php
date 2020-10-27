@@ -2,12 +2,17 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
-use Generated\Shared\Transfer\GoogleTagManagerNewsletterDataTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer;
+use Spryker\Shared\Kernel\Transfer\Exception\TransferUnserializationException;
+use Spryker\Shared\Log\LoggerTrait;
 
 class GoogleTagManagerSessionHandler implements GoogleTagManagerSessionHandlerInterface
 {
+    use LoggerTrait;
+
+    public const SESSION_NEWSLETTER_DATA = 'SESSION_NEWSLETTER_DATA';
+
     /**
      * @var \FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface
      */
@@ -22,27 +27,46 @@ class GoogleTagManagerSessionHandler implements GoogleTagManagerSessionHandlerIn
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GoogleTagManagerNewsletterDataTransfer $googleTagManagerNewsletterDataTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer $googleTagManagerNewsletterTransfer
      *
      * @return void
      */
-    public function setNewsletterData(GoogleTagManagerNewsletterDataTransfer $googleTagManagerNewsletterDataTransfer): void
+    public function setNewsletterData(GoogleTagManagerNewsletterTransfer $googleTagManagerNewsletterTransfer): void
     {
-        $this->sessionClient->set(GoogleTagManagerConstants::SESSION_NEWSLETTER_DATA, $googleTagManagerNewsletterDataTransfer->toArray());
+        $this->sessionClient->set(static::SESSION_NEWSLETTER_DATA, $googleTagManagerNewsletterTransfer->serialize());
     }
 
     /**
-     * @return array
+     * @return \Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer
      */
-    public function getNewsletterData(): array
+    public function getNewsletterData(): GoogleTagManagerNewsletterTransfer
     {
-        $newsletterDataArray = $this->sessionClient->get(GoogleTagManagerConstants::SESSION_NEWSLETTER_DATA);
+        $googleTagManagerNewsletterTransfer = new GoogleTagManagerNewsletterTransfer();
 
-        if (is_array($newsletterDataArray)) {
-            return $newsletterDataArray;
+        if (!$this->sessionClient->get(static::SESSION_NEWSLETTER_DATA)) {
+            return $googleTagManagerNewsletterTransfer;
         }
 
-        return [];
+        try {
+            $googleTagManagerNewsletterTransfer->unserialize(
+                $this->sessionClient->get(static::SESSION_NEWSLETTER_DATA)
+            );
+        } catch (TransferUnserializationException $e) {
+            $this->getLogger()->notice(sprintf(
+                'GoogleTagManager: cant get newsletter session data in %s',
+                self::class
+            ), ['message' => $e->getMessage()]);
+        }
+
+        return $googleTagManagerNewsletterTransfer;
+    }
+
+    /**
+     * @return void
+     */
+    public function removeNewsletterData(): void
+    {
+        $this->sessionClient->remove(static::SESSION_NEWSLETTER_DATA);
     }
 
     /**

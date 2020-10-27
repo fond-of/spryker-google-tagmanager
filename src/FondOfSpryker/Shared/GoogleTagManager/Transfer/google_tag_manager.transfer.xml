@@ -70,7 +70,7 @@
         <property name="imageUrl" type="string" />
     </transfer>
 
-    <transfer name="GoogleTagManagerNewsletterData">
+    <transfer name="GoogleTagManagerNewsletter">
         <property name="email" type="string" />
         <property name="externalIdHash" type="string" />
     </transfer>

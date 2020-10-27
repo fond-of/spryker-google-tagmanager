@@ -73,11 +73,11 @@ class OrderVariableBuilderPlugin extends AbstractPlugin implements OrderVariable
             }
         }
 
-        /*$variables = [
+        $variables = [
             GoogleTagManagerConstants::TRANSACTION_PRODUCTS => $this->transactionProductsVariableBuilder->getProductsFromOrder($orderTransfer),
             GoogleTagManagerConstants::TRANSACTION_PRODUCTS_SKUS => $this->getTransactionProductsSkus($orderTransfer),
             GoogleTagManagerConstants::CUSTOMER_EMAIL => $this->getCustomerEmail($orderTransfer->getBillingAddress()),
-        ];*/
+        ];
 
         $gooleTagManagerTransactionTransfer = $this->addTransactionProducts(
             $gooleTagManagerTransactionTransfer,

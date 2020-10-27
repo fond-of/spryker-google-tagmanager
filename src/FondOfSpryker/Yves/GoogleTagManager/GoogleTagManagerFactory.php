@@ -19,6 +19,7 @@ use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductArrayMode
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Session\GoogleTagManagerSessionHandlerInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\GoogleTagManagerTwigExtension;
 use Spryker\Shared\Kernel\Store;
@@ -100,7 +101,7 @@ class GoogleTagManagerFactory extends AbstractFactory
      */
     public function getNewsletterVariableBuilder(): NewsletterVariableBuilder
     {
-        return new NewsletterVariableBuilder($this->getNewsletterVariableBuilderPlugins());
+        return new NewsletterVariableBuilder($this->getNewsletterVariableBuilderFieldPlugins());
     }
 
     /**
@@ -232,11 +233,11 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\NewsletterVariables\NewsletterVariablesPluginInterfaceField[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\NewsletterFieldPluginInterface[]
      */
-    public function getNewsletterVariableBuilderPlugins(): array
+    public function getNewsletterVariableBuilderFieldPlugins(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::NEWSLETTER_VARIABLE_BUILDER_PLUGINS);
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::NEWSLETTER_VARIABLE_BUILDER_FIELD_PLUGINS);
     }
 
     /**
@@ -318,5 +319,13 @@ class GoogleTagManagerFactory extends AbstractFactory
     public function getProductImageStorageClient(): GoogleTagManagerToProductImageStorageClientInterface
     {
         return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::PRODUCT_IMAGE_STORAGE_CLIENT);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Session\GoogleTagManagerSessionHandlerInterface
+     */
+    public function getGoogleTagManagerSessionHandler(): GoogleTagManagerSessionHandlerInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::GTM_SESSION_HANDLER);
     }
 }

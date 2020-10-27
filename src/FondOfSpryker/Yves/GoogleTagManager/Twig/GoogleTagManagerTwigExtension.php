@@ -123,12 +123,6 @@ class GoogleTagManagerTwigExtension extends AbstractTwigExtensionPlugin
                 $this->addOrderVariables($params['order']);
 
                 break;
-
-            /*case GoogleTagManagerConstants::PAGE_TYPE_NEWSLETTER_SUBSCRIBE:
-                $this->addNewsletterSubscribeVariables($page);
-
-                break;*/
-
             default:
                 $this->addQuoteVariables();
 

@@ -2,21 +2,26 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Session;
 
-use Generated\Shared\Transfer\GoogleTagManagerNewsletterDataTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer;
 
 interface GoogleTagManagerSessionHandlerInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GoogleTagManagerNewsletterDataTransfer $googleTagManagerNewsletterDataTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer $googleTagManagerNewsletterTransfer
      *
      * @return void
      */
-    public function setNewsletterData(GoogleTagManagerNewsletterDataTransfer $googleTagManagerNewsletterDataTransfer): void;
+    public function setNewsletterData(GoogleTagManagerNewsletterTransfer $googleTagManagerNewsletterTransfer): void;
 
     /**
-     * @return array
+     * @return \Generated\Shared\Transfer\GoogleTagManagerNewsletterTransfer
      */
-    public function getNewsletterData(): array;
+    public function getNewsletterData(): GoogleTagManagerNewsletterTransfer;
+
+    /**
+     * @return void
+     */
+    public function removeNewsletterData(): void;
 
     /**
      * @param string $key
