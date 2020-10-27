@@ -2,21 +2,21 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-use Generated\Shared\Transfer\GooleTagManagerQuoteTransfer;
+use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
 interface QuoteFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerTransaction $GooleTagManagerTransaction
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerQuoteTransfer
+     * @return \Generated\Shared\Transfer\GooleTagManagerTransaction
      */
     public function handle(
-        GooleTagManagerQuoteTransfer $gooleTagManagerQuoteTransfer,
+        GooleTagManagerTransactionTransfer $GooleTagManagerTransaction,
         QuoteTransfer $quoteTransfer,
         array $params = []
-    ): GooleTagManagerQuoteTransfer;
+    ): GooleTagManagerTransactionTransfer;
 }

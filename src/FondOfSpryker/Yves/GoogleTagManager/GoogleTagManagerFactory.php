@@ -7,15 +7,16 @@ use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProd
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToProductStorageClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\Client\GoogleTagManagerToSessionClientInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\EnhancedEcommerceProductMapperInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultVariableBuilderPluginInterface;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductVariableBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\QuoteVariableBuilderInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsVariableBuilderPluginInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\NewsletterVariableBuilder;
-use FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductArrayModel;
 use FondOfSpryker\Yves\GoogleTagManager\Model\EnhancedEcommerce\ProductModelBuilderInterface;
-use FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariableBuilderPlugin;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandler;
 use FondOfSpryker\Yves\GoogleTagManager\Session\EnhancedEcommerceSessionHandlerInterface;
 use FondOfSpryker\Yves\GoogleTagManager\Twig\EnhancedEcommerceTwigExtension;
@@ -47,14 +48,11 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\CategoryVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryVariableBuilderPluginInterface
      */
-    public function createCategoryVariableBuilder(): CategoryVariableBuilderPlugin
+    public function getCategoryVariableBuilderPlugin(): CategoryVariableBuilderPluginInterface
     {
-        return new CategoryVariableBuilderPlugin(
-            $this->getMoneyPlugin(),
-            $this->getCategoryVariableBuilderPlugins()
-        );
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_VARIABLE_BUILDER_PLUGIN);
     }
 
     /**
@@ -66,18 +64,19 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Model\DataLayer\OrderVariableBuilder
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderFieldPluginInterface[]
      */
-    public function createOrderVariableBuilder(): OrderVariableBuilder
+    public function getCategoryProductVariableBuilderFieldPlugins(): array
     {
-        return new OrderVariableBuilder(
-            $this->getMoneyPlugin(),
-            $this->getCartClient(),
-            $this->getProductStorageClient(),
-            $this->getStore(),
-            $this->getOrderVariableBuilderPlugins(),
-            $this->getTransactionProductVariableBuilderPlugin()
-        );
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_PRODUCT_VARIABLE_BUILDER_FIELD_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderVariableBuilderPluginInterface
+     */
+    public function getOrderVariableBuilderPlugin(): OrderVariableBuilderPluginInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::ORDER_VARIABLE_BUILDER_PLUGIN);
     }
 
     /**
@@ -185,11 +184,19 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryFieldPluginInterface[]
      */
-    public function getCategoryVariableBuilderPlugins(): array
+    public function getCategoryVariableBuilderFieldPlugins(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_VARIABLE_BUILDER_PLUGINS);
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_VARIABLE_BUILDER_FIELD_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductVariableBuilderPluginInterface
+     */
+    public function getCategoryProductVariableBuilderPlugin(): CategoryProductVariableBuilderPluginInterface
+    {
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::CATEGORY_PRODUCT_VARIABLE_BUILDER_PLUGIN);
     }
 
     /**
@@ -201,11 +208,11 @@ class GoogleTagManagerFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables\OrderVariableBuilderPluginInterface[]
+     * @return \FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderFieldPluginInterface[]
      */
-    public function getOrderVariableBuilderPlugins(): array
+    public function getOrderVariableBuilderFieldPlugins(): array
     {
-        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::ORDER_VARIABLE_BUILDER_PLUGINS);
+        return $this->getProvidedDependency(GoogleTagManagerDependencyProvider::ORDER_VARIABLE_BUILDER_FIELD_PLUGINS);
     }
 
     /**

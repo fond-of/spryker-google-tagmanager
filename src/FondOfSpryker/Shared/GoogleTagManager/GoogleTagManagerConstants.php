@@ -8,6 +8,14 @@ interface GoogleTagManagerConstants
     public const ENABLED = false;
     public const INTERNAL_IPS = 'INTERNAL_IPS';
 
+    public const PRODUCT = 'product';
+    public const PRODUCTS = 'products';
+    public const CATEGORY = 'category';
+
+    public const CATEGORY_ARRAY_CONTENT_TYPE = 'contentType';
+    public const CATEGORY_ARRAY_ID_CATEGORY = 'id_category';
+    public const CATEGORY_ARRAY_NAME = 'name';
+
     public const ATTRIBUTE_SPECIAL_PRICE = 'ATTRIBUTE_SPECIAL_PRICE';
     public const ATTRIBUTE_SPECIAL_PRICE_FROM = 'ATTRIBUTE_SPECIAL_PRICE_FROM';
     public const ATTRIBUTE_SPECIAL_PRICE_TO = 'ATTRIBUTE_SPECIAL_PRICE_TO';
@@ -36,8 +44,6 @@ interface GoogleTagManagerConstants
     public const CATEGORY_SIZE = 'categorySize';
     public const CATEGORY_PRODUCTS = 'categoryProducts';
     public const CATEGORY_CONTENT_TYPE = 'contentType';
-
-    public const PRODUCTS = 'products';
 
     public const TRANSACTION_ENTITY = 'transactionEntity';
     public const TRANSACTION_ID = 'transactionId';

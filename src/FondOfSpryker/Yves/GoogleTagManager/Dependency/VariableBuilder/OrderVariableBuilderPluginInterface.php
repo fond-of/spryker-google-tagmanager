@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables;
+namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
 use Generated\Shared\Transfer\OrderTransfer;
 
@@ -8,9 +8,8 @@ interface OrderVariableBuilderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $variables
      *
      * @return array
      */
-    public function handle(OrderTransfer $orderTransfer, array $variables): array;
+    public function getVariables(OrderTransfer $orderTransfer): array;
 }

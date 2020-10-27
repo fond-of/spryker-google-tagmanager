@@ -27,6 +27,23 @@
         <property name="customerEmail" type="string" />
     </transfer>
 
+    <transfer name="GooleTagManagerTransaction">
+        <property name="transactionEntity" type="string" />
+        <property name="transactionId" type="string" />
+        <property name="transactionAffiliation" type="string" />
+        <property name="transactionTotal" type="string" />
+        <property name="transactionTotalWithoutShippingAmount" type="string" />
+        <property name="transactionSubtotal" type="string" />
+        <property name="transactionTax" type="string" />
+        <property name="transactionShipping" type="string" />
+        <property name="transactionPayment" type="string" />
+        <property name="transactionCurrency" type="string" />
+        <property name="transactionProducts" type="GooleTagManagerTransactionProduct[]" />
+        <property name="transactionProductsSkus" type="string[]" />
+        <property name="transactionDate" type="string" />
+        <property name="customerEmail" type="string" />
+    </transfer>
+
     <transfer name="GooleTagManagerProductDetail">
         <property name="productId" type="int" />
         <property name="productName" type="string" />
@@ -60,8 +77,9 @@
 
     <transfer name="GooleTagManagerCategory">
         <property name="idCategory" type="int" />
+        <property name="contentType" type="string" />
         <property name="name" type="string" />
-        <property name="size" type="int" />
+        <property name="categorySize" type="int" />
         <property name="categoryProducts" type="GooleTagManagerCategoryProduct[]" />
         <property name="products" type="array"/>
     </transfer>

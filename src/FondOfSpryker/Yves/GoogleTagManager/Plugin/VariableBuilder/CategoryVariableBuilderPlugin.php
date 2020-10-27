@@ -2,106 +2,84 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
-use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
-use Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer;
+use Exception;
+use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryVariableBuilderPluginInterface;
 use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
-class CategoryVariableBuilderPlugin extends AbstractPlugin
+/**
+ * @method \FondOfSpryker\Yves\GoogleTagManager\GoogleTagManagerFactory getFactory()
+ */
+class CategoryVariableBuilderPlugin extends AbstractPlugin implements CategoryVariableBuilderPluginInterface
 {
-    /**
-     * @var \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
-     */
-    protected $moneyPlugin;
-
-    /**
-     * @var \FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVariables\CategoryVariableBuilderPluginInterface[]
-     */
-    protected $categoryVariableBuilderPlugins;
-
-    /**
-     * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
-     * @param array $categoryVariableBuilderPlugins
-     */
-    public function __construct(
-        MoneyPluginInterface $moneyPlugin,
-        array $categoryVariableBuilderPlugins = []
-    ) {
-        $this->moneyPlugin = $moneyPlugin;
-        $this->categoryVariableBuilderPlugins = $categoryVariableBuilderPlugins;
-    }
-
     /**
      * @param array $category
      * @param array $products
-     * @param string $contentType
+     * @param array $params
      *
      * @return array
      */
-    public function getVariables(array $category, array $products, string $contentType): array
+    public function getVariables(array $category, array $products, array $params = []): array
     {
-        $categoryProducts = [];
+        $googleTagManagerCategoryTransfer = $this->createGooleTagManagerCategoryTransfer();
+        $googleTagManagerCategoryTransfer = $this->addProducts($googleTagManagerCategoryTransfer, $products);
 
-        $googleTagManagerCategoryTransfer = new GooleTagManagerCategoryTransfer();
-        $googleTagManagerCategoryTransfer->setIdCategory($category['id_category']);
-        $googleTagManagerCategoryTransfer->setName($category['name']);
-        $googleTagManagerCategoryTransfer->setSize(count($products));
+        foreach ($this->getFactory()->getCategoryVariableBuilderFieldPlugins() as $plugin) {
+            try {
+                $googleTagManagerCategoryTransfer = $plugin->handle($googleTagManagerCategoryTransfer, $category, $products, $params);
+            } catch (Exception $e) {
+                $this->getLogger()->notice(sprintf(
+                    'GoogleTagManager: error in %s, plugin %s',
+                    self::class,
+                    get_class($plugin)
+                ));
+            }
+        }
 
+        return $this->stripEmptyArrayIndex($googleTagManagerCategoryTransfer);
+    }
+
+    /**
+     * @return void
+     */
+    protected function addProducts(
+        GooleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
+        array $products
+    ): GooleTagManagerCategoryTransfer {
         foreach ($products as $product) {
-            $gooleTagManagerCategoryProductTransfer = new GooleTagManagerCategoryProductTransfer();
-            $gooleTagManagerCategoryProductTransfer->setIdProductAbstract($product['id_product_abstract']);
-            $gooleTagManagerCategoryProductTransfer->setName($this->getProductName($product));
-            $gooleTagManagerCategoryProductTransfer->setSku($product['abstract_sku']);
-            $gooleTagManagerCategoryProductTransfer->setPrice($this->moneyPlugin->convertIntegerToDecimal($product['price']));
+            $gooleTagManagerCategoryProductTransfer = $this->getFactory()
+                ->getCategoryProductVariableBuilderPlugin()
+                ->getProduct($googleTagManagerCategoryTransfer, $product);
 
             $googleTagManagerCategoryTransfer->addCategoryProducts($gooleTagManagerCategoryProductTransfer);
-
-            $categoryProducts[] = $gooleTagManagerCategoryProductTransfer->toArray();
         }
 
-        $variables = [
-            GoogleTagManagerConstants::CATEGORY_ID => $category['id_category'],
-            GoogleTagManagerConstants::CATEGORY_NAME => $category['name'],
-            GoogleTagManagerConstants::CATEGORY_CONTENT_TYPE => $contentType,
-            GoogleTagManagerConstants::CATEGORY_SIZE => $googleTagManagerCategoryTransfer->getCategoryProducts()->count(),
-            GoogleTagManagerConstants::CATEGORY_PRODUCTS => $categoryProducts,
-            GoogleTagManagerConstants::PRODUCTS => $googleTagManagerCategoryTransfer->getProducts(),
-        ];
-
-        return $this->executePlugins($variables, $googleTagManagerCategoryTransfer);
+        return $googleTagManagerCategoryTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer|array $product
-     *
-     * @return string
+     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
      */
-    protected function getProductName(array $product): string
+    protected function createGooleTagManagerCategoryTransfer(): GooleTagManagerCategoryTransfer
     {
-        if (!array_key_exists('attributes', $product)) {
-            return $product['abstract_name'];
-        }
-
-        if (isset($product['attributes'][GoogleTagManagerConstants::NAME_UNTRANSLATED])) {
-            return $product['attributes'][GoogleTagManagerConstants::NAME_UNTRANSLATED];
-        }
-
-        return $product['abstract_name'];
+        return new GooleTagManagerCategoryTransfer();
     }
 
     /**
-     * @param array $variables
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryTransfer
      *
      * @return array
      */
-    protected function executePlugins(array $variables, GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer): array
+    protected function stripEmptyArrayIndex(GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer): array
     {
-        foreach ($this->categoryVariableBuilderPlugins as $plugin) {
-            $variables = array_merge($variables, $plugin->handle($gooleTagManagerCategoryTransfer));
+        $gooleTagManagerCategoryArray = $gooleTagManagerCategoryTransfer->toArray(true, true);
+
+        foreach ($gooleTagManagerCategoryArray as $field => $value) {
+            if ($value === null || $value === '') {
+                unset($gooleTagManagerCategoryArray[$field]);
+            }
         }
 
-        return $variables;
+        return $gooleTagManagerCategoryArray;
     }
 }
