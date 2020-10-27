@@ -129,7 +129,7 @@ class EnhancedEcommerceProductImpressionsPlugin extends AbstractPlugin implement
             return true;
         }
 
-        $this->getLogger()->alert(sprintf(
+        $this->getLogger()->info(sprintf(
             'GoogleTagManager: Could not add product to product-impressions, index %s not exists',
             $key
         ), ['product' => json_encode($product)]);
