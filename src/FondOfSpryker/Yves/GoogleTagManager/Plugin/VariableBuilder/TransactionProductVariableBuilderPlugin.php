@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductsVariableBuilderPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -26,16 +26,16 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
-    public function getProduct(ItemTransfer $itemTransfer): GooleTagManagerTransactionProductTransfer
+    public function getProduct(ItemTransfer $itemTransfer): GoogleTagManagerTransactionProductTransfer
     {
-        $GooleTagManagerTransactionProductTransfer = $this->createGooleTagManagerTransactionProductTransfer();
+        $GoogleTagManagerTransactionProductTransfer = $this->createGoogleTagManagerTransactionProductTransfer();
 
         foreach ($this->getFactory()->getTransactionProductVariableBuilderFieldPlugins() as $plugin) {
             try {
-                $GooleTagManagerTransactionProductTransfer = $plugin->handle(
-                    $GooleTagManagerTransactionProductTransfer,
+                $GoogleTagManagerTransactionProductTransfer = $plugin->handle(
+                    $GoogleTagManagerTransactionProductTransfer,
                     $itemTransfer
                 );
             } catch (Exception $e) {
@@ -47,14 +47,14 @@ class TransactionProductVariableBuilderPlugin extends AbstractPlugin implements 
             }
         }
 
-        return $GooleTagManagerTransactionProductTransfer;
+        return $GoogleTagManagerTransactionProductTransfer;
     }
 
     /**
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
-    protected function createGooleTagManagerTransactionProductTransfer(): GooleTagManagerTransactionProductTransfer
+    protected function createGoogleTagManagerTransactionProductTransfer(): GoogleTagManagerTransactionProductTransfer
     {
-        return new GooleTagManagerTransactionProductTransfer();
+        return new GoogleTagManagerTransactionProductTransfer();
     }
 }

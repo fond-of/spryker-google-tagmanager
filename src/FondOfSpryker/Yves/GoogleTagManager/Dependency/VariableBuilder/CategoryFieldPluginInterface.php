@@ -2,22 +2,22 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer;
 
 interface CategoryFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer
      * @param array $category
      * @param array $products
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer
      */
     public function handle(
-        GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer,
+        GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
         array $category,
         array $products = [],
         array $params = []
-    ): GooleTagManagerCategoryTransfer;
+    ): GoogleTagManagerCategoryTransfer;
 }

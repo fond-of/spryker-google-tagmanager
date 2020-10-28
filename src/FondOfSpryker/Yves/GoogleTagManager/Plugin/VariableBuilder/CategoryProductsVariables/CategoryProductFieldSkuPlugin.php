@@ -3,26 +3,26 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryProductsVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 class CategoryProductFieldSkuPlugin extends AbstractPlugin implements CategoryProductFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryProductTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer $googleTagManagerCategoryProductTransfer
      * @param array $productArray
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer
      */
     public function handle(
-        GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryProductTransfer,
+        GoogleTagManagerCategoryProductTransfer $googleTagManagerCategoryProductTransfer,
         array $productArray
-    ): GooleTagManagerCategoryProductTransfer {
+    ): GoogleTagManagerCategoryProductTransfer {
         if (isset($productArray['abstract_sku'])) {
             $sku = str_replace('ABSTRACT-', '', strtoupper($productArray['abstract_sku']));
-            $gooleTagManagerCategoryProductTransfer->setSku($sku);
+            $googleTagManagerCategoryProductTransfer->setSku($sku);
         }
 
-        return $gooleTagManagerCategoryProductTransfer;
+        return $googleTagManagerCategoryProductTransfer;
     }
 }

@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\OrderVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\OrderFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -13,25 +13,25 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class OrderFieldTransactionPaymentPlugin extends AbstractPlugin implements OrderFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer $googleTagManagerTransactionTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer
      */
     public function handle(
-        GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
+        GoogleTagManagerTransactionTransfer $googleTagManagerTransactionTransfer,
         OrderTransfer $orderTransfer,
         array $params = []
-    ): GooleTagManagerTransactionTransfer {
+    ): GoogleTagManagerTransactionTransfer {
         $paymentMethods = [];
 
         foreach ($orderTransfer->getPayments() as $payment) {
             $paymentMethods[] = $payment->getPaymentMethod();
         }
 
-        $gooleTagManagerTransactionTransfer->setTransactionPayment(implode(',', $paymentMethods));
+        $googleTagManagerTransactionTransfer->setTransactionPayment(implode(',', $paymentMethods));
 
-        return $gooleTagManagerTransactionTransfer;
+        return $googleTagManagerTransactionTransfer;
     }
 }

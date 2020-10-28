@@ -2,19 +2,19 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-use Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer;
-use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer;
 
 interface CategoryProductVariableBuilderPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer $googleTagManagerCategoryTransfer
      * @param array $productArray
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer
      */
     public function getProduct(
-        GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer,
+        GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
         array $productArray
-    ): GooleTagManagerCategoryProductTransfer;
+    ): GoogleTagManagerCategoryProductTransfer;
 }

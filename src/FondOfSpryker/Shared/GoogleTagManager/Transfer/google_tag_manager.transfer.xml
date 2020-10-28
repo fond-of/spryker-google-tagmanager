@@ -3,7 +3,7 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
 
-    <transfer name="GooleTagManagerDefault">
+    <transfer name="GoogleTagManagerDefault">
         <property name="pageType" type="string" />
         <property name="store" type="string" />
         <property name="internalTraffic" type="bool" />
@@ -11,7 +11,7 @@
         <property name="externalIdHash" type="string" />
     </transfer>
 
-    <transfer name="GooleTagManagerQuote">
+    <transfer name="GoogleTagManagerQuote">
         <property name="transactionEntity" type="string" />
         <property name="transactionId" type="string" />
         <property name="transactionAffiliation" type="string" />
@@ -27,7 +27,7 @@
         <property name="customerEmail" type="string" />
     </transfer>
 
-    <transfer name="GooleTagManagerTransaction">
+    <transfer name="GoogleTagManagerTransaction">
         <property name="transactionEntity" type="string" />
         <property name="transactionId" type="string" />
         <property name="transactionAffiliation" type="string" />
@@ -44,7 +44,7 @@
         <property name="customerEmail" type="string" />
     </transfer>
 
-    <transfer name="GooleTagManagerProductDetail">
+    <transfer name="GoogleTagManagerProductDetail">
         <property name="productId" type="int" />
         <property name="productName" type="string" />
         <property name="productSku" type="string" />
@@ -55,7 +55,7 @@
         <property name="salePrice" type="float" />
     </transfer>
 
-    <transfer name="GooleTagManagerTransactionProduct">
+    <transfer name="GoogleTagManagerTransactionProduct">
         <property name="id" type="int" />
         <property name="name" type="string" />
         <property name="sku" type="string" />

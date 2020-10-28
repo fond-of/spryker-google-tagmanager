@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -16,17 +16,17 @@ class TransactionProductFieldUrlPlugin extends AbstractPlugin implements Transac
     public const ATTR_URL_KEY = 'url_key';
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
     public function handle(
-        GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,
+        GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer,
         ItemTransfer $itemTransfer,
         array $params = []
-    ): GooleTagManagerTransactionProductTransfer {
+    ): GoogleTagManagerTransactionProductTransfer {
         $url = sprintf(
             '%s/%s/%s',
             $this->getHost(),
@@ -34,7 +34,7 @@ class TransactionProductFieldUrlPlugin extends AbstractPlugin implements Transac
             $this->getUrlKey($itemTransfer)
         );
 
-        return $gooleTagManagerTransactionProductTransfer->setUrl($url);
+        return $googleTagManagerTransactionProductTransfer->setUrl($url);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryVariableBuilderPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -21,7 +21,7 @@ class CategoryVariableBuilderPlugin extends AbstractPlugin implements CategoryVa
      */
     public function getVariables(array $category, array $products, array $params = []): array
     {
-        $googleTagManagerCategoryTransfer = $this->createGooleTagManagerCategoryTransfer();
+        $googleTagManagerCategoryTransfer = $this->createGoogleTagManagerCategoryTransfer();
         $googleTagManagerCategoryTransfer = $this->addProducts($googleTagManagerCategoryTransfer, $products);
 
         foreach ($this->getFactory()->getCategoryVariableBuilderFieldPlugins() as $plugin) {
@@ -43,43 +43,43 @@ class CategoryVariableBuilderPlugin extends AbstractPlugin implements CategoryVa
      * @return void
      */
     protected function addProducts(
-        GooleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
+        GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
         array $products
-    ): GooleTagManagerCategoryTransfer {
+    ): GoogleTagManagerCategoryTransfer {
         foreach ($products as $product) {
-            $gooleTagManagerCategoryProductTransfer = $this->getFactory()
+            $googleTagManagerCategoryProductTransfer = $this->getFactory()
                 ->getCategoryProductVariableBuilderPlugin()
                 ->getProduct($googleTagManagerCategoryTransfer, $product);
 
-            $googleTagManagerCategoryTransfer->addCategoryProducts($gooleTagManagerCategoryProductTransfer);
+            $googleTagManagerCategoryTransfer->addCategoryProducts($googleTagManagerCategoryProductTransfer);
         }
 
         return $googleTagManagerCategoryTransfer;
     }
 
     /**
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer
      */
-    protected function createGooleTagManagerCategoryTransfer(): GooleTagManagerCategoryTransfer
+    protected function createGoogleTagManagerCategoryTransfer(): GoogleTagManagerCategoryTransfer
     {
-        return new GooleTagManagerCategoryTransfer();
+        return new GoogleTagManagerCategoryTransfer();
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer $googleTagManagerCategoryTransfer
      *
      * @return array
      */
-    protected function stripEmptyArrayIndex(GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer): array
+    protected function stripEmptyArrayIndex(GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer): array
     {
-        $gooleTagManagerCategoryArray = $gooleTagManagerCategoryTransfer->toArray(true, true);
+        $googleTagManagerCategoryArray = $googleTagManagerCategoryTransfer->toArray(true, true);
 
-        foreach ($gooleTagManagerCategoryArray as $field => $value) {
+        foreach ($googleTagManagerCategoryArray as $field => $value) {
             if ($value === null || $value === '') {
-                unset($gooleTagManagerCategoryArray[$field]);
+                unset($googleTagManagerCategoryArray[$field]);
             }
         }
 
-        return $gooleTagManagerCategoryArray;
+        return $googleTagManagerCategoryArray;
     }
 }

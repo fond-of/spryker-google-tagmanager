@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 /**
@@ -12,15 +12,15 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class DefaultFieldCurrencyPlugin extends AbstractPlugin implements DefaultFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer $googleTagManagerDefaultTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer
      */
     public function handle(
-        GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
+        GoogleTagManagerDefaultTransfer $googleTagManagerDefaultTransfer,
         array $params = []
-    ): GooleTagManagerDefaultTransfer {
-        return $gooleTagManagerDefaultTransfer->setCurrency($this->getFactory()->getStore()->getCurrencyIsoCode());
+    ): GoogleTagManagerDefaultTransfer {
+        return $googleTagManagerDefaultTransfer->setCurrency($this->getFactory()->getStore()->getCurrencyIsoCode());
     }
 }

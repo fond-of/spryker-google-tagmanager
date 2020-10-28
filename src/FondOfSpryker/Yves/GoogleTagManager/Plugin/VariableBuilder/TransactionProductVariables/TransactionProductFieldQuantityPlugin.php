@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -15,17 +15,17 @@ class TransactionProductFieldQuantityPlugin extends AbstractPlugin implements Tr
     public const FIELD_NAME = 'quantity';
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
     public function handle(
-        GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,
+        GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer,
         ItemTransfer $itemTransfer,
         array $params = []
-    ): GooleTagManagerTransactionProductTransfer {
-        return $gooleTagManagerTransactionProductTransfer->setQuantity($itemTransfer->getQuantity());
+    ): GoogleTagManagerTransactionProductTransfer {
+        return $googleTagManagerTransactionProductTransfer->setQuantity($itemTransfer->getQuantity());
     }
 }

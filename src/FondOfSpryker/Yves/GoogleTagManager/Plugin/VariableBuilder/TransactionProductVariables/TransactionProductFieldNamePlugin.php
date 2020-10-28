@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -17,17 +17,17 @@ class TransactionProductFieldNamePlugin extends AbstractPlugin implements Transa
     public const ATTR_NAME_UNTRANSLATED = 'name_untranslated';
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
     public function handle(
-        GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,
+        GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer,
         ItemTransfer $itemTransfer,
         array $params = []
-    ): GooleTagManagerTransactionProductTransfer {
+    ): GoogleTagManagerTransactionProductTransfer {
         $locale = $this->getFactory()
             ->getStore()
             ->getCurrentLocale();
@@ -35,9 +35,9 @@ class TransactionProductFieldNamePlugin extends AbstractPlugin implements Transa
         $nameUntranslated = $this->getAttr($itemTransfer, $locale, static::ATTR_NAME_UNTRANSLATED);
 
         if ($nameUntranslated) {
-            return $gooleTagManagerTransactionProductTransfer->setName($nameUntranslated);
+            return $googleTagManagerTransactionProductTransfer->setName($nameUntranslated);
         }
 
-        return $gooleTagManagerTransactionProductTransfer->setName($itemTransfer->getName());
+        return $googleTagManagerTransactionProductTransfer->setName($itemTransfer->getName());
     }
 }

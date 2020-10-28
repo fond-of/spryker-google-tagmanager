@@ -2,21 +2,21 @@
 
 namespace FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder;
 
-use Generated\Shared\Transfer\GooleTagManagerTransactionTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 
 interface OrderFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer $googleTagManagerTransactionTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionTransfer
      */
     public function handle(
-        GooleTagManagerTransactionTransfer $gooleTagManagerTransactionTransfer,
+        GoogleTagManagerTransactionTransfer $googleTagManagerTransactionTransfer,
         OrderTransfer $orderTransfer,
         array $params = []
-    ): GooleTagManagerTransactionTransfer;
+    ): GoogleTagManagerTransactionTransfer;
 }

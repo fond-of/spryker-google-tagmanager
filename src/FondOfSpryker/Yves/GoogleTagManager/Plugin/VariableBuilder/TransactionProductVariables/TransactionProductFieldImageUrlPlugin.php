@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\TransactionProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\TransactionProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\ProductImageStorageTransfer;
 use Generated\Shared\Transfer\ProductImageTransfer;
@@ -14,24 +14,24 @@ class TransactionProductFieldImageUrlPlugin extends AbstractPlugin implements Tr
     public const ATTR_IMAGE_URL = 'imageUrl';
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerTransactionProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerTransactionProductTransfer
      */
     public function handle(
-        GooleTagManagerTransactionProductTransfer $gooleTagManagerTransactionProductTransfer,
+        GoogleTagManagerTransactionProductTransfer $googleTagManagerTransactionProductTransfer,
         ItemTransfer $itemTransfer,
         array $params = []
-    ): GooleTagManagerTransactionProductTransfer {
+    ): GoogleTagManagerTransactionProductTransfer {
         $imageUrl = $this->getImageUrl($itemTransfer);
 
         if ($imageUrl === null) {
-            return $gooleTagManagerTransactionProductTransfer;
+            return $googleTagManagerTransactionProductTransfer;
         }
 
-        return $gooleTagManagerTransactionProductTransfer->setImageUrl($imageUrl);
+        return $googleTagManagerTransactionProductTransfer->setImageUrl($imageUrl);
     }
 
     /**

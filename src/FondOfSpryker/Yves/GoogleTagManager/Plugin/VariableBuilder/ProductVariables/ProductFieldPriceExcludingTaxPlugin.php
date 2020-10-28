@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -13,17 +13,17 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class ProductFieldPriceExcludingTaxPlugin extends AbstractPlugin implements ProductFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer $googleTagManagerProductDetailTransfer
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer
      */
     public function handle(
-        GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
+        GoogleTagManagerProductDetailTransfer $googleTagManagerProductDetailTransfer,
         ProductAbstractTransfer $product,
         array $params = []
-    ): GooleTagManagerProductDetailTransfer {
+    ): GoogleTagManagerProductDetailTransfer {
         $product = $this->getFactory()
             ->getTaxProductConnectorClient()
             ->getNetPriceForProduct($product);
@@ -32,8 +32,8 @@ class ProductFieldPriceExcludingTaxPlugin extends AbstractPlugin implements Prod
             ->getMoneyPlugin()
             ->convertIntegerToDecimal($product->getNetPrice());
 
-        $gooleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
+        $googleTagManagerProductDetailTransfer->setProductPriceExcludingTax($priceExcludingTax);
 
-        return $gooleTagManagerProductDetailTransfer;
+        return $googleTagManagerProductDetailTransfer;
     }
 }

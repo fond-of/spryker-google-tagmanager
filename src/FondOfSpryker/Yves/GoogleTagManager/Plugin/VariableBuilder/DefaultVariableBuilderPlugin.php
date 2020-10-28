@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultVariableBuilderPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -33,13 +33,13 @@ class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultVari
      */
     public function getVariable(string $page, array $params = []): array
     {
-        $gooleTagManagerDefaultTransfer = $this->createGooleTagManagerDefaultTransfer();
-        $gooleTagManagerDefaultTransfer->setPageType($page);
+        $googleTagManagerDefaultTransfer = $this->createGoogleTagManagerDefaultTransfer();
+        $googleTagManagerDefaultTransfer->setPageType($page);
         $defaultVariableBuilderPlugins = $this->getFactory()->getDefaultVariableBuilderFieldPlugins();
 
         foreach ($defaultVariableBuilderPlugins as $plugin) {
             try {
-                $plugin->handle($gooleTagManagerDefaultTransfer, $params);
+                $plugin->handle($googleTagManagerDefaultTransfer, $params);
             } catch (Exception $e) {
                 $this->getLogger()->notice(sprintf(
                     'GoogleTagManager: error in %s, plugin %s',
@@ -49,36 +49,36 @@ class DefaultVariableBuilderPlugin extends AbstractPlugin implements DefaultVari
             }
         }
 
-        return $this->stripEmptyArrayIndex($gooleTagManagerDefaultTransfer);
+        return $this->stripEmptyArrayIndex($googleTagManagerDefaultTransfer);
     }
 
     /**
-     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer
      */
-    protected function createGooleTagManagerDefaultTransfer(): GooleTagManagerDefaultTransfer
+    protected function createGoogleTagManagerDefaultTransfer(): GoogleTagManagerDefaultTransfer
     {
-        return new GooleTagManagerDefaultTransfer();
+        return new GoogleTagManagerDefaultTransfer();
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerDefaultTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer $googleTagManagerDefaultTransfer
      *
      * @return array
      */
-    protected function stripEmptyArrayIndex(GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer): array
+    protected function stripEmptyArrayIndex(GoogleTagManagerDefaultTransfer $googleTagManagerDefaultTransfer): array
     {
-        $gooleTagManagerProductDetailArray = $gooleTagManagerDefaultTransfer->toArray(true, true);
+        $googleTagManagerProductDetailArray = $googleTagManagerDefaultTransfer->toArray(true, true);
 
-        foreach ($gooleTagManagerProductDetailArray as $field => $value) {
+        foreach ($googleTagManagerProductDetailArray as $field => $value) {
             if ($value === null) {
-                unset($gooleTagManagerProductDetailArray[$field]);
+                unset($googleTagManagerProductDetailArray[$field]);
             }
 
             if ($value === '') {
-                unset($gooleTagManagerProductDetailArray[$field]);
+                unset($googleTagManagerProductDetailArray[$field]);
             }
         }
 
-        return $gooleTagManagerProductDetailArray;
+        return $googleTagManagerProductDetailArray;
     }
 }

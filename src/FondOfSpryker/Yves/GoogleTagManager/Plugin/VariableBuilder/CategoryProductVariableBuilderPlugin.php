@@ -4,8 +4,8 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder;
 
 use Exception;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryProductVariableBuilderPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer;
-use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -17,21 +17,21 @@ class CategoryProductVariableBuilderPlugin extends AbstractPlugin implements Cat
     use LoggerTrait;
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer $googleTagManagerCategoryTransfer
      * @param array $productArray
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer
      */
     public function getProduct(
-        GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer,
+        GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
         array $productArray
-    ): GooleTagManagerCategoryProductTransfer {
-        $gooleTagManagerCategoryProductTransfer = $this->createGooleTagManagerCategoryProductTransfer();
+    ): GoogleTagManagerCategoryProductTransfer {
+        $googleTagManagerCategoryProductTransfer = $this->createGoogleTagManagerCategoryProductTransfer();
 
         foreach ($this->getFactory()->getCategoryProductVariableBuilderFieldPlugins() as $plugin) {
             try {
-                $gooleTagManagerCategoryProductTransfer = $plugin->handle(
-                    $gooleTagManagerCategoryProductTransfer,
+                $googleTagManagerCategoryProductTransfer = $plugin->handle(
+                    $googleTagManagerCategoryProductTransfer,
                     $productArray
                 );
             } catch (Exception $e) {
@@ -43,14 +43,14 @@ class CategoryProductVariableBuilderPlugin extends AbstractPlugin implements Cat
             }
         }
 
-        return $gooleTagManagerCategoryProductTransfer;
+        return $googleTagManagerCategoryProductTransfer;
     }
 
     /**
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryProductTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryProductTransfer
      */
-    protected function createGooleTagManagerCategoryProductTransfer(): GooleTagManagerCategoryProductTransfer
+    protected function createGoogleTagManagerCategoryProductTransfer(): GoogleTagManagerCategoryProductTransfer
     {
-        return new GooleTagManagerCategoryProductTransfer();
+        return new GoogleTagManagerCategoryProductTransfer();
     }
 }

@@ -4,31 +4,31 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\CategoryVar
 
 use FondOfSpryker\Shared\GoogleTagManager\GoogleTagManagerConstants;
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\CategoryFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerCategoryTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
 class CategoryFieldContentTypePlugin extends AbstractPlugin implements CategoryFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer
      * @param array $category
      * @param array $products
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerCategoryTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerCategoryTransfer
      */
     public function handle(
-        GooleTagManagerCategoryTransfer $gooleTagManagerCategoryTransfer,
+        GoogleTagManagerCategoryTransfer $googleTagManagerCategoryTransfer,
         array $category,
         array $products = [],
         array $params = []
-    ): GooleTagManagerCategoryTransfer {
+    ): GoogleTagManagerCategoryTransfer {
         if (isset($params[GoogleTagManagerConstants::CATEGORY_ARRAY_CONTENT_TYPE])) {
-            $gooleTagManagerCategoryTransfer->setContentType(
+            $googleTagManagerCategoryTransfer->setContentType(
                 $params[GoogleTagManagerConstants::CATEGORY_ARRAY_CONTENT_TYPE]
             );
         }
 
-        return $gooleTagManagerCategoryTransfer;
+        return $googleTagManagerCategoryTransfer;
     }
 }

@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\ProductVariables;
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\ProductFieldPluginInterface;
-use Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -12,24 +12,24 @@ class ProductFieldNamePlugin extends AbstractPlugin implements ProductFieldPlugi
     public const NAME_UNTRANSLATED = 'name_untranslated';
 
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer $googleTagManagerProductDetailTransfer
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $product
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerProductDetailTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerProductDetailTransfer
      */
     public function handle(
-        GooleTagManagerProductDetailTransfer $gooleTagManagerProductDetailTransfer,
+        GoogleTagManagerProductDetailTransfer $googleTagManagerProductDetailTransfer,
         ProductAbstractTransfer $product,
         array $params = []
-    ): GooleTagManagerProductDetailTransfer {
-        $gooleTagManagerProductDetailTransfer->setProductName($product->getName());
+    ): GoogleTagManagerProductDetailTransfer {
+        $googleTagManagerProductDetailTransfer->setProductName($product->getName());
 
         if ($this->hasNameUntranslated($product) === true) {
-            $gooleTagManagerProductDetailTransfer->setProductName($product->getAttributes()[static::NAME_UNTRANSLATED]);
+            $googleTagManagerProductDetailTransfer->setProductName($product->getAttributes()[static::NAME_UNTRANSLATED]);
         }
 
-        return $gooleTagManagerProductDetailTransfer;
+        return $googleTagManagerProductDetailTransfer;
     }
 
     /**

@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\GoogleTagManager\Plugin\VariableBuilder\DefaultVari
 
 use FondOfSpryker\Yves\GoogleTagManager\Dependency\VariableBuilder\DefaultFieldPluginInterface;
 use Generated\Shared\Transfer\AddressTransfer;
-use Generated\Shared\Transfer\GooleTagManagerDefaultTransfer;
+use Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 
@@ -14,31 +14,31 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 class DefaultFieldCustomerEmailHashPlugin extends AbstractPlugin implements DefaultFieldPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer
+     * @param \Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer $googleTagManagerDefaultTransfer
      * @param array $params
      *
-     * @return \Generated\Shared\Transfer\GooleTagManagerDefaultTransfer
+     * @return \Generated\Shared\Transfer\GoogleTagManagerDefaultTransfer
      */
     public function handle(
-        GooleTagManagerDefaultTransfer $gooleTagManagerDefaultTransfer,
+        GoogleTagManagerDefaultTransfer $googleTagManagerDefaultTransfer,
         array $params = []
-    ): GooleTagManagerDefaultTransfer {
+    ): GoogleTagManagerDefaultTransfer {
         $quoteTransfer = $this->getFactory()
             ->getCartClient()
             ->getQuote();
 
         if (!$quoteTransfer instanceof QuoteTransfer) {
-            return $gooleTagManagerDefaultTransfer;
+            return $googleTagManagerDefaultTransfer;
         }
 
         if (!$quoteTransfer->getBillingAddress() instanceof AddressTransfer) {
-            return $gooleTagManagerDefaultTransfer;
+            return $googleTagManagerDefaultTransfer;
         }
 
         if (!$quoteTransfer->getBillingAddress()->getEmail()) {
-            return $gooleTagManagerDefaultTransfer;
+            return $googleTagManagerDefaultTransfer;
         }
 
-        return $gooleTagManagerDefaultTransfer->setExternalIdHash(sha1($quoteTransfer->getBillingAddress()->getEmail()));
+        return $googleTagManagerDefaultTransfer->setExternalIdHash(sha1($quoteTransfer->getBillingAddress()->getEmail()));
     }
 }
