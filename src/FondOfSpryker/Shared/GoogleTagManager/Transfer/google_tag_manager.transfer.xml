@@ -22,7 +22,7 @@
         <property name="transactionShipping" type="string" />
         <property name="transactionPayment" type="string" />
         <property name="transactionCurrency" type="string" />
-        <property name="transactionProducts" type="GooleTagManagerTransactionProduct[]" />
+        <property name="transactionProducts" type="GoogleTagManagerTransactionProduct[]" />
         <property name="transactionProductsSkus" type="string[]" />
         <property name="customerEmail" type="string" />
     </transfer>
@@ -38,7 +38,7 @@
         <property name="transactionShipping" type="string" />
         <property name="transactionPayment" type="string" />
         <property name="transactionCurrency" type="string" />
-        <property name="transactionProducts" type="GooleTagManagerTransactionProduct[]" />
+        <property name="transactionProducts" type="GoogleTagManagerTransactionProduct[]" />
         <property name="transactionProductsSkus" type="string[]" />
         <property name="transactionDate" type="string" />
         <property name="customerEmail" type="string" />
@@ -75,16 +75,16 @@
         <property name="externalIdHash" type="string" />
     </transfer>
 
-    <transfer name="GooleTagManagerCategory">
+    <transfer name="GoogleTagManagerCategory">
         <property name="idCategory" type="int" />
         <property name="contentType" type="string" />
         <property name="name" type="string" />
         <property name="categorySize" type="int" />
-        <property name="categoryProducts" type="GooleTagManagerCategoryProduct[]" />
+        <property name="categoryProducts" type="GoogleTagManagerCategoryProduct[]" />
         <property name="products" type="array"/>
     </transfer>
 
-    <transfer name="GooleTagManagerCategoryProduct">
+    <transfer name="GoogleTagManagerCategoryProduct">
         <property name="idProductAbstract" type="int" />
         <property name="name" type="string" />
         <property name="sku" type="string" />
